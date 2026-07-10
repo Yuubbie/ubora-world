@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: #F3F5F4;
+  color: #16233F;
+  font-family: 'Inter', sans-serif;
+}
+
+.font-display {
+  font-family: 'Fraunces', serif;
+}
+
+.font-mono-brand {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.card-hover {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(22, 35, 63, 0.08);
+}
+
+.slip-perforate {
+  background-image: radial-gradient(circle, #F3F5F4 4px, transparent 4.5px);
+  background-size: 16px 16px;
+  background-position: -8px center;
+}
