@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 
+const WHATSAPP_GROUP_LINK = "https://chat.whatsapp.com/HcnOnFikr3EFCImHJbkqVA";
+
 export default function WaitlistPage() {
   const [form, setForm] = useState({
     fullName: "",
@@ -28,8 +30,12 @@ export default function WaitlistPage() {
         <div className="max-w-md text-center">
           <img src="/logo.jpg" alt="Ubora World" className="h-14 w-14 rounded-full object-cover mx-auto mb-6" />
           <h1 className="font-display text-3xl font-semibold mb-3" style={{ color: "#16233F" }}>You're on the list.</h1>
-          <p className="text-muted">
-            We'll message you on WhatsApp the moment Ubora World opens for your group. Tell a friend to join too.
+          <p className="text-muted mb-8">
+            We'll message you on WhatsApp the moment Ubora World opens for your group.
+          </p>
+          <a href={WHATSAPP_GROUP_LINK} target="_blank" rel="noopener noreferrer" className="inline-block rounded-lg px-6 py-3 text-sm font-semibold" style={{ background: "#2E7D5B", color: "#fff" }}>Join the WhatsApp group</a>
+          <p className="text-xs text-muted mt-4">
+            Optional - for early updates and a place to ask questions before launch.
           </p>
         </div>
       </div>
