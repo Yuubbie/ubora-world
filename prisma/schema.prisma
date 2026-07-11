@@ -301,4 +301,12 @@ model ResultCheckerToken {
   code          String  @unique
   used          Boolean @default(false)
   linkedResultId String?
+} model WaitlistSignup {
+  id         String   @id @default(cuid())
+  fullName   String
+  email      String   @unique
+  phone      String
+  interest   String
+  referredBy String?
+  createdAt  DateTime @default(now())
 }
