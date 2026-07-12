@@ -6,7 +6,7 @@ export default function RootPage() {
       <div className="flex-1 grid md:grid-cols-2">
         <div className="flex flex-col justify-center px-8 md:px-16 py-14" style={{ background: "#16233F", color: "#fff" }}>
           <div className="flex items-center gap-2.5 mb-8">
-            <img src="/logo.jpg" alt="Ubora World" className="h-10 w-10 rounded-full object-cover" />
+            <img src="/brand/ubora-icon-cream.svg" alt="Ubora World" className="h-10 w-10 rounded-full object-cover" />
             <span className="font-display font-semibold text-xl">Ubora World</span>
           </div>
           <p className="font-mono-brand text-xs tracking-widest uppercase mb-4" style={{ color: "#C99A2E" }}>

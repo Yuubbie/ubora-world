@@ -23,7 +23,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
       <div className="flex items-center gap-2 mb-8">
-        <img src="/logo.jpg" alt="Ubora World" className="h-10 w-10 rounded" />
+        <img src="/brand/ubora-icon-navy.svg" alt="Ubora World" className="h-10 w-10 rounded" />
         <span className="uw-display font-semibold text-xl">Ubora World</span>
       </div>
       <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white border border-line rounded-xl p-6">

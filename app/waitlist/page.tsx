@@ -28,7 +28,7 @@ export default function WaitlistPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-6" style={{ background: "#F3F5F4" }}>
         <div className="max-w-md text-center">
-          <img src="/logo.jpg" alt="Ubora World" className="h-14 w-14 rounded-full object-cover mx-auto mb-6" />
+          <img src="/brand/ubora-icon-navy.svg" alt="Ubora World" className="h-14 w-14 rounded-full object-cover mx-auto mb-6" />
           <h1 className="font-display text-3xl font-semibold mb-3" style={{ color: "#16233F" }}>You're on the list.</h1>
           <p className="text-muted mb-8">
             We'll message you on WhatsApp the moment Ubora World opens for your group.
@@ -46,7 +46,7 @@ export default function WaitlistPage() {
     <div className="min-h-screen flex flex-col md:flex-row">
       <div className="flex-1 flex flex-col justify-center px-8 md:px-16 py-14" style={{ background: "#16233F", color: "#fff" }}>
         <div className="flex items-center gap-2.5 mb-8">
-          <img src="/logo.jpg" alt="Ubora World" className="h-10 w-10 rounded-full object-cover" />
+          <img src="/brand/ubora-icon-navy.svg" alt="Ubora World" className="h-10 w-10 rounded-full object-cover" />
           <span className="font-display font-semibold text-xl">Ubora World</span>
         </div>
         <p className="font-mono-brand text-xs tracking-widest uppercase mb-4" style={{ color: "#C99A2E" }}>

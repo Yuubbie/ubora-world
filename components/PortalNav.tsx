@@ -17,7 +17,7 @@ export default function PortalNav({ tier }: { tier: string | null }) {
     <div className="border-b border-line bg-white sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-5 md:px-6 py-4 flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-2.5">
-          <img src="/logo.jpg" alt="Ubora World" className="h-8 w-8 rounded-full object-cover shrink-0" />
+          <img src="/brand/ubora-icon-navy.svg" alt="Ubora World" className="h-8 w-8 rounded-full object-cover shrink-0" />
           <span className="font-display font-semibold text-lg tracking-tight whitespace-nowrap">Ubora World</span>
         </Link>
 
