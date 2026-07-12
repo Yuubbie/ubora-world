@@ -7,6 +7,53 @@ body {
   background: #F3F5F4;
   color: #16233F;
   font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer base {
+  h1, h2, h3 {
+    font-family: 'Fraunces', serif;
+    letter-spacing: -0.02em;
+  }
+  ::selection {
+    background: #C99A2E;
+    color: #FFFFFF;
+  }
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #F3F5F4, 0 0 0 4px #C99A2E;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-ink px-6 py-3 font-semibold text-paper shadow-button transition-all duration-200 ease-out;
+  }
+  .btn-primary:hover {
+    @apply bg-ink2 shadow-cardHover -translate-y-0.5;
+  }
+  .btn-primary:active {
+    @apply translate-y-0 scale-[0.98];
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center rounded-lg bg-gold px-6 py-3 font-semibold text-ink shadow-button transition-all duration-200 ease-out;
+  }
+  .btn-gold:hover {
+    @apply bg-golddeep text-paper shadow-cardHover -translate-y-0.5;
+  }
+  .btn-gold:active {
+    @apply translate-y-0 scale-[0.98];
+  }
+
+  .card-premium {
+    @apply relative rounded-2xl border border-line bg-white shadow-card transition-all duration-200 ease-out;
+  }
+  .card-premium:hover {
+    @apply -translate-y-1 shadow-cardHover;
+    border-color: rgba(201, 154, 46, 0.4);
+  }
 }
 
 .font-display {
@@ -18,15 +65,42 @@ body {
 }
 
 .card-hover {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 .card-hover:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(22, 35, 63, 0.08);
+  border-color: rgba(201, 154, 46, 0.4);
 }
 
 .slip-perforate {
   background-image: radial-gradient(circle, #F3F5F4 4px, transparent 4.5px);
   background-size: 16px 16px;
   background-position: -8px center;
+}
+
+.slip-divider {
+  position: relative;
+}
+@media (min-width: 768px) {
+  .slip-divider::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -1px;
+    bottom: 0;
+    width: 2px;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.35) 3px, transparent 3.5px);
+    background-size: 2px 22px;
+    background-repeat: repeat-y;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
