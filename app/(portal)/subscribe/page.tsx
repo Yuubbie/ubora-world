@@ -30,47 +30,60 @@ export default function SubscribePage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12">
-      <p className="font-mono-brand text-xs uppercase tracking-widest mb-2" style={{ color: "#8C6D1F" }}>Pricing</p>
-      <h1 className="font-display text-3xl md:text-4xl font-semibold mb-2 tracking-tight">Choose your plan</h1>
-      <p className="text-muted mb-10">Per semester (3 months). Renews manually - no surprise charges.</p>
-      {error && <p className="text-coral mb-4">{error}</p>}
-      <div className="grid sm:grid-cols-3 gap-5">
-        {TIERS.map((t) => (
-          <div
-            key={t.id}
-            className={`card-hover bg-white rounded-2xl p-6 flex flex-col ${t.highlight ? "border-2" : "border border-line"}`}
-            style={t.highlight ? { borderColor: "#C99A2E" } : {}}
-          >
-            {t.highlight && (
-              <span className="font-mono-brand text-xs font-semibold px-2.5 py-1 rounded-full self-start mb-3" style={{ background: "#EFEAD9", color: "#8C6D1F" }}>
-                MOST POPULAR
-              </span>
-            )}
-            <h3 className="font-display font-semibold text-xl mb-1">{t.label}</h3>
-            <p className="mb-5 flex items-baseline gap-0.5">
-              <span className="font-sans text-2xl font-semibold">NGN</span>
-              <span className="font-display text-3xl font-semibold">
-                {(TIER_PRICES_KOBO[t.id] / 100).toLocaleString()}
-              </span>
-            </p>
-            <ul className="text-sm text-muted mb-7 flex-1 space-y-2">
-              {t.features.map((f) => (
-                <li key={f} className="flex items-start gap-2">
-                  <span style={{ color: "#2E7D5B" }}>✓</span> {f}
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={() => subscribe(t.id)}
-              disabled={loading !== null}
-              className="rounded-lg py-2.5 text-sm font-semibold disabled:opacity-50 transition-colors"
-              style={t.highlight ? { background: "#C99A2E", color: "#16233F" } : { background: "#16233F", color: "#fff" }}
+    <div className="bg-dot-grid min-h-screen">
+      <div className="max-w-4xl mx-auto px-6 py-14">
+        <p className="eyebrow text-golddeep mb-3 animate-fade-up" style={{ opacity: 0 }}>
+          Pricing
+        </p>
+        <h1
+          className="font-display text-3xl md:text-4xl font-bold mb-2 tracking-tight animate-fade-up"
+          style={{ animationDelay: "0.05s", opacity: 0 }}
+        >
+          Choose your <span className="italic font-medium text-gold">plan</span>.
+        </h1>
+        <p className="text-muted mb-10 animate-fade-up" style={{ animationDelay: "0.1s", opacity: 0 }}>
+          Per semester (3 months). Renews manually - no surprise charges.
+        </p>
+        {error && <p className="text-coral mb-4 font-medium">{error}</p>}
+        <div className="grid sm:grid-cols-3 gap-5">
+          {TIERS.map((t, i) => (
+            <div
+              key={t.id}
+              className={`card-premium flex flex-col p-7 animate-fade-up-scale ${t.highlight ? "border-2 border-gold shadow-cardHover" : ""}`}
+              style={{ animationDelay: `${0.15 + i * 0.05}s`, opacity: 0 }}
             >
-              {loading === t.id ? "Redirecting..." : `Subscribe to ${t.label}`}
-            </button>
-          </div>
-        ))}
+              {t.highlight && (
+                <span className="eyebrow self-start mb-3 rounded-full bg-gold/15 px-2.5 py-1 text-[10px] text-golddeep">
+                  Most Popular
+                </span>
+              )}
+              <h3 className="font-display font-bold text-xl mb-3 tracking-tight">{t.label}</h3>
+              <p className="font-mono-brand mb-6">
+                <span className="text-sm text-muted mr-1">NGN</span>
+                <span className="text-3xl font-semibold text-ink">
+                  {(TIER_PRICES_KOBO[t.id] / 100).toLocaleString()}
+                </span>
+              </p>
+              <ul className="text-sm text-muted mb-8 flex-1 space-y-2.5">
+                {t.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2">
+                    <span className="text-green mt-0.5">✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => subscribe(t.id)}
+                disabled={loading !== null}
+                className={`group text-sm disabled:opacity-50 disabled:pointer-events-none ${t.highlight ? "btn-gold" : "btn-primary"}`}
+              >
+                <span>{loading === t.id ? "Redirecting..." : `Subscribe to ${t.label}`}</span>
+                {loading !== t.id && (
+                  <span className="ml-2 transition-transform duration-200 group-hover:translate-x-1">→</span>
+                )}
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
