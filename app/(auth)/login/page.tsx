@@ -21,12 +21,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 bg-paper overflow-hidden">
+    <div className="bg-dot-grid relative min-h-screen flex flex-col items-center justify-center px-4 bg-paper overflow-hidden">
       <div
         className="absolute w-[500px] h-[500px] rounded-full opacity-[0.12] blur-3xl pointer-events-none"
         style={{ top: "-120px", right: "-120px", background: "radial-gradient(circle, #C99A2E, transparent)" }}
       />
-      <div className="relative flex items-center gap-3 mb-10 animate-fade-up">
+      <div className="relative flex items-center gap-3 mb-8 animate-fade-up">
         <img src="/brand/ubora-icon-navy.svg" alt="Ubora World" className="h-12 w-12 rounded" />
         <span className="font-display font-bold text-2xl tracking-tight">Ubora World</span>
       </div>
@@ -35,7 +35,7 @@ export default function LoginPage() {
         className="relative card-premium w-full max-w-sm p-9 animate-fade-up-scale"
         style={{ animationDelay: "0.1s", opacity: 0 }}
       >
-        <p className="font-mono-brand text-xs tracking-[0.2em] uppercase text-gold mb-3">
+        <p className="eyebrow text-gold mb-3">
           Secure Student Portal
         </p>
         <h1 className="font-display text-3xl font-bold mb-2 tracking-tight">Student login</h1>
@@ -47,14 +47,14 @@ export default function LoginPage() {
         <input
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
-          className="w-full px-4 py-3 rounded-lg border border-line text-base mb-5 transition-colors duration-150 hover:border-muted focus:border-gold focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-line text-base mb-5 transition-colors duration-150 hover:border-muted focus:border-gold focus:outline-none"
         />
         <label className="text-sm font-medium block mb-1.5">Password</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-3 rounded-lg border border-line text-base mb-7 transition-colors duration-150 hover:border-muted focus:border-gold focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-line text-base mb-7 transition-colors duration-150 hover:border-muted focus:border-gold focus:outline-none"
         />
         <button
           disabled={loading}
