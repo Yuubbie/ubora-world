@@ -35,14 +35,14 @@ export default function WaitlistPage() {
           <p className="text-muted mb-8">
             We'll message you on WhatsApp the moment Ubora World opens for your group.
           </p>
-          
-            href={WHATSAPP_GROUP_LINK}
+          <a
+           href={WHATSAPP_GROUP_LINK}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-gold group inline-flex text-sm"
           >
             <span>Join the WhatsApp group</span>
-            <span className="ml-2 transition-transform duration-200 group-hover:translate-x-1">→</span>
+            <span className="ml-2 transition-transform duration-200 group-hover:translate-x-1">›</span>
           </a>
           <p className="text-xs text-muted mt-4">
             Optional - for early updates and a place to ask questions before launch.
