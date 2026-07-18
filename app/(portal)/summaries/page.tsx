@@ -18,9 +18,9 @@ export default async function SummariesPage() {
     : [];
 
   return (
-    <div>
-      <PortalNav tier={access.active ? access.tier : null} />
-      <div className="bg-dot-grid min-h-[calc(100vh-64px)]">
+    <div className="md:flex md:min-h-screen">
+      <PortalNav tier={access.active ? access.tier : null} userName={session!.user?.name || undefined} />
+      <div className="flex-1 bg-dot-grid min-h-screen">
         <div className="max-w-4xl mx-auto px-6 py-14">
           <p className="eyebrow text-golddeep mb-3 animate-fade-up" style={{ opacity: 0 }}>
             Library
