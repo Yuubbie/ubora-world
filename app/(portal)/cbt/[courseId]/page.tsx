@@ -7,6 +7,11 @@ type Result = { score: number; total: number; percentage: number; grade: string 
 
 const QUIZ_SECONDS = 300;
 
+const ERROR_MESSAGES: Record<string, string> = {
+  unauthenticated: "You need to be logged in to start a practice test.",
+  no_approved_question_bank: "This course doesn't have an approved question bank yet — check back soon.",
+};
+
 export default function CbtQuizPage() {
   const { courseId } = useParams<{ courseId: string }>();
   const [questions, setQuestions] = useState<Question[] | null>(null);
@@ -67,7 +72,26 @@ export default function CbtQuizPage() {
     else submit(updated);
   }
 
-  if (error) return <div className="p-8 text-coral">{error}</div>;
+  if (error) {
+    const isPlanIssue = error !== "unauthenticated" && error !== "no_approved_question_bank";
+    const message = ERROR_MESSAGES[error] ?? (isPlanIssue ? error : "Something went wrong loading this practice test.");
+    return (
+      <div className="max-w-md mx-auto p-8 pt-20 text-center">
+        <div className="card-premium p-7">
+          <p className="font-display text-lg font-semibold mb-2">Can't start this practice test</p>
+          <p className="text-sm text-muted mb-6">{message}</p>
+          <div className="flex gap-3 justify-center flex-wrap">
+            {isPlanIssue && (
+              <a href="/subscribe" className="btn-gold text-sm py-2.5 px-5">Upgrade plan</a>
+            )}
+            <a href="/cbt" className="border border-line rounded-lg px-5 py-2.5 text-sm font-medium">
+              Back to CBT Practice
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (!questions) return <div className="p-8 text-muted">Loading...</div>;
 
   if (result) {

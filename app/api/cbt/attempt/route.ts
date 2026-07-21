@@ -28,22 +28,34 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   const { courseId, answers } = parsed.data;
 
-  const questionIds = answers.map((a) => a.questionId);
-  const questions = await db.question.findMany({ where: { id: { in: questionIds } } });
-  const byId = new Map(questions.map((q) => [q.id, q]));
+  // Re-derive the *legitimate* question set server-side — the same approved
+  // bank the /questions endpoint would have served for this course. We never
+  // trust that the questionIds in the request actually came from there.
+  const bank = await db.questionBank.findFirst({
+    where: { courseId, status: "approved" },
+    include: { questions: true },
+  });
+  if (!bank) return NextResponse.json({ error: "no_approved_question_bank" }, { status: 404 });
 
-  // Spec 6.3 rule 2: attempts are immutable and scored authoritatively server-side.
+  const validQuestionIds = new Set(bank.questions.map((q) => q.id));
+  const byId = new Map(bank.questions.map((q) => [q.id, q]));
+
+  // Only answers whose questionId actually belongs to this course's approved
+  // bank are scored or counted — anything else submitted is silently ignored,
+  // not trusted, and not allowed to inflate or deflate the total.
+  const validAnswers = answers.filter((a) => validQuestionIds.has(a.questionId));
+
   let correct = 0;
-  for (const a of answers) {
-    const q = byId.get(a.questionId);
-    if (!q) continue;
+  for (const a of validAnswers) {
+    const q = byId.get(a.questionId)!;
     const originalSelectedIndex = a.optionOrder[a.selectedDisplayIndex];
     if (originalSelectedIndex === q.correctOptionIndex) correct += 1;
   }
 
-  const total = answers.length;
+  const total = validAnswers.length;
   const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
 
+  // Spec 6.3 rule 2: attempts are immutable and scored authoritatively server-side.
   const attempt = await db.attempt.create({
     data: {
       userId: (session.user as any).id,
