@@ -102,14 +102,14 @@ export default async function DashboardPage() {
                 <span>Open Course Summaries</span>
                 <span className="transition-transform duration-200 group-hover:translate-x-1">↗</span>
               </Link>
-              <Link href="/past-questions" className="action-btn group">
+              <span className="action-btn opacity-40 cursor-not-allowed">
                 <span>Browse Past Questions</span>
-                <span className="transition-transform duration-200 group-hover:translate-x-1">↗</span>
-              </Link>
-              <Link href="/tutorials" className="action-btn group">
+                <span className="text-[10px] font-mono-brand tracking-wide">SOON</span>
+              </span>
+              <span className="action-btn opacity-40 cursor-not-allowed">
                 <span>Watch Tutorials</span>
-                <span className="transition-transform duration-200 group-hover:translate-x-1">↗</span>
-              </Link>
+                <span className="text-[10px] font-mono-brand tracking-wide">SOON</span>
+              </span>
             </div>
           </div>
 
