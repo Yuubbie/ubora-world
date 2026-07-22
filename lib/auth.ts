@@ -4,6 +4,9 @@ import bcrypt from "bcryptjs";
 import { db } from "./db";
 
 export const authOptions: NextAuthOptions = {
+  // TEMPORARY: prints detailed auth failure reasons to the server logs.
+  // Remove this once we've found the preview-login issue.
+  debug: true,
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   providers: [
@@ -14,18 +17,28 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.identifier || !credentials?.password) return null;
+        if (!credentials?.identifier || !credentials?.password) {
+          console.log("[auth] missing identifier or password in submitted form");
+          return null;
+        }
 
         const user = await db.user.findFirst({
           where: {
             OR: [{ email: credentials.identifier }, { phone: credentials.identifier }],
           },
         });
-        if (!user) return null;
+        if (!user) {
+          console.log("[auth] no user found matching identifier:", credentials.identifier);
+          return null;
+        }
 
         const valid = await bcrypt.compare(credentials.password, user.passwordHash);
-        if (!valid) return null;
+        if (!valid) {
+          console.log("[auth] password did not match for user:", credentials.identifier);
+          return null;
+        }
 
+        console.log("[auth] login succeeded for user:", credentials.identifier);
         return {
           id: user.id,
           name: user.fullName,
