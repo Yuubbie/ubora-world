@@ -44,15 +44,67 @@ export async function POST(req: Request) {
   // bank are scored or counted — anything else submitted is silently ignored,
   // not trusted, and not allowed to inflate or deflate the total.
   const validAnswers = answers.filter((a) => validQuestionIds.has(a.questionId));
+  const answerByQuestionId = new Map(validAnswers.map((a) => [a.questionId, a]));
 
   let correct = 0;
-  for (const a of validAnswers) {
-    const q = byId.get(a.questionId)!;
+  // Per-question review, built for EVERY question in the bank — including
+  // ones the student skipped — so the review screen can show "not answered"
+  // rather than silently omitting them. correctOptionIndex and explanation
+  // are only ever placed into this response AFTER grading has happened —
+  // they are never sent to the client beforehand.
+  const review: {
+    questionId: string;
+    text: string;
+    options: string[];
+    selectedIndex: number; // -1 means the student never answered this one
+    correctIndex: number;
+    isCorrect: boolean;
+    explanation: string | null;
+  }[] = [];
+
+  for (const q of bank.questions) {
+    const a = answerByQuestionId.get(q.id);
+
+    if (!a) {
+      // Skipped question: show the options in their original stored order
+      // (there's no per-attempt shuffle to reconstruct since it was never answered).
+      review.push({
+        questionId: q.id,
+        text: q.text,
+        options: q.options,
+        selectedIndex: -1,
+        correctIndex: q.correctOptionIndex,
+        isCorrect: false,
+        explanation: q.explanation ?? null,
+      });
+      continue;
+    }
+
     const originalSelectedIndex = a.optionOrder[a.selectedDisplayIndex];
-    if (originalSelectedIndex === q.correctOptionIndex) correct += 1;
+    const isCorrect = originalSelectedIndex === q.correctOptionIndex;
+    if (isCorrect) correct += 1;
+
+    // Reconstruct the options in the exact order the student saw them
+    // during the quiz (a.optionOrder is the shuffle applied for this attempt),
+    // and translate the correct answer into that same display order.
+    const displayOptions = a.optionOrder.map((originalIdx) => q.options[originalIdx]);
+    const correctDisplayIndex = a.optionOrder.indexOf(q.correctOptionIndex);
+
+    review.push({
+      questionId: q.id,
+      text: q.text,
+      options: displayOptions,
+      selectedIndex: a.selectedDisplayIndex,
+      correctIndex: correctDisplayIndex,
+      isCorrect,
+      explanation: q.explanation ?? null,
+    });
   }
 
-  const total = validAnswers.length;
+  // Scored against the FULL question count in the bank — skipped questions
+  // count against you, same as real NOUN/JAMB CBT scoring. This also means
+  // "total" here is the bank size, not just how many were answered.
+  const total = bank.questions.length;
   const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
 
   // Spec 6.3 rule 2: attempts are immutable and scored authoritatively server-side.
@@ -72,5 +124,6 @@ export async function POST(req: Request) {
     total,
     percentage,
     grade: gradeFor(percentage),
+    review,
   });
 }
