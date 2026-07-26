@@ -30,6 +30,18 @@ function moduleTitle(m: number) {
   return MODULE_TITLES[m] ?? `Module ${m}`;
 }
 
+// One accent per module, like colored tabs on folders in a course binder.
+// Reuses the same hues already used for grade colors on the results screen
+// (gold, ink, green) plus one warm sienna, so the palette feels like one
+// deliberate family rather than an arbitrary rainbow.
+const MODULE_ACCENTS: Record<number, string> = {
+  0: "#8C6D1F",
+  1: "#C79A3D",
+  2: "#16233F",
+  3: "#2E7D5B",
+  4: "#8C5A3B",
+};
+
 const ERROR_MESSAGES: Record<string, string> = {
   unauthenticated: "You need to be logged in to start a practice test.",
   no_approved_question_bank: "This course doesn't have an approved question bank yet — check back soon.",
@@ -52,6 +64,12 @@ export default function CbtQuizPage() {
   const [sets, setSets] = useState<SetInfo[] | null>(null);
   const [selected, setSelected] = useState<{ module: number; set: number } | null>(null);
   const [setListError, setSetListError] = useState<string | null>(null);
+
+  // Score reveal animation — counts up from 0 to the real percentage,
+  // then reveals the grade badge, so the result feels like it's landing
+  // rather than just appearing.
+  const [animatedPercentage, setAnimatedPercentage] = useState(0);
+  const [showGrade, setShowGrade] = useState(false);
 
   // Step 2: the actual quiz, once a set has been chosen
   const [questions, setQuestions] = useState<Question[] | null>(null);
@@ -111,6 +129,36 @@ export default function CbtQuizPage() {
   }, [questions, result, seconds === null]);
 
   const answeredCount = useMemo(() => Object.keys(answers).length, [answers]);
+
+  // Animate the score counting up from 0 to the real percentage whenever a
+  // new result comes in, then reveal the grade badge shortly after.
+  useEffect(() => {
+    if (!result) {
+      setAnimatedPercentage(0);
+      setShowGrade(false);
+      return;
+    }
+    const target = result.percentage;
+    const durationMs = 1100;
+    const start = performance.now();
+
+    let frame: number;
+    function tick(now: number) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / durationMs, 1);
+      // ease-out cubic, so it starts fast and settles gently rather than
+      // ticking up at a flat, mechanical rate
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setAnimatedPercentage(Math.round(eased * target));
+      if (progress < 1) {
+        frame = requestAnimationFrame(tick);
+      } else {
+        setShowGrade(true);
+      }
+    }
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [result]);
 
   async function submit() {
     if (submittingRef.current) return;
@@ -192,35 +240,82 @@ export default function CbtQuizPage() {
       byModule.get(s.module)!.push(s);
     }
 
+    const totalSets = sets.length;
+    const totalQuestions = sets.reduce((sum, s) => sum + s.count, 0);
+    const totalModules = byModule.size;
+
     return (
-      <div className="max-w-xl mx-auto p-8">
-        <h1 className="font-display text-2xl font-semibold mb-2">Choose a practice set</h1>
-        <p className="text-sm text-muted mb-6">
-          Each set is a focused, 30-question practice session. Work through every set in a module to cover all its questions — nothing repeats until you've seen everything.
-        </p>
-        <div className="flex flex-col gap-6">
-          {Array.from(byModule.entries()).map(([moduleNum, moduleSets]) => (
-            <div key={moduleNum}>
-              <p className="font-mono-brand text-xs text-muted mb-2 uppercase tracking-wide">{moduleTitle(moduleNum)}</p>
-              <div className="flex flex-col gap-3">
-                {moduleSets.map((s) => (
-                  <button
-                    key={`${s.module}-${s.set}`}
-                    onClick={() => setSelected({ module: s.module, set: s.set })}
-                    className="text-left bg-white border border-line rounded-2xl p-5 shadow-sm hover:border-ink2 transition-colors flex items-center justify-between"
+      <div className="max-w-2xl mx-auto p-8">
+        <div className="mb-9">
+          <p className="font-mono-brand text-[11px] tracking-[0.2em] text-muted uppercase mb-3">CSS121 · Introduction to Psychology</p>
+          <h1 className="font-display text-3xl font-bold mb-2">Choose a practice set</h1>
+          <p className="text-sm text-muted max-w-md leading-relaxed">
+            Each set is a focused, 30-question session. Work your way through every set in a module to cover all its questions — nothing repeats until you've seen everything.
+          </p>
+          <div className="flex items-center gap-3 mt-5 font-mono-brand text-[11px] text-muted">
+            <span>{totalModules} modules</span>
+            <span className="w-1 h-1 rounded-full bg-[#DCE1E6]" />
+            <span>{totalSets} sets</span>
+            <span className="w-1 h-1 rounded-full bg-[#DCE1E6]" />
+            <span>{totalQuestions} questions</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-10">
+          {Array.from(byModule.entries()).map(([moduleNum, moduleSets]) => {
+            const accent = MODULE_ACCENTS[moduleNum] ?? MODULE_ACCENTS[0];
+            return (
+              <div key={moduleNum}>
+                <div className="flex items-center gap-3 mb-4">
+                  <span
+                    className="font-mono-brand text-[10px] font-bold tracking-[0.22em] uppercase rounded-full px-3 py-1 border"
+                    style={{ color: accent, borderColor: accent, background: `${accent}14` }}
                   >
-                    <div>
-                      <p className="font-display text-lg font-semibold">Set {s.set}</p>
-                      <p className="font-mono-brand text-xs text-muted mt-1">
-                        {s.count} question{s.count === 1 ? "" : "s"} · about {Math.round((s.count * SECONDS_PER_QUESTION) / 60)} min
-                      </p>
-                    </div>
-                    <span className="font-display text-xl">→</span>
-                  </button>
-                ))}
+                    {moduleTitle(moduleNum)}
+                  </span>
+                  <div className="h-px flex-1" style={{ background: "#E4E1D8" }} />
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  {moduleSets.map((s) => (
+                    <button
+                      key={`${s.module}-${s.set}`}
+                      onClick={() => setSelected({ module: s.module, set: s.set })}
+                      className="group relative text-left bg-white border border-line rounded-2xl pl-7 pr-5 py-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md flex items-center gap-4 overflow-hidden"
+                      style={{ borderColor: "#E4E1D8" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.borderColor = accent)}
+                      onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#E4E1D8")}
+                    >
+                      {/* spine accent, like a tabbed folder edge */}
+                      <span className="absolute left-0 top-0 bottom-0 w-1.5" style={{ background: accent }} />
+
+                      {/* seal-style set number */}
+                      <span
+                        className="shrink-0 w-12 h-12 rounded-full border-2 flex items-center justify-center font-display text-xl font-bold transition-colors"
+                        style={{ borderColor: "#16233F", color: "#16233F" }}
+                      >
+                        {s.set}
+                      </span>
+
+                      <div className="flex-1">
+                        <p className="font-display text-xl font-bold">Set {s.set}</p>
+                        <p className="font-mono-brand text-xs text-muted mt-0.5">
+                          {s.count} question{s.count === 1 ? "" : "s"} · about {Math.round((s.count * SECONDS_PER_QUESTION) / 60)} min
+                        </p>
+                      </div>
+
+                      <span
+                        className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-display text-lg transition-colors"
+                        style={{ background: "#F3F5F4", color: "#16233F" }}
+                      >
+                        →
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     );
@@ -262,10 +357,18 @@ export default function CbtQuizPage() {
           </div>
           <div className="p-6">
             <div className="flex items-end gap-2 mb-4">
-              <span className="font-display text-6xl font-semibold">{result.percentage}%</span>
+              <span className="font-display text-6xl font-bold tabular-nums">{animatedPercentage}%</span>
               <span className="text-sm text-muted mb-2">({result.score}/{result.total} correct)</span>
             </div>
-            <span className="font-mono-brand text-xs font-semibold px-3 py-1.5 rounded-full" style={{ background: "#F3F5F4", color: gradeColor }}>
+            <span
+              className="font-mono-brand text-xs font-semibold px-3 py-1.5 rounded-full inline-block transition-all duration-500"
+              style={{
+                background: "#F3F5F4",
+                color: gradeColor,
+                opacity: showGrade ? 1 : 0,
+                transform: showGrade ? "scale(1)" : "scale(0.85)",
+              }}
+            >
               {result.grade}
             </span>
             <div className="slip-perforate h-4 mt-6 -mx-6" />
@@ -282,7 +385,7 @@ export default function CbtQuizPage() {
         </div>
 
         <div className="mt-10">
-          <h2 className="font-display text-xl font-semibold mb-4">Review your answers</h2>
+          <h2 className="font-display text-xl font-bold mb-4">Review your answers</h2>
           <div className="flex flex-col gap-4">
             {result.review.map((r, i) => {
               const yourLetter = r.selectedIndex >= 0 ? OPTION_LETTERS[r.selectedIndex] : null;
@@ -290,7 +393,7 @@ export default function CbtQuizPage() {
               return (
                 <div key={r.questionId} className="bg-white border border-line rounded-2xl p-5 shadow-sm">
                   <div className="flex items-start justify-between gap-3 mb-3">
-                    <p className="font-display text-base font-semibold">{i + 1}. {r.text}</p>
+                    <p className="font-display text-base font-bold">{i + 1}. {r.text}</p>
                     <span
                       className="shrink-0 font-mono-brand text-xs font-semibold px-2.5 py-1 rounded-full"
                       style={{ background: r.isCorrect ? "#E7F3EC" : "#F6E3E0", color: r.isCorrect ? "#2E7D5B" : "#B23A2E" }}
@@ -359,7 +462,7 @@ export default function CbtQuizPage() {
       <div className="flex justify-between items-center mb-5">
         <span className="font-mono-brand text-xs text-muted">{answeredCount} of {questions.length} answered</span>
         <span
-          className="font-mono-brand text-sm px-3 py-1.5 rounded-full"
+          className={`font-mono-brand text-sm px-3 py-1.5 rounded-full ${seconds < 60 ? "animate-pulse" : ""}`}
           style={{ background: seconds < 60 ? "#F6E3E0" : "#F3F5F4", color: seconds < 60 ? "#B23A2E" : "#16233F" }}
         >
           {formatTime(seconds)}
@@ -384,15 +487,22 @@ export default function CbtQuizPage() {
         </div>
       </div>
 
-      <div className="bg-white border border-line rounded-2xl p-6 mb-5 shadow-sm">
+      <style>{`
+        @keyframes qFadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      <div key={q.id} className="bg-white border border-line rounded-2xl p-6 mb-5 shadow-sm" style={{ animation: "qFadeIn 0.28s ease-out" }}>
         <p className="font-mono-brand text-xs text-muted mb-2">Question {idx + 1} of {questions.length}</p>
-        <h2 className="font-display text-xl font-semibold mb-5">{q.text}</h2>
+        <h2 className="font-display text-2xl font-bold mb-5">{q.text}</h2>
         <div className="flex flex-col gap-2.5">
           {q.options.map((opt, i) => (
             <button
               key={i}
               onClick={() => selectOption(q, i)}
-              className={`text-left px-4 py-3 rounded-lg border text-sm font-medium transition-colors ${
+              className={`text-left px-4 py-3 rounded-lg border text-sm font-medium transition-all active:scale-[0.98] ${
                 currentAnswer?.selectedDisplayIndex === i ? "bg-ink text-white border-ink" : "border-line hover:border-ink2"
               }`}
             >
