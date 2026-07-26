@@ -13,7 +13,11 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-export async function GET(_req: Request, { params }: { params: Promise<{ courseId: string }> }) {
+// Must match SET_SIZE in the modules route, so "Set 2" always means the
+// same 30 questions regardless of which endpoint is asked.
+const SET_SIZE = 30;
+
+export async function GET(req: Request, { params }: { params: Promise<{ courseId: string }> }) {
   const { courseId } = await params;
 
   const session = await getServerSession(authOptions);
@@ -21,6 +25,12 @@ export async function GET(_req: Request, { params }: { params: Promise<{ courseI
 
   const gate = await requireTier((session.user as any).id, "standard");
   if (!gate.ok) return NextResponse.json({ error: gate.reason }, { status: 403 });
+
+  const url = new URL(req.url);
+  const moduleParam = url.searchParams.get("module");
+  const setParam = url.searchParams.get("set");
+  const moduleFilter = moduleParam !== null ? parseInt(moduleParam, 10) : null;
+  const setNumber = setParam !== null ? parseInt(setParam, 10) : 1;
 
   // Spec 6.6: only an approved question bank is ever served to a student.
   const bank = await db.questionBank.findFirst({
@@ -30,16 +40,38 @@ export async function GET(_req: Request, { params }: { params: Promise<{ courseI
 
   if (!bank) return NextResponse.json({ error: "no_approved_question_bank" }, { status: 404 });
 
-  // Spec 4.2: question AND option order randomized per attempt.
+  let poolQuestions = bank.questions;
+  if (moduleFilter !== null && !Number.isNaN(moduleFilter)) {
+    poolQuestions = poolQuestions.filter((q) => (q.module ?? 0) === moduleFilter);
+  }
+
+  if (poolQuestions.length === 0) {
+    return NextResponse.json({ error: "no_questions_in_module" }, { status: 404 });
+  }
+
+  // Deterministic ordering (same sort every time) so "Set N" always refers
+  // to the exact same slice of questions — this is what guarantees full
+  // coverage across sets, rather than random sampling that could miss some.
+  const sortedPool = [...poolQuestions].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+
+  const start = (setNumber - 1) * SET_SIZE;
+  const end = Math.min(start + SET_SIZE, sortedPool.length);
+  const setQuestions = sortedPool.slice(start, end);
+
+  if (setQuestions.length === 0) {
+    return NextResponse.json({ error: "no_questions_in_module" }, { status: 404 });
+  }
+
+  // Within the fixed set, question order AND option order are still
+  // randomized per attempt — only WHICH questions belong to this set is
+  // fixed, not the order they're presented in.
   // correctOptionIndex is stripped — the client must never receive answers.
-  const questions = shuffle(bank.questions).map((q) => {
+  const questions = shuffle(setQuestions).map((q) => {
     const optionOrder = shuffle(q.options.map((_, i) => i));
     return {
       id: q.id,
       text: q.text,
       options: optionOrder.map((i) => q.options[i]),
-      // We send the shuffled order back so the attempt-submission endpoint
-      // can map the student's selected option back to the original index.
       optionOrder,
     };
   });

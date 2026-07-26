@@ -103,9 +103,11 @@ model Question {
   options            String[]
   correctOptionIndex Int
   explanation        String?
+  module             Int?
   questionBank       QuestionBank @relation(fields: [questionBankId], references: [id])
 
   @@index([questionBankId])
+  @@index([questionBankId, module])
 }
 
 model Attempt {

@@ -14,6 +14,12 @@ const answerSchema = z.object({
 
 const attemptSchema = z.object({
   courseId: z.string(),
+  module: z.number().int().nullable().optional(), // which module was practiced, if any (for records only now)
+  // Every question ID that was actually shown in this session (answered or
+  // skipped), as returned by the /questions endpoint. This is what scoring
+  // is based on — not the whole module — since sessions are randomly
+  // sampled down to a cap and can differ attempt to attempt.
+  sessionQuestionIds: z.array(z.string()),
   answers: z.array(answerSchema),
 });
 
@@ -26,32 +32,35 @@ export async function POST(req: Request) {
 
   const parsed = attemptSchema.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
-  const { courseId, answers } = parsed.data;
+  const { courseId, sessionQuestionIds, answers } = parsed.data;
 
   // Re-derive the *legitimate* question set server-side — the same approved
   // bank the /questions endpoint would have served for this course. We never
-  // trust that the questionIds in the request actually came from there.
+  // trust that questionIds in the request actually came from there.
   const bank = await db.questionBank.findFirst({
     where: { courseId, status: "approved" },
     include: { questions: true },
   });
   if (!bank) return NextResponse.json({ error: "no_approved_question_bank" }, { status: 404 });
 
-  const validQuestionIds = new Set(bank.questions.map((q) => q.id));
-  const byId = new Map(bank.questions.map((q) => [q.id, q]));
+  const bankQuestionsById = new Map(bank.questions.map((q) => [q.id, q]));
 
-  // Only answers whose questionId actually belongs to this course's approved
-  // bank are scored or counted — anything else submitted is silently ignored,
-  // not trusted, and not allowed to inflate or deflate the total.
-  const validAnswers = answers.filter((a) => validQuestionIds.has(a.questionId));
-  const answerByQuestionId = new Map(validAnswers.map((a) => [a.questionId, a]));
+  // Only IDs that genuinely belong to this course's approved bank are
+  // trusted as "part of this session" — anything forged or stale is dropped.
+  const scopedQuestions = sessionQuestionIds
+    .filter((id) => bankQuestionsById.has(id))
+    .map((id) => bankQuestionsById.get(id)!);
+
+  if (scopedQuestions.length === 0) {
+    return NextResponse.json({ error: "invalid_session" }, { status: 400 });
+  }
+
+  const scopedIds = new Set(scopedQuestions.map((q) => q.id));
+  const answerByQuestionId = new Map(
+    answers.filter((a) => scopedIds.has(a.questionId)).map((a) => [a.questionId, a])
+  );
 
   let correct = 0;
-  // Per-question review, built for EVERY question in the bank — including
-  // ones the student skipped — so the review screen can show "not answered"
-  // rather than silently omitting them. correctOptionIndex and explanation
-  // are only ever placed into this response AFTER grading has happened —
-  // they are never sent to the client beforehand.
   const review: {
     questionId: string;
     text: string;
@@ -62,12 +71,10 @@ export async function POST(req: Request) {
     explanation: string | null;
   }[] = [];
 
-  for (const q of bank.questions) {
+  for (const q of scopedQuestions) {
     const a = answerByQuestionId.get(q.id);
 
     if (!a) {
-      // Skipped question: show the options in their original stored order
-      // (there's no per-attempt shuffle to reconstruct since it was never answered).
       review.push({
         questionId: q.id,
         text: q.text,
@@ -84,9 +91,6 @@ export async function POST(req: Request) {
     const isCorrect = originalSelectedIndex === q.correctOptionIndex;
     if (isCorrect) correct += 1;
 
-    // Reconstruct the options in the exact order the student saw them
-    // during the quiz (a.optionOrder is the shuffle applied for this attempt),
-    // and translate the correct answer into that same display order.
     const displayOptions = a.optionOrder.map((originalIdx) => q.options[originalIdx]);
     const correctDisplayIndex = a.optionOrder.indexOf(q.correctOptionIndex);
 
@@ -101,10 +105,9 @@ export async function POST(req: Request) {
     });
   }
 
-  // Scored against the FULL question count in the bank — skipped questions
-  // count against you, same as real NOUN/JAMB CBT scoring. This also means
-  // "total" here is the bank size, not just how many were answered.
-  const total = bank.questions.length;
+  // Scored against exactly the session that was shown — this session's own
+  // question count, not the whole module or course pool.
+  const total = scopedQuestions.length;
   const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
 
   // Spec 6.3 rule 2: attempts are immutable and scored authoritatively server-side.
