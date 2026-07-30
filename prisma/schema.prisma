@@ -44,17 +44,22 @@ model Department {
 
 model Course {
   id               String            @id @default(cuid())
-  departmentId     String
+  departmentId     String?
   code             String            @unique
   title            String
+  isGST            Boolean           @default(false)
+  level            Int
+  semester         Semester
   attempts         Attempt[]
-  department       Department        @relation(fields: [departmentId], references: [id])
+  department       Department?       @relation(fields: [departmentId], references: [id])
   pastQuestionSets PastQuestionSet[]
   questionBanks    QuestionBank[]
   summaries        Summary[]
   tutorials        TutorialContent[]
 
   @@index([departmentId])
+  @@index([isGST])
+  @@index([level, semester])
 }
 
 model Payment {
@@ -300,4 +305,9 @@ enum RequestStatus {
   submitted
   in_progress
   resolved
+}
+
+enum Semester {
+  first
+  second
 }
