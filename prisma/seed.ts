@@ -27,6 +27,8 @@ async function main() {
       code: "CSC 103",
       title: "Introduction to Computer Science",
       departmentId: department.id,
+      level: 100,
+      semester: "first",
     },
   });
 
