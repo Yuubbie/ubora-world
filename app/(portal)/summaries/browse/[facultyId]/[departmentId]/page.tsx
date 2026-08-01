@@ -98,7 +98,7 @@ export default async function SummariesDepartmentListPage({
                         {bySemester.get(sem)!.map((s) => (
                           <a
                             key={s.id}
-                            href={s.fileUrl}
+                            href={`/api/summaries/${s.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="card-premium p-6 block hover:border-gold/40 transition-colors"

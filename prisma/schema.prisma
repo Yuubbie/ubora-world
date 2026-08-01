@@ -149,6 +149,7 @@ model Summary {
   topicCount Int
   pageCount  Int
   fileUrl    String
+  fileData   Bytes?
   status     ContentStatus @default(draft)
   approvedAt DateTime?
   approvedBy String?
