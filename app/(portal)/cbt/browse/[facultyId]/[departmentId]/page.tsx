@@ -32,7 +32,14 @@ export default async function DepartmentCourseListPage({
 
   const courses = await db.course.findMany({
     where: {
-      OR: [{ departmentId: department.id }, { isGST: true }],
+      OR: [
+        // GST courses appear in every department automatically.
+        { isGST: true },
+        // Cross-listed courses: a course owned by one department but taught
+        // to another (e.g. POL111 is owned by Political Science and taught
+        // to Criminology) appears in every department linked to it.
+        { departments: { some: { departmentId: department.id } } },
+      ],
     },
     include: {
       questionBanks: { where: { status: "approved" }, select: { id: true } },
