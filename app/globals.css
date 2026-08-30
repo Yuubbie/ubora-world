@@ -1,7 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,100..900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+  ============================================================
+  TYPE SYSTEM - three families, five roles, no exceptions.
+  ============================================================
+
+    Fraunces        display serif   headings only
+    Inter           body sans       all prose
+    IBM Plex Mono   labels          eyebrows, meta, codes, counts
+
+  RULES:
+    1. Never italic. Anywhere. The italic axis is not even loaded.
+    2. Never use Inter for a heading or Fraunces for body copy.
+    3. Gold is for eyebrows and buttons - never inside a heading.
+    4. Use the .type-* classes below. Do not hand-roll font sizes
+       and weights on a page; that is what caused the drift.
+*/
 
 body {
   background: #F3F5F4;
@@ -28,6 +45,30 @@ body {
 }
 
 @layer components {
+  /* ------------------------------------------------------------ type scale
+     Every piece of text on every screen uses one of these. */
+
+  .type-page-title {
+    @apply font-display text-3xl md:text-4xl font-bold tracking-tight;
+  }
+  .type-section-title {
+    @apply font-display text-xl font-bold tracking-tight;
+  }
+  .type-card-title {
+    @apply font-display text-base font-semibold tracking-tight;
+  }
+  .type-body {
+    @apply text-sm leading-relaxed;
+  }
+  .type-meta {
+    @apply font-mono-brand text-xs text-muted;
+  }
+  .eyebrow {
+    @apply font-mono-brand text-xs tracking-[0.2em] uppercase;
+  }
+
+  /* --------------------------------------------------------------- buttons
+     Three levels only. One gold button per screen. */
   .btn-primary {
     @apply inline-flex items-center justify-center rounded-xl bg-ink px-6 py-3 font-semibold text-paper shadow-button transition-all duration-200 ease-out;
   }
@@ -48,6 +89,21 @@ body {
     @apply translate-y-0 scale-[0.98];
   }
 
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-xl border border-line bg-white px-6 py-3 font-semibold text-ink transition-all duration-200 ease-out;
+  }
+  .btn-ghost:hover {
+    @apply border-gold/40 -translate-y-0.5;
+  }
+  .btn-ghost:active {
+    @apply translate-y-0 scale-[0.98];
+  }
+
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+
+  /* ----------------------------------------------------------------- cards */
   .card-premium {
     @apply relative rounded-3xl border border-line bg-white shadow-card transition-all duration-200 ease-out;
   }
@@ -56,8 +112,51 @@ body {
     border-color: rgba(201, 154, 46, 0.4);
   }
 
-  .eyebrow {
-    @apply font-mono-brand text-xs tracking-[0.2em] uppercase;
+  /* Use where the card is not clickable, so it does not lift and imply
+     an action that is not there. */
+  .card-static {
+    @apply relative rounded-3xl border border-line bg-white shadow-card;
+  }
+
+  /* ----------------------------------------------------------------- pills */
+  .tag {
+    @apply eyebrow inline-block rounded-full border border-line bg-paper px-2.5 py-1 text-[10px] text-muted;
+  }
+  .tag-gold {
+    @apply eyebrow inline-block rounded-full border border-gold/30 bg-gold/10 px-2.5 py-1 text-[10px] text-golddeep;
+  }
+
+  /* --------------------------------------------------------------- notices */
+  .notice {
+    @apply card-static px-5 py-4 flex items-center justify-between gap-4 flex-wrap;
+  }
+  .notice-warn {
+    @apply border-coral/30 bg-coral/5;
+  }
+  .notice-warn-text {
+    @apply text-sm text-coral font-medium;
+  }
+  .notice-info {
+    @apply border-gold/30 bg-gold/5;
+  }
+  .notice-info-text {
+    @apply text-sm text-golddeep font-medium;
+  }
+
+  /* ----------------------------------------------------------------- forms */
+  .field-label {
+    @apply eyebrow text-muted mb-2 block;
+  }
+  .field-input {
+    @apply w-full rounded-xl border border-line bg-white px-4 py-3 text-ink transition-colors duration-200;
+  }
+  .field-input:focus {
+    @apply border-gold outline-none;
+  }
+
+  /* ------------------------------------------------------------ page shell */
+  .page-shell {
+    @apply max-w-4xl mx-auto px-6 py-14;
   }
 }
 
@@ -128,16 +227,33 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
 .stat-card {
   @apply rounded-2xl bg-white p-6 shadow-card;
 }
 
 .stat-number {
-  @apply text-3xl md:text-4xl font-bold tracking-tight mb-1;
-  font-family: 'Fraunces', serif;
+  @apply font-display text-3xl md:text-4xl font-bold tracking-tight mb-1;
   font-optical-sizing: auto;
 }
 
 .stat-label {
   @apply text-sm text-muted;
+}
+
+/*
+  ITALIC GUARD - must stay at the very end of this file.
+
+  This cannot live in @layer base: Tailwind emits its own .italic utility
+  after the base layer, and with equal specificity the later rule wins, so
+  a base-layer override is silently ignored. Placed here, unlayered and
+  last, it wins on source order.
+
+  The real fix is not using italic markup in the first place; this only
+  stops a stray class from reintroducing it.
+*/
+em,
+i,
+.italic {
+  font-style: normal;
 }
