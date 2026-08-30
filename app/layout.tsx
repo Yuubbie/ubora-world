@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import Providers from "@/components/Providers";
 import ServiceWorkerRegistrar from "@/components/ServiceWorkerRegistrar";
+import InstallAppBanner from "@/components/InstallAppBanner";
 
 export const metadata: Metadata = {
   title: "Ubora World",
@@ -27,6 +28,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Providers>{children}</Providers>
         <ServiceWorkerRegistrar />
+        {/* Site-wide so it reaches visitors on the landing page, not just
+            signed-in students. Renders nothing when already installed. */}
+        <InstallAppBanner />
       </body>
     </html>
   );
