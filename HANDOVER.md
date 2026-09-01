@@ -14,14 +14,21 @@ follow its "what to build next" section, follow this file instead.
 - **Payments**: Paystack (test mode wired up, live keys not yet added)
 - **Styling**: Tailwind CSS
 - **Validation**: Zod
-- **Deploy**: Vercel (main branch auto-deploys; a `dev` branch also exists
-  remotely but has no unmerged commits — safe to ignore or delete)
+- **PWA**: manifest + service worker + install-prompt banner (see
+  "PWA support" section below)
+- **Deploy**: Vercel (main branch auto-deploys)
+
+Note on branches: `dev` and `main` were previously diverged with unrelated
+work on each side. They've now been merged together on `main`. Check
+`git branch -a` before assuming `dev` is stale again — it was actively
+used at least once already.
 
 ## Actual current status (not what the README says)
 
 The README describes "Phase 1" (auth + schema-only subscriptions + one
 faculty's content). That's stale. Phase 2 has already been built and merged
-in (see `PHASE2_INSTRUCTIONS.md` for what it added). Real status:
+in (see `PHASE2_INSTRUCTIONS.md` for what it added), and further work has
+landed since. Real status:
 
 **Built and working:**
 - Auth (signup/login, NextAuth sessions, bcrypt passwords)
@@ -36,9 +43,18 @@ in (see `PHASE2_INSTRUCTIONS.md` for what it added). Real status:
   (not public static files — this was a deliberate security fix, see
   commits `501ec81` and `24c0632`)
 - Multiple courses fully seeded with content: GST101, GST102, GST103,
-  GST105, GST107, CSS111, CSS121, CSS133 — each with a question bank and
-  a course summary
+  GST105, GST107, CSS111, CSS121, CSS133, POL111 — each with a question
+  bank and a course summary
 - Faculty/department browsing for both CBT practice and summaries
+- **Course cross-listing**: courses can now belong to more than one
+  department (schema migration `20260829115702_add_course_department_crosslisting`
+  and `crosslist-courses.js`). If you're adding a new course, check whether
+  it should be cross-listed rather than duplicated.
+- **PWA support**: `app/manifest.ts`, `public/sw.js`, app icons in
+  `public/icons/`, and an install-prompt banner
+  (`components/InstallAppBanner.tsx`) registered via
+  `components/ServiceWorkerRegistrar.tsx`. The app is installable on
+  mobile/desktop.
 - Waitlist signup flow
 
 **Schema exists but NOT built out (no UI/routes yet):**
@@ -90,10 +106,11 @@ Demo logins (from seed data):
 
 Course content (summaries, question banks) has been added course-by-course
 via one-off scripts at the repo root (`add-gst101-summary.js`,
-`add-css111-summary.js`, etc.) and in `prisma/seed-data/`. These are ad hoc,
-not a reusable pipeline — if more courses need to be added regularly, this
-is a good candidate for consolidating into a single script or admin UI
-rather than continuing to write a new one-off file per course.
+`add-css111-summary.js`, `add-pol111-summary.js`, etc.) and in
+`prisma/seed-data/`. These are ad hoc, not a reusable pipeline — if more
+courses need to be added regularly, this is a good candidate for
+consolidating into a single script or admin UI rather than continuing to
+write a new one-off file per course.
 
 ## Subscription expiry
 
@@ -111,4 +128,4 @@ existing in the repo doesn't mean it's being executed anywhere.
 3. Consider consolidating the course-content-authoring scripts into a
    single reusable tool if more courses are coming.
 4. Confirm/set up the subscription-expiry cron job if not already running.
-5. Delete or merge the stale `origin/dev` branch to reduce confusion.
+5. Test the PWA install flow on a real mobile device if not already done.
