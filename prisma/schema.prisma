@@ -33,25 +33,27 @@ model Faculty {
 }
 
 model Department {
-  id        String   @id @default(cuid())
-  facultyId String
-  name      String
-  courses   Course[]
-  faculty   Faculty  @relation(fields: [facultyId], references: [id])
+  id                 String             @id @default(cuid())
+  facultyId          String
+  name               String
+  courses            Course[]
+  crossListedCourses CourseDepartment[]
+  faculty            Faculty            @relation(fields: [facultyId], references: [id])
 
   @@index([facultyId])
 }
 
 model Course {
-  id               String            @id @default(cuid())
+  id               String             @id @default(cuid())
   departmentId     String?
-  code             String            @unique
+  code             String             @unique
   title            String
-  isGST            Boolean           @default(false)
+  isGST            Boolean            @default(false)
   level            Int
   semester         Semester
   attempts         Attempt[]
-  department       Department?       @relation(fields: [departmentId], references: [id])
+  department       Department?        @relation(fields: [departmentId], references: [id])
+  departments      CourseDepartment[]
   pastQuestionSets PastQuestionSet[]
   questionBanks    QuestionBank[]
   summaries        Summary[]
@@ -60,6 +62,23 @@ model Course {
   @@index([departmentId])
   @@index([isGST])
   @@index([level, semester])
+}
+
+// Cross-listing. A course is OWNED by one department (Course.departmentId)
+// but may be TAUGHT to students of several. POL111 is owned by Political
+// Science and taught to Criminology; ECO121 by Economics, likewise.
+// GST courses are NOT listed here - isGST: true already makes them appear
+// in every department, and stays correct when new departments are added.
+model CourseDepartment {
+  id           String     @id @default(cuid())
+  courseId     String
+  departmentId String
+  course       Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, departmentId])
+  @@index([courseId])
+  @@index([departmentId])
 }
 
 model Payment {
