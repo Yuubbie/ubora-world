@@ -1,0 +1,76 @@
+// add-css112-summary.js
+// Creates the Summary record for CSS112 (Sociology of Law).
+//
+// SECURITY: same pattern as the other add-*-summary.js scripts - the PDF
+// is read from the non-public private-uploads/ folder and its raw bytes
+// go straight into Summary.fileData, which is what the authenticated
+// route at app/api/summaries/[summaryId]/route.ts serves from. fileUrl
+// is set to a non-resolvable placeholder, never a real public path.
+//
+// Status is set to 'draft', consistent with the other summary scripts.
+//
+// BEFORE RUNNING:
+//   1. Place the finished PDF at:
+//        C:\Users\HP\Desktop\ubora-world\private-uploads\css112-summary.pdf
+//   2. Confirm CSS112 has already been seeded (seed-css112.js).
+//
+// Run from the project root:
+//   node add-css112-summary.js
+
+const { PrismaClient } = require('@prisma/client');
+const fs = require('fs');
+const path = require('path');
+const prisma = new PrismaClient();
+
+const PDF_PATH = path.join(process.cwd(), 'private-uploads', 'css112-summary.pdf');
+
+async function main() {
+  const course = await prisma.course.findUnique({ where: { code: 'CSS112' } });
+  if (!course) {
+    console.error('CSS112 course not found. Run seed-css112.js first.');
+    await prisma.$disconnect();
+    process.exit(1);
+  }
+
+  const existing = await prisma.summary.findFirst({ where: { courseId: course.id } });
+  if (existing) {
+    console.log('A summary already exists for CSS112:', existing.id);
+    console.log('Skipping creation to avoid duplicates.');
+    await prisma.$disconnect();
+    return;
+  }
+
+  if (!fs.existsSync(PDF_PATH)) {
+    console.error(`PDF not found at expected path: ${PDF_PATH}`);
+    console.error('Place css112-summary.pdf in the private-uploads folder and re-run.');
+    await prisma.$disconnect();
+    process.exit(1);
+  }
+
+  const buffer = fs.readFileSync(PDF_PATH);
+  console.log(`Read ${buffer.length} bytes from ${PDF_PATH}`);
+
+  const summary = await prisma.summary.create({
+    data: {
+      courseId: course.id,
+      title: 'CSS112 Course Summary - Sociology of Law',
+      topicCount: 25,
+      pageCount: 6,
+      fileUrl: 'db-stored:css112-summary',
+      fileData: buffer,
+      status: 'draft',
+    },
+  });
+
+  console.log('Summary created:', summary.id);
+  console.log('fileData bytes stored:', buffer.length);
+  console.log('fileUrl (placeholder, not servable):', summary.fileUrl);
+  console.log('Status: draft - go to /admin/content to review and approve.');
+  await prisma.$disconnect();
+}
+
+main().catch(async (err) => {
+  console.error('Summary seed failed:', err);
+  await prisma.$disconnect();
+  process.exit(1);
+});

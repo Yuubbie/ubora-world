@@ -26,7 +26,7 @@ const prisma = new PrismaClient();
 
 const DRY_RUN = process.argv.includes('--dry-run');
 
-// Confirmed live 29 Aug 2026.
+// Confirmed live 29 Aug 2026. Computer Science added 2 Sep 2026.
 const DEPT = {
   CRIMINOLOGY: 'cms7arwzd0002sgbyyjev2dn1',
   ECONOMICS: 'cms7arxjf0004sgbyb4vqx8et',
@@ -36,6 +36,7 @@ const DEPT = {
   PCR: 'cms7arz16000csgby9l8g60gw',
   TOURISM: 'cms7arzef000esgby3zl6aotz',
   DEV_STUDIES: 'cms7arzrt000gsgbybgjlmkqc',
+  COMPUTER_SCIENCE: 'cmrcnngy20002100ylo7snl5m',
 };
 
 /**
@@ -46,6 +47,9 @@ const CROSS_LISTINGS = [
   { code: 'POL111', departments: [DEPT.CRIMINOLOGY] },
   { code: 'ECO121', departments: [DEPT.CRIMINOLOGY] },
   { code: 'PCR111', departments: [DEPT.CRIMINOLOGY] },
+  { code: 'CIT104', departments: [DEPT.CRIMINOLOGY] },
+  { code: 'POL126', departments: [DEPT.CRIMINOLOGY] },
+  { code: 'PCR114', departments: [DEPT.CRIMINOLOGY] },
 ];
 
 async function main() {
