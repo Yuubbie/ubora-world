@@ -50,6 +50,9 @@ const CROSS_LISTINGS = [
   { code: 'CIT104', departments: [DEPT.CRIMINOLOGY] },
   { code: 'POL126', departments: [DEPT.CRIMINOLOGY] },
   { code: 'PCR114', departments: [DEPT.CRIMINOLOGY] },
+  { code: 'PCR274', departments: [DEPT.CRIMINOLOGY] },
+  { code: 'LAW212', departments: [DEPT.CRIMINOLOGY] },
+  { code: 'MAC212', departments: [DEPT.CRIMINOLOGY] },
 ];
 
 async function main() {
