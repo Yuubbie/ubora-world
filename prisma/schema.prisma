@@ -8,6 +8,7 @@ datasource db {
 }
 
 model User {
+  tutorChatMessages TutorChatMessage[]
   id                String             @id @default(cuid())
   fullName          String
   email             String?            @unique
@@ -44,6 +45,7 @@ model Department {
 }
 
 model Course {
+  tutorChatMessages TutorChatMessage[]
   id               String             @id @default(cuid())
   departmentId     String?
   code             String             @unique
@@ -330,4 +332,22 @@ enum RequestStatus {
 enum Semester {
   first
   second
+}
+
+model TutorChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  role      ChatRole
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+
+  @@index([userId, courseId, createdAt])
+}
+
+enum ChatRole {
+  user
+  assistant
 }
