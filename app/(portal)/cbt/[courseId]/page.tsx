@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 type SetInfo = { module: number; set: number; count: number };
 type Question = { id: string; text: string; options: string[]; optionOrder: number[] };
@@ -252,6 +253,13 @@ export default function CbtQuizPage() {
           <p className="text-sm text-muted max-w-md leading-relaxed">
             Each set is a focused, 30-question session. Work your way through every set in a module to cover all its questions — nothing repeats until you've seen everything.
           </p>
+          <Link
+            href={`/tutor/${courseId}`}
+            className="inline-flex items-center gap-1.5 mt-4 text-sm font-medium text-[#16233F] underline underline-offset-4 hover:text-[#2E7D5B] transition-colors"
+          >
+            Ask the Tutor
+            <span aria-hidden="true">→</span>
+          </Link>
           <div className="flex items-center gap-3 mt-5 font-mono-brand text-[11px] text-muted">
             <span>{totalModules} modules</span>
             <span className="w-1 h-1 rounded-full bg-[#DCE1E6]" />
