@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import BackLink from "@/components/BackLink";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,6 +27,9 @@ export default function LoginPage() {
         className="absolute w-[500px] h-[500px] rounded-full opacity-[0.12] blur-3xl pointer-events-none"
         style={{ top: "-120px", right: "-120px", background: "radial-gradient(circle, #C99A2E, transparent)" }}
       />
+      <div className="relative mb-6">
+        <BackLink href="/" label="Home" />
+      </div>
       <a href="/" className="relative flex items-center gap-3 mb-8 animate-fade-up">
         <img src="/brand/ubora-logo.jpeg" alt="Ubora World" className="h-12 w-12 rounded-xl object-cover" />
         <span className="font-display font-bold text-2xl tracking-tight">Ubora World</span>

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { TIER_PRICES_KOBO } from "@/lib/config";
+import BackLink from "@/components/BackLink";
 
 const TIERS: { id: "basic" | "standard" | "premium"; label: string; features: string[]; highlight?: boolean }[] = [
   { id: "basic", label: "Basic", features: ["Past questions", "Course summaries (view only)"] },
@@ -31,6 +32,9 @@ export default function SubscribeForm() {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-14">
+      <div className="mb-3">
+        <BackLink href="/dashboard" label="Dashboard" />
+      </div>
       <p className="eyebrow text-golddeep mb-3 animate-fade-up" style={{ opacity: 0 }}>
         Pricing
       </p>

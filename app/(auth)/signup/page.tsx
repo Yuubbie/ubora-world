@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import BackLink from "@/components/BackLink";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -28,6 +29,9 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
+      <div className="mb-6">
+        <BackLink href="/" label="Home" />
+      </div>
       <a href="/" className="flex items-center gap-3 mb-8">
         <img src="/brand/ubora-logo.jpeg" alt="Ubora World" className="h-12 w-12 rounded-xl object-cover" />
         <span className="font-display font-bold text-2xl tracking-tight">Ubora World</span>

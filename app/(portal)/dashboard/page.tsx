@@ -124,6 +124,7 @@ export default async function DashboardPage() {
       <div className="flex-1 bg-dot-grid min-h-screen">
         <div className="page-shell">
           <PageHeader
+            back={{ href: "/", label: "Home" }}
             eyebrow="Dashboard"
             title={firstName ? `${getGreeting()}, ${firstName}` : getGreeting()}
             subtitle={
