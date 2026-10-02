@@ -114,23 +114,23 @@ export default async function HomePage() {
           This is the real app, not a mock. Use the demo student, then follow the path a NOUN undergraduate actually takes: portal, paper, summary, tutor. Official TMAs and courseware stay on NOUN eLearn.
         </p>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {[
-            ["01", "Log in", "Open the live student portal. Demo: demo.student@uboraworld.test / Password123!", "/login", false],
-            ["02", "Sit CBT", "Faculty, then department, then the 30-question set for the course you are sitting.", "/cbt", false],
-            ["03", "Read summaries", "Cram notes for the same course, gated to a logged-in pass.", "/summaries", false],
-            ["04", "NOUN eLearn", "Official LMS: TMAs, course materials, facilitation. Opens NOUN, not Ubora.", "https://elearn.nou.edu.ng/", true],
-          ].map(([n, t, d, href, external]) =>
-            external ? (
-              <a key={t} href={href} target="_blank" rel="noopener noreferrer" className="card-premium p-6 no-underline">
-                <p className="font-mono-brand text-golddeep">{n}</p>
-                <h3 className="type-card-title mt-2">{t}</h3>
-                <p className="mt-3 type-body text-muted">{d}</p>
+          {([
+            { n: "01", t: "Log in", d: "Open the live student portal. Demo: demo.student@uboraworld.test / Password123!", href: "/login", external: false },
+            { n: "02", t: "Sit CBT", d: "Faculty, then department, then the 30-question set for the course you are sitting.", href: "/cbt", external: false },
+            { n: "03", t: "Read summaries", d: "Cram notes for the same course, gated to a logged-in pass.", href: "/summaries", external: false },
+            { n: "04", t: "NOUN eLearn", d: "Official LMS: TMAs, course materials, facilitation. Opens NOUN, not Ubora.", href: "https://elearn.nou.edu.ng/", external: true },
+          ] as const).map((step) =>
+            step.external ? (
+              <a key={step.t} href={step.href} target="_blank" rel="noopener noreferrer" className="card-premium p-6 no-underline">
+                <p className="font-mono-brand text-golddeep">{step.n}</p>
+                <h3 className="type-card-title mt-2">{step.t}</h3>
+                <p className="mt-3 type-body text-muted">{step.d}</p>
               </a>
             ) : (
-              <Link key={t} href={href} className="card-premium p-6 no-underline">
-                <p className="font-mono-brand text-golddeep">{n}</p>
-                <h3 className="type-card-title mt-2">{t}</h3>
-                <p className="mt-3 type-body text-muted">{d}</p>
+              <Link key={step.t} href={step.href} className="card-premium p-6 no-underline">
+                <p className="font-mono-brand text-golddeep">{step.n}</p>
+                <h3 className="type-card-title mt-2">{step.t}</h3>
+                <p className="mt-3 type-body text-muted">{step.d}</p>
               </Link>
             )
           )}
