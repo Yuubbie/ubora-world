@@ -111,7 +111,7 @@ export default async function DashboardPage() {
   const actions = [
     { href: "/cbt", label: "Start CBT Practice", ready: true },
     { href: "/summaries", label: "Open Course Summaries", ready: true },
-    { href: null, label: "Browse Past Questions", ready: false },
+    { href: "/cbt", label: "Ask the Tutor", ready: true },
     { href: null, label: "Watch Tutorials", ready: false },
   ];
 

@@ -1,83 +1,230 @@
 import Link from "next/link";
+import { db } from "@/lib/db";
+import { TIER_PRICES_KOBO } from "@/lib/config";
 
-export default function RootPage() {
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+function naira(kobo: number) {
+  return (kobo / 100).toLocaleString("en-NG");
+}
+
+const TIERS: { id: "basic" | "standard" | "premium"; label: string; features: string[]; highlight?: boolean }[] = [
+  { id: "basic", label: "Basic", features: ["Past questions", "Course summaries (view only)"] },
+  { id: "standard", label: "Standard", features: ["Everything in Basic", "CBT practice engine"], highlight: true },
+  { id: "premium", label: "Premium", features: ["Everything in Standard", "Video & audio tutorials", "Downloadable summaries"] },
+];
+
+export default async function HomePage() {
+  const [liveCourseCount, questionCount, summaryCount, liveCourses] = await Promise.all([
+    db.course.count({ where: { questionBanks: { some: { status: "approved" } } } }),
+    db.question.count({ where: { questionBank: { status: "approved" } } }),
+    db.summary.count({ where: { status: "approved" } }),
+    db.course.findMany({
+      where: { questionBanks: { some: { status: "approved" } } },
+      select: { code: true, title: true, isGST: true, level: true, semester: true, department: { select: { name: true } } },
+      orderBy: { code: "asc" },
+    }),
+  ]);
+
   return (
-    <div className="min-h-[100dvh] md:min-h-screen flex flex-col">
-      <div className="flex-1 grid md:grid-cols-2">
-        <div className="slip-divider bg-grain relative overflow-hidden flex flex-col justify-center px-6 py-6 md:px-14 md:py-12 bg-ink text-white">
-          <div
-            className="absolute w-[380px] h-[380px] rounded-full opacity-20 blur-3xl pointer-events-none"
-            style={{ top: "-100px", left: "-100px", background: "radial-gradient(circle, #C99A2E, transparent)" }}
-          />
-          <div className="relative z-10">
-            <div className="flex items-center gap-2.5 mb-3 md:mb-7 animate-fade-up" style={{ opacity: 0 }}>
-              <img src="/brand/ubora-icon-cream.svg" alt="Ubora World" className="h-8 w-8 md:h-11 md:w-11 rounded-full object-cover" />
-              <span className="font-display font-bold text-lg md:text-xl tracking-tight">Ubora World</span>
-            </div>
-            <p className="eyebrow mb-2 md:mb-4 text-gold animate-fade-up" style={{ animationDelay: "0.1s", opacity: 0 }}>
-              NOUN - WAEC - NECO - JAMB
-            </p>
-            <h1 className="font-display text-2xl md:text-4xl lg:text-5xl font-bold leading-[1.15] md:leading-[1.1] tracking-tight mb-2.5 md:mb-4 max-w-xl animate-fade-up" style={{ animationDelay: "0.15s", opacity: 0 }}>
-              Everything between you and your <span className="italic font-medium text-gold">next result slip</span>.
+    <div className="min-h-[100dvh] bg-paper text-ink">
+      <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/90 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 md:px-8">
+          <Link href="/" className="flex items-center gap-2.5">
+            <img src="/brand/ubora-logo.jpeg" alt="Ubora World" className="h-9 w-9 rounded-xl object-cover" />
+            <span className="font-display text-lg font-semibold tracking-tight">Ubora World</span>
+          </Link>
+          <nav className="hidden items-center gap-7 text-sm text-muted md:flex">
+            <a href="#walkthrough" className="hover:text-ink">Walkthrough</a>
+            <a href="#courses" className="hover:text-ink">Courses</a>
+            <a href="#pricing" className="hover:text-ink">Pricing</a>
+            <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="hover:text-ink">
+              NOUN eLearn
+            </a>
+          </nav>
+          <div className="flex items-center gap-2">
+            <Link href="/login" className="btn-ghost btn-sm">Log in</Link>
+            <Link href="/signup" className="btn-gold btn-sm hidden sm:inline-flex">Create account</Link>
+          </div>
+        </div>
+      </header>
+
+      <section className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-grain" />
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-12 md:grid-cols-2 md:px-8 md:py-20">
+          <div>
+            <p className="eyebrow text-golddeep mb-4">NOUN · WAEC · NECO · JAMB</p>
+            <h1 className="font-display text-4xl font-bold leading-[1.12] tracking-tight md:text-6xl">
+              Everything between you and your next result slip.
             </h1>
-            <p className="text-white/80 text-sm md:text-lg max-w-md mb-3 md:mb-8 leading-normal md:leading-relaxed animate-fade-up" style={{ animationDelay: "0.2s", opacity: 0 }}>
-              CBT practice, course summaries, past questions and tutorial videos -
-              organized by faculty, available on your phone, one subscription per semester.
+            <p className="mt-5 max-w-lg text-base leading-7 text-muted md:text-lg">
+              CBT practice, course summaries, and a tutor you can ask on the go — organised by faculty, department, course, level and semester. One pass. Your phone. The paper you actually sit.
             </p>
-            <div className="hidden md:flex flex-wrap gap-2.5 font-mono-brand text-xs animate-fade-up" style={{ animationDelay: "0.25s", opacity: 0 }}>
-              <span className="flex items-center px-3 py-1.5 rounded-full border border-white/25 transition-colors duration-150 hover:border-gold hover:text-gold">
-                <span className="w-1.5 h-1.5 rounded-full bg-gold inline-block mr-2" />Past Questions
-              </span>
-              <span className="flex items-center px-3 py-1.5 rounded-full border border-white/25 transition-colors duration-150 hover:border-gold hover:text-gold">
-                <span className="w-1.5 h-1.5 rounded-full bg-gold inline-block mr-2" />CBT Simulator
-              </span>
-              <span className="flex items-center px-3 py-1.5 rounded-full border border-white/25 transition-colors duration-150 hover:border-gold hover:text-gold">
-                <span className="w-1.5 h-1.5 rounded-full bg-gold inline-block mr-2" />Video &amp; Audio Tutorials
-              </span>
-              <span className="flex items-center px-3 py-1.5 rounded-full border border-white/25 transition-colors duration-150 hover:border-gold hover:text-gold">
-                <span className="w-1.5 h-1.5 rounded-full bg-gold inline-block mr-2" />Course Summaries
-              </span>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/signup" className="btn-gold">Create an account</Link>
+              <Link href="/login" className="btn-primary">Log in</Link>
+              <Link href="/cbt" className="btn-ghost">Sit CBT</Link>
+              <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="btn-ghost">
+                NOUN eLearn · TMAs
+              </a>
+            </div>
+            <div className="mt-10 grid max-w-md grid-cols-3 gap-6">
+              {[
+                [String(liveCourseCount), "live courses"],
+                [questionCount.toLocaleString("en-NG"), "practice items"],
+                [String(summaryCount), "summaries"],
+              ].map(([n, l]) => (
+                <div key={l}>
+                  <p className="font-display text-3xl font-bold text-golddeep">{n}</p>
+                  <p className="mt-1 font-mono-brand text-[11px] uppercase tracking-[0.16em] text-muted">{l}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="card-static overflow-hidden p-6 md:p-8">
+            <p className="eyebrow text-golddeep">Exam ticket · live banks</p>
+            <p className="mt-3 font-display text-2xl font-bold">Faculty. Department. Then the paper.</p>
+            <p className="mt-2 text-sm text-muted">Same CBT you already know: 30-question module sets, server-side scoring, Ask the Tutor on the course page.</p>
+            <div className="mt-6 space-y-3">
+              {[
+                "Log in with your real student account",
+                "Pick faculty → department → course",
+                "Sit a 30-question set. Then ask a follow-up.",
+              ].map((line, i) => (
+                <div key={line} className="flex items-start gap-3 rounded-2xl bg-paper px-4 py-3 text-sm">
+                  <span className="font-mono-brand text-golddeep">0{i + 1}</span>
+                  <span>{line}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/login" className="btn-gold btn-sm">Student login</Link>
+              <Link href="/cbt" className="btn-ghost btn-sm">Open CBT</Link>
             </div>
           </div>
         </div>
-        <div className="bg-dot-grid relative overflow-hidden flex flex-col items-center justify-center px-6 py-6 md:px-8 md:py-12 gap-2.5 md:gap-4 bg-paper">
-          <svg
-            viewBox="0 0 240 240"
-            className="absolute pointer-events-none"
-            style={{ width: "300px", height: "300px", top: "-50px", right: "-50px", opacity: 0.05 }}
-          >
-            <path
-              d="M78,58 L78,150 C78,181 103,198 133,198 C163,198 184,179 184,148 L184,108 L152,130 L202,54"
-              fill="none"
-              stroke="#16233F"
-              strokeWidth="30"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <div className="relative z-10 flex flex-col items-center gap-2 md:gap-3.5 w-full">
-            <p className="eyebrow text-muted mb-0.5 md:mb-1 animate-fade-up" style={{ opacity: 0 }}>
-              Get started
-            </p>
-            <Link
-              href="/login"
-              className="btn-primary group w-full max-w-xs text-sm py-2.5 md:py-3 animate-fade-up-scale"
-              style={{ animationDelay: "0.1s", opacity: 0 }}
-            >
-              <span>Log in</span>
-              <span className="ml-2 transition-transform duration-200 group-hover:translate-x-1">→</span>
+      </section>
+
+      <section id="walkthrough" className="mx-auto max-w-6xl px-5 py-14 md:px-8">
+        <p className="eyebrow text-golddeep">Live walkthrough</p>
+        <h2 className="type-page-title mt-3">Walk the product in four taps.</h2>
+        <p className="mt-3 max-w-2xl text-muted">
+          This is the real app, not a mock. Use the demo student, then follow the path a NOUN undergraduate actually takes: portal, paper, summary, tutor. Official TMAs and courseware stay on NOUN eLearn.
+        </p>
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          {[
+            ["01", "Log in", "Open the live student portal. Demo: demo.student@uboraworld.test / Password123!", "/login", false],
+            ["02", "Sit CBT", "Faculty, then department, then the 30-question set for the course you are sitting.", "/cbt", false],
+            ["03", "Read summaries", "Cram notes for the same course, gated to a logged-in pass.", "/summaries", false],
+            ["04", "NOUN eLearn", "Official LMS: TMAs, course materials, facilitation. Opens NOUN, not Ubora.", "https://elearn.nou.edu.ng/", true],
+          ].map(([n, t, d, href, external]) =>
+            external ? (
+              <a key={t} href={href} target="_blank" rel="noopener noreferrer" className="card-premium p-6 no-underline">
+                <p className="font-mono-brand text-golddeep">{n}</p>
+                <h3 className="type-card-title mt-2">{t}</h3>
+                <p className="mt-3 type-body text-muted">{d}</p>
+              </a>
+            ) : (
+              <Link key={t} href={href} className="card-premium p-6 no-underline">
+                <p className="font-mono-brand text-golddeep">{n}</p>
+                <h3 className="type-card-title mt-2">{t}</h3>
+                <p className="mt-3 type-body text-muted">{d}</p>
+              </Link>
+            )
+          )}
+        </div>
+      </section>
+
+      <section id="product" className="mx-auto max-w-6xl px-5 py-8 md:px-8">
+        <p className="eyebrow text-golddeep">What you get</p>
+        <h2 className="type-page-title mt-3">Built like the exam, not like a brochure.</h2>
+        <div className="mt-8 grid gap-4 md:grid-cols-4">
+          {[
+            ["CBT simulator", "Fixed 30-question sets per module so the full bank is covered across attempts.", "/cbt"],
+            ["Course summaries", "Cram format, served only to logged-in subscribers. Never a public file.", "/summaries"],
+            ["Ask the Tutor", "Stuck mid-revision? Ask from the course you are sitting. Grounded in that course bank.", "/cbt"],
+            ["Semester pass", "Basic, Standard or Premium. Paystack checkout. Manual renew — no surprise charges.", "/subscribe"],
+          ].map(([t, d, href]) => (
+            <Link key={t} href={href} className="card-premium p-6 no-underline">
+              <h3 className="type-card-title">{t}</h3>
+              <p className="mt-3 type-body text-muted">{d}</p>
             </Link>
-            <Link
-              href="/signup"
-              className="group w-full max-w-xs text-center rounded-xl py-2.5 md:py-3 text-sm font-semibold border border-line text-ink transition-all duration-200 ease-out hover:border-gold hover:shadow-button animate-fade-up-scale"
-              style={{ animationDelay: "0.15s", opacity: 0 }}
-            >
-              <span>Create an account</span>
-              <span className="ml-2 inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
+          ))}
+        </div>
+      </section>
+
+      <section id="courses" className="mx-auto max-w-6xl px-5 py-8 md:px-8 md:py-14">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="eyebrow text-golddeep">Live catalogue</p>
+            <h2 className="type-page-title mt-3">Approved courses, served from the live bank.</h2>
+          </div>
+          <Link href="/cbt" className="btn-ghost btn-sm">Browse in CBT</Link>
+        </div>
+        <div className="mt-8 overflow-hidden rounded-3xl border border-line bg-white">
+          {liveCourses.map((c) => (
+            <div key={c.code} className="grid grid-cols-2 items-center gap-3 border-b border-line px-5 py-3.5 last:border-0 md:grid-cols-5">
+              <p className="font-mono-brand text-golddeep">{c.code}</p>
+              <p className="col-span-2 text-sm">{c.title}</p>
+              <p className="hidden text-sm text-muted md:block">{c.isGST ? "GST · all depts" : c.department?.name}</p>
+              <p className="text-right font-mono-brand text-[11px] uppercase tracking-[0.14em] text-green">
+                {c.level}L · {c.semester}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="pricing" className="mx-auto max-w-6xl px-5 py-14 md:px-8">
+        <p className="eyebrow text-golddeep">Semester economics</p>
+        <h2 className="type-page-title mt-3">Pay for the semester you are in.</h2>
+        <p className="mt-3 max-w-xl text-muted">Per semester (3 months). Same prices as the live subscribe page. Renews manually.</p>
+        <div className="mt-10 grid gap-5 sm:grid-cols-3">
+          {TIERS.map((t) => (
+            <article key={t.id} className={`card-static flex flex-col p-7 ${t.highlight ? "border-2 border-gold shadow-cardHover" : ""}`}>
+              {t.highlight && <span className="tag-gold self-start mb-3">Most Popular</span>}
+              <h3 className="font-display text-xl font-bold">{t.label}</h3>
+              <p className="font-mono-brand mt-3 mb-5">
+                <span className="text-sm text-muted mr-1">NGN</span>
+                <span className="text-3xl font-semibold">{naira(TIER_PRICES_KOBO[t.id])}</span>
+              </p>
+              <ul className="mb-8 flex-1 space-y-2.5 text-sm text-muted">
+                {t.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2">
+                    <span className="text-green mt-0.5">✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/signup" className={t.highlight ? "btn-gold" : "btn-primary"}>
+                Subscribe to {t.label}
+              </Link>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 pb-20 md:px-8">
+        <div className="rounded-3xl bg-ink px-8 py-12 text-center text-white">
+          <h2 className="font-display text-3xl font-bold md:text-5xl">Sit the paper on your phone tonight.</h2>
+          <p className="mx-auto mt-4 max-w-xl text-white/70">
+            Create an account, log in, pick your faculty, run a module. Ask the Tutor lives on every CBT course page.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link href="/signup" className="btn-gold">Create account</Link>
+            <Link href="/login" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
+              Log in
             </Link>
+            <Link href="/cbt" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
+              Open CBT
+            </Link>
+            <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
+              NOUN eLearn
+            </a>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
