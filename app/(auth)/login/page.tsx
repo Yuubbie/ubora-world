@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import BackLink from "@/components/BackLink";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,10 +27,13 @@ export default function LoginPage() {
         className="absolute w-[500px] h-[500px] rounded-full opacity-[0.12] blur-3xl pointer-events-none"
         style={{ top: "-120px", right: "-120px", background: "radial-gradient(circle, #C99A2E, transparent)" }}
       />
-      <div className="relative flex items-center gap-3 mb-8 animate-fade-up">
-        <img src="/brand/ubora-icon-navy.svg" alt="Ubora World" className="h-12 w-12 rounded" />
-        <span className="font-display font-bold text-2xl tracking-tight">Ubora World</span>
+      <div className="relative mb-6">
+        <BackLink href="/" label="Home" />
       </div>
+      <a href="/" className="relative flex items-center gap-3 mb-8 animate-fade-up">
+        <img src="/brand/ubora-logo.jpeg" alt="Ubora World" className="h-12 w-12 rounded-xl object-cover" />
+        <span className="font-display font-bold text-2xl tracking-tight">Ubora World</span>
+      </a>
       <form
         onSubmit={handleSubmit}
         className="relative card-premium w-full max-w-sm p-9 animate-fade-up-scale"
@@ -40,7 +44,7 @@ export default function LoginPage() {
         </p>
         <h1 className="font-display text-3xl font-bold mb-2 tracking-tight">Student login</h1>
         <p className="text-sm text-muted mb-7">
-          Demo account — demo.student@uboraworld.test / Password123!
+          Demo student — demo.student@uboraworldapp.com / Password123!
         </p>
         {error && <p className="text-sm text-coral mb-4 font-medium">{error}</p>}
         <label className="text-sm font-medium block mb-1.5">Email or phone</label>

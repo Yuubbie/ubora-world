@@ -34,6 +34,7 @@
 
 import { useParams } from "next/navigation";
 import CourseTutorChat from "@/components/CourseTutorChat";
+import BackLink from "@/components/BackLink";
 
 export default function TutorPage() {
   const params = useParams();
@@ -41,6 +42,9 @@ export default function TutorPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="mb-4">
+        <BackLink href={`/cbt/${courseId}`} label="CBT practice" />
+      </div>
       <CourseTutorChat courseId={courseId} />
     </div>
   );
