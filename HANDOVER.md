@@ -1,6 +1,6 @@
 # Ubora World — Handover / Status Document
 
-**Last updated:** 3 September 2026
+**Last updated:** 4 October 2026
 **Purpose:** single source of truth for what's built, what's live, and what's still open. Check this anytime you need to know where things stand.
 
 ---
@@ -11,7 +11,7 @@ Ubora World is **ready for pilot launch**, scoped to the Criminology and Securit
 
 - First semester Criminology: **10 of 10 courses live and approved**
 - Second semester Criminology: **7 of 8 courses live and approved** (CSS136 outstanding)
-- Faculty/department structure: **5 faculties, 39 departments live**, with GST courses automatically visible to every one of them
+- Faculty/department structure: **5 faculties, 39 departments live**, with GST courses automatically visible to every one of them once approved
 - Payments: **still in Paystack TEST mode** — no real money can be collected yet
 - Domain: **still on default Vercel domain**, not a custom domain yet
 
@@ -47,6 +47,14 @@ Ubora World is **ready for pilot launch**, scoped to the Criminology and Securit
 
 Each completed course has: a CBT question bank (draft → approved), a downloadable PDF summary (draft → approved), and — where owned by another department — a `CourseDepartment` cross-listing row into Criminology.
 
+### GST203 — live (4 Oct 2026)
+
+| Code | Title | Status |
+|---|---|---|
+| GST203 | Introduction to Philosophy and Logic | **approved** — 122 questions (5 modules), 5-page summary. `isGST: true`, no `departmentId`. Do **not** run `crosslist-courses.js`. |
+
+Scripts: `prisma/seed-data/seed-gst203.js` + `GST203_CBT_Bank_Module1-5.csv`; `add-gst203-summary.js` (PDF in `private-uploads/gst203-summary.pdf`, gitignored). Visible to every department because it is GST.
+
 ---
 
 ## 3. Faculty / Department Structure
@@ -61,7 +69,7 @@ As of 3 Sep 2026, **5 faculties and 39 departments** exist in the live database.
 | **Faculty of Management Sciences** | 7 | Accounting, Banking and Finance, Business Administration, Cooperative and Rural Development, Entrepreneurship, Marketing, Public Administration |
 | **Faculty of Education** | 15 | B.A.(ED) Early Childhood Education, B.A.(ED) English, B.A.(ED) French, B.A.(ED) Primary Education, B.LIS Library and Information Science, B.Sc.(ED) Agricultural Science, B.Sc.(ED) Biology, B.Sc.(ED) Business Education, B.Sc.(ED) Chemistry, B.Sc.(ED) Computer Science, B.Sc.(ED) Health Education, B.Sc.(ED) Human Kinetics, B.Sc.(ED) Integrated Science, B.Sc.(ED) Mathematics, B.Sc.(ED) Physics |
 
-**Important note on GST auto-coverage:** GST courses use `isGST: true` with no `departmentId`, so they appear automatically for *every* department that exists — no manual linking needed. This means all 39 departments above already show GST101/102/103/105/107 to their students, even though none of them (besides Criminology) have any department-specific courses built yet. This was the "every department has a course at launch" milestone reached on 3 Sep 2026.
+**Important note on GST auto-coverage:** GST courses use `isGST: true` with no `departmentId`, so they appear automatically for *every* department that exists — no manual linking needed. Live/approved GSTs shown to all departments: GST101/102/103/105/107, GST202 (if already approved), and GST203 (approved 4 Oct 2026).
 
 **Structural fix made this session:** the original "Computer Science" department (created in Phase 1, holding CIT104 and the demo course CSC103, plus 18 real recorded student attempts) was originally mis-attached to "Faculty of Sciences". This was corrected — the department was re-parented to the new "Faculty of Computing" without touching its id, its courses, or any student data.
 
@@ -127,3 +135,5 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 - **2 Sep 2026:** ECO121 and PCR111 built and cross-listed, completing first-semester Criminology (10/10). CIT104 built for Computer Science, cross-listed into Criminology (first course built for the then-unnamed Computing side of Faculty of Sciences).
 - **2–3 Sep 2026:** CSS112, CSS132, CSS134 built (all owned directly by Criminology). Discovered and corrected the requirement to run `crosslist-courses.js` even for directly-owned courses.
 - **3 Sep 2026:** POL126 and PCR114 built and cross-listed, bringing second-semester Criminology to 7/8. Faculty of Computing, Faculty of Management Sciences, and Faculty of Education created; 24 new departments added; Computer Science department corrected from Faculty of Sciences to Faculty of Computing. Team briefed; pilot declared ready.
+- **4 Oct 2026:** GST203 (Introduction to Philosophy and Logic) seeded and approved: 122 CBT questions across 5 modules, 5-page private summary. `isGST: true`, no departmentId, no crosslist. Branch `261004-feat-gst203-from-zip`.
+- **4 Oct 2026:** Launch 30-day Premium trial on public signup (`TRIAL_LENGTH_DAYS` / `TRIAL_TIER` in `lib/config.ts`). New students get CBT, summaries, and Ask the Tutor with no payment row. Landing walkthrough starts at `/signup`. Paid semester prices unchanged. No confirmation email (NextAuth credentials, not Supabase).

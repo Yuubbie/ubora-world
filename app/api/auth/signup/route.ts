@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { TRIAL_LENGTH_DAYS, TRIAL_TIER } from "@/lib/config";
 
 const signupSchema = z.object({
   fullName: z.string().min(2),
@@ -30,13 +31,34 @@ export async function POST(req: Request) {
 
   const passwordHash = await bcrypt.hash(password, 12);
 
+  const startDate = new Date();
+  const endDate = new Date(startDate.getTime() + TRIAL_LENGTH_DAYS * 24 * 60 * 60 * 1000);
+
   // Public signup always creates a `student` role. Agent, content_partner, and
   // admin accounts are provisioned separately (Phase 2/3 admin tooling) — this
   // is what makes Spec 6.7 rule 1 (content partners can't hold referral codes)
   // structurally true rather than just a policy someone has to remember.
-  const user = await db.user.create({
-    data: { fullName, email, phone, passwordHash, matricNumber, role: "student" },
+  // Launch trial: every new student gets 30 days of Premium (CBT, summaries,
+  // Ask the Tutor) with no payment row. Paid checkout still creates a separate
+  // subscription via confirmPaymentAndActivate.
+  const user = await db.$transaction(async (tx) => {
+    const created = await tx.user.create({
+      data: { fullName, email, phone, passwordHash, matricNumber, role: "student" },
+    });
+    await tx.subscription.create({
+      data: {
+        userId: created.id,
+        tier: TRIAL_TIER,
+        startDate,
+        endDate,
+        status: "active",
+      },
+    });
+    return created;
   });
 
-  return NextResponse.json({ id: user.id, fullName: user.fullName }, { status: 201 });
+  return NextResponse.json(
+    { id: user.id, fullName: user.fullName, trialDays: TRIAL_LENGTH_DAYS, trialTier: TRIAL_TIER },
+    { status: 201 },
+  );
 }

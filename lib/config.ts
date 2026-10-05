@@ -22,6 +22,8 @@ export function tierIncludes(subscriptionTier: Tier, requiredTier: Tier): boolea
 
 // Master Spec Section 6.1 — subscription length.
 export const SUBSCRIPTION_LENGTH_DAYS = 90; // 3 months
+export const TRIAL_LENGTH_DAYS = 30;
+export const TRIAL_TIER: Tier = "premium";
 export const RENEWAL_REMINDER_DAYS_BEFORE = [7, 1];
 
 // Prices in kobo (smallest Naira unit) — one place to change pricing, per
