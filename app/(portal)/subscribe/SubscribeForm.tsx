@@ -45,7 +45,7 @@ export default function SubscribeForm() {
         Choose your <span className="italic font-medium text-gold">plan</span>.
       </h1>
       <p className="text-muted mb-10 animate-fade-up" style={{ animationDelay: "0.1s", opacity: 0 }}>
-        Per semester (3 months). Renews manually - no surprise charges.
+        New accounts already have 30 days of Premium. These prices are the 3-month pass after the trial. Renews manually — no surprise charges.
       </p>
       {error && <p className="text-coral mb-4 font-medium">{error}</p>}
       <div className="grid sm:grid-cols-3 gap-5">

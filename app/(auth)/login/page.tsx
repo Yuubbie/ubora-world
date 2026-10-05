@@ -44,7 +44,7 @@ export default function LoginPage() {
         </p>
         <h1 className="font-display text-3xl font-bold mb-2 tracking-tight">Student login</h1>
         <p className="text-sm text-muted mb-7">
-          Demo student — demo.student@uboraworldapp.com / Password123!
+          New here? Create an account for 30 days of Premium, then come back and log in. Demo: demo.student@uboraworld.test / Password123!
         </p>
         {error && <p className="text-sm text-coral mb-4 font-medium">{error}</p>}
         <label className="text-sm font-medium block mb-1.5">Email or phone</label>

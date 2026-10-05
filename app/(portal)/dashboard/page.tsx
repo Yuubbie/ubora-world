@@ -129,8 +129,10 @@ export default async function DashboardPage() {
             title={firstName ? `${getGreeting()}, ${firstName}` : getGreeting()}
             subtitle={
               access.active
-                ? `Your ${access.tier} subscription is active until ${access.endDate.toLocaleDateString("en-GB")}.`
-                : "You don't have an active subscription yet - subscribe to unlock content."
+                ? access.trial
+                  ? `Your 30-day Premium trial is open until ${access.endDate.toLocaleDateString("en-GB")}. CBT, summaries, and Ask the Tutor are unlocked.`
+                  : `Your ${access.tier} subscription is active until ${access.endDate.toLocaleDateString("en-GB")}.`
+                : "Your trial has ended. Subscribe to keep CBT, summaries, and Ask the Tutor."
             }
           />
 
@@ -140,10 +142,10 @@ export default async function DashboardPage() {
           >
             <StatCard
               icon={<IconCheck />}
-              value={access.active ? "Active" : "Inactive"}
+              value={access.active ? (access.trial ? "Trial" : "Active") : "Inactive"}
               label="Subscription"
             />
-            <StatCard icon={<IconPlan />} value={tierLabel} label="Current Plan" />
+            <StatCard icon={<IconPlan />} value={access.active && access.trial ? "Premium trial" : tierLabel} label="Current Plan" />
             <StatCard
               icon={<IconClock />}
               value={access.active ? daysRemaining : "None"}
@@ -159,7 +161,16 @@ export default async function DashboardPage() {
           {!access.active ? (
             <div className="notice notice-warn mb-8">
               <p className="notice-warn-text">
-                Subscribe to unlock CBT practice and course summaries.
+                Your 30-day trial has ended. Subscribe to keep CBT practice and course summaries.
+              </p>
+              <Link href="/subscribe" className="btn-gold btn-sm shrink-0">
+                View plans
+              </Link>
+            </div>
+          ) : access.trial ? (
+            <div className="notice notice-warn mb-8">
+              <p className="notice-warn-text">
+                Launch trial — {daysRemaining} day{daysRemaining === 1 ? "" : "s"} of Premium left. After that, pick a semester plan.
               </p>
               <Link href="/subscribe" className="btn-gold btn-sm shrink-0">
                 View plans

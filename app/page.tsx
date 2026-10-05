@@ -45,7 +45,7 @@ export default async function HomePage() {
           </nav>
           <div className="flex items-center gap-2">
             <Link href="/login" className="btn-ghost btn-sm">Log in</Link>
-            <Link href="/signup" className="btn-gold btn-sm hidden sm:inline-flex">Create account</Link>
+            <Link href="/signup" className="btn-gold btn-sm hidden sm:inline-flex">Free 30-day trial</Link>
           </div>
         </div>
       </header>
@@ -62,7 +62,7 @@ export default async function HomePage() {
               CBT practice, course summaries, and a tutor you can ask on the go — organised by faculty, department, course, level and semester. One pass. Your phone. The paper you actually sit.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/signup" className="btn-gold">Create an account</Link>
+              <Link href="/signup" className="btn-gold">Start 30-day free trial</Link>
               <Link href="/login" className="btn-primary">Log in</Link>
               <Link href="/cbt" className="btn-ghost">Sit CBT</Link>
               <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="btn-ghost">
@@ -89,8 +89,8 @@ export default async function HomePage() {
             <p className="mt-2 text-sm text-muted">Same CBT you already know: 30-question module sets, server-side scoring, Ask the Tutor on the course page.</p>
             <div className="mt-6 space-y-3">
               {[
-                "Log in with your real student account",
-                "Pick faculty → department → course",
+                "Sign up — 30 days of Premium, no card",
+                "Log in, then faculty → department → course",
                 "Sit a 30-question set. Then ask a follow-up.",
               ].map((line, i) => (
                 <div key={line} className="flex items-start gap-3 rounded-2xl bg-paper px-4 py-3 text-sm">
@@ -100,8 +100,8 @@ export default async function HomePage() {
               ))}
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/login" className="btn-gold btn-sm">Student login</Link>
-              <Link href="/cbt" className="btn-ghost btn-sm">Open CBT</Link>
+              <Link href="/signup" className="btn-gold btn-sm">Sign up free</Link>
+              <Link href="/login" className="btn-ghost btn-sm">Student login</Link>
             </div>
           </div>
         </div>
@@ -109,16 +109,18 @@ export default async function HomePage() {
 
       <section id="walkthrough" className="mx-auto max-w-6xl px-5 py-14 md:px-8">
         <p className="eyebrow text-golddeep">Live walkthrough</p>
-        <h2 className="type-page-title mt-3">Walk the product in four taps.</h2>
+        <h2 className="type-page-title mt-3">Sign up once. Thirty days of everything.</h2>
         <p className="mt-3 max-w-2xl text-muted">
-          This is the real app, not a mock. Use the demo student, then follow the path a NOUN undergraduate actually takes: portal, paper, summary, tutor. Official TMAs and courseware stay on NOUN eLearn.
+          This is the real app, not a mock. Create your own account for a 30-day Premium trial (CBT, summaries, Ask the Tutor). Or use the demo student. Official TMAs and courseware stay on NOUN eLearn.
         </p>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {([
-            { n: "01", t: "Log in", d: "Open the live student portal. Demo: demo.student@uboraworld.test / Password123!", href: "/login", external: false },
-            { n: "02", t: "Sit CBT", d: "Faculty, then department, then the 30-question set for the course you are sitting.", href: "/cbt", external: false },
-            { n: "03", t: "Read summaries", d: "Cram notes for the same course, gated to a logged-in pass.", href: "/summaries", external: false },
-            { n: "04", t: "NOUN eLearn", d: "Official LMS: TMAs, course materials, facilitation. Opens NOUN, not Ubora.", href: "https://elearn.nou.edu.ng/", external: true },
+            { n: "01", t: "Sign up", d: "Open Create account. Full name, email, password (8+). Matric is optional. Tap Start 30-day free trial. You are sent to login — no card, no Paystack.", href: "/signup", external: false },
+            { n: "02", t: "Log in", d: "Use the email and password you just set. Demo if you only want a peek: demo.student@uboraworld.test / Password123!", href: "/login", external: false },
+            { n: "03", t: "Sit CBT", d: "Dashboard → Start CBT Practice. Faculty, then department, then the 30-question set. Ask the Tutor lives on that course page.", href: "/cbt", external: false },
+            { n: "04", t: "Read summaries", d: "Same faculty path under Course summaries. Cram notes for the paper you are sitting.", href: "/summaries", external: false },
+            { n: "05", t: "Ask the Tutor", d: "From any CBT course page, open Ask. Grounded in that course bank. Same Premium trial unlocks it.", href: "/cbt", external: false },
+            { n: "06", t: "NOUN eLearn", d: "Official LMS: TMAs, course materials, facilitation. Opens NOUN, not Ubora.", href: "https://elearn.nou.edu.ng/", external: true },
           ] as const).map((step) =>
             step.external ? (
               <a key={step.t} href={step.href} target="_blank" rel="noopener noreferrer" className="card-premium p-6 no-underline">
@@ -145,7 +147,7 @@ export default async function HomePage() {
             ["CBT simulator", "Fixed 30-question sets per module so the full bank is covered across attempts.", "/cbt"],
             ["Course summaries", "Cram format, served only to logged-in subscribers. Never a public file.", "/summaries"],
             ["Ask the Tutor", "Stuck mid-revision? Ask from the course you are sitting. Grounded in that course bank.", "/cbt"],
-            ["Semester pass", "Basic, Standard or Premium. Paystack checkout. Manual renew — no surprise charges.", "/subscribe"],
+            ["30-day trial, then a pass", "Sign up unlocks Premium for 30 days. After that: Basic, Standard or Premium. Paystack. Manual renew.", "/signup"],
           ].map(([t, d, href]) => (
             <Link key={t} href={href} className="card-premium p-6 no-underline">
               <h3 className="type-card-title">{t}</h3>
@@ -179,8 +181,8 @@ export default async function HomePage() {
 
       <section id="pricing" className="mx-auto max-w-6xl px-5 py-14 md:px-8">
         <p className="eyebrow text-golddeep">Semester economics</p>
-        <h2 className="type-page-title mt-3">Pay for the semester you are in.</h2>
-        <p className="mt-3 max-w-xl text-muted">Per semester (3 months). Same prices as the live subscribe page. Renews manually.</p>
+        <h2 className="type-page-title mt-3">Thirty days free. Then pay for the semester you are in.</h2>
+        <p className="mt-3 max-w-xl text-muted">New accounts get Premium for 30 days — CBT, summaries, Ask the Tutor. After that, a 3-month pass at the prices below. Renews manually.</p>
         <div className="mt-10 grid gap-5 sm:grid-cols-3">
           {TIERS.map((t) => (
             <article key={t.id} className={`card-static flex flex-col p-7 ${t.highlight ? "border-2 border-gold shadow-cardHover" : ""}`}>
@@ -198,7 +200,7 @@ export default async function HomePage() {
                 ))}
               </ul>
               <Link href="/signup" className={t.highlight ? "btn-gold" : "btn-primary"}>
-                Subscribe to {t.label}
+                Start free, then {t.label}
               </Link>
             </article>
           ))}
@@ -209,10 +211,10 @@ export default async function HomePage() {
         <div className="rounded-3xl bg-ink px-8 py-12 text-center text-white">
           <h2 className="font-display text-3xl font-bold md:text-5xl">Sit the paper on your phone tonight.</h2>
           <p className="mx-auto mt-4 max-w-xl text-white/70">
-            Create an account, log in, pick your faculty, run a module. Ask the Tutor lives on every CBT course page.
+            Sign up, get 30 days of Premium, log in, pick your faculty, run a module. Ask the Tutor lives on every CBT course page.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/signup" className="btn-gold">Create account</Link>
+            <Link href="/signup" className="btn-gold">Start 30-day free trial</Link>
             <Link href="/login" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
               Log in
             </Link>
