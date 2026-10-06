@@ -55,6 +55,14 @@ Each completed course has: a CBT question bank (draft → approved), a downloada
 
 Scripts: `prisma/seed-data/seed-gst203.js` + `GST203_CBT_Bank_Module1-5.csv`; `add-gst203-summary.js` (PDF in `private-uploads/gst203-summary.pdf`, gitignored). Visible to every department because it is GST.
 
+### ENT101 — live (5 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ENT101 | Introduction to Entrepreneurship | Entrepreneurship (Faculty of Management Sciences) | **approved** — 98 questions (4 modules), 4-page summary. 100L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-ent101.js` + `ENT101_CBT_Bank_Module1-4.csv`; `add-ent101-summary.js` (PDF in `private-uploads/ent101-summary.pdf`, gitignored). First department-owned course for Entrepreneurship. CSS136 is not in the current ZIP.
+
 ---
 
 ## 3. Faculty / Department Structure
@@ -119,7 +127,7 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 
 ## 9. What's Still Open Before Full Pilot Launch
 
-1. **CSS136** — last course needed to complete second-semester Criminology (waiting on Eunice)
+1. **CSS136** — last course needed to complete second-semester Criminology (waiting on Eunice; not in the current ZIP)
 2. **Switch Paystack from test to live keys** — currently no real payments can be processed
 3. **Migrate to a custom domain** — currently on default Vercel domain
 4. **Confirm/wire the subscription-expiry cron job** (`npm run db:expire-subscriptions`)
@@ -137,3 +145,5 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 - **3 Sep 2026:** POL126 and PCR114 built and cross-listed, bringing second-semester Criminology to 7/8. Faculty of Computing, Faculty of Management Sciences, and Faculty of Education created; 24 new departments added; Computer Science department corrected from Faculty of Sciences to Faculty of Computing. Team briefed; pilot declared ready.
 - **4 Oct 2026:** GST203 (Introduction to Philosophy and Logic) seeded and approved: 122 CBT questions across 5 modules, 5-page private summary. `isGST: true`, no departmentId, no crosslist. Branch `261004-feat-gst203-from-zip`.
 - **4 Oct 2026:** Launch 30-day Premium trial on public signup (`TRIAL_LENGTH_DAYS` / `TRIAL_TIER` in `lib/config.ts`). New students get CBT, summaries, and Ask the Tutor with no payment row. Landing walkthrough starts at `/signup`. Paid semester prices unchanged. No confirmation email (NextAuth credentials, not Supabase).
+- **4 Oct 2026:** ENT101 (Introduction to Entrepreneurship) seeded from the 2017 course guide / ZIP PDF: 98 CBT questions across 4 modules, 4-page private summary. Owned by Entrepreneurship (`cmtlzb39l000spalnd9pg5fob`), 100L first semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology.
+- **5 Oct 2026:** ENT101 bank and summary approved in the live DB. First department-owned Management Sciences course is live.
