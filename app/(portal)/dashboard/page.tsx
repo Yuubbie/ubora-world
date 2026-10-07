@@ -109,10 +109,12 @@ export default async function DashboardPage() {
   const firstName = (session!.user?.name || "").split(" ")[0];
 
   const actions = [
-    { href: "/cbt", label: "Start CBT Practice", ready: true },
-    { href: "/summaries", label: "Open Course Summaries", ready: true },
-    { href: "/cbt", label: "Ask the Tutor", ready: true },
-    { href: null, label: "Watch Tutorials", ready: false },
+    { href: "/cbt", label: "Start CBT Practice", ready: true, external: false },
+    { href: "/summaries", label: "Open Course Summaries", ready: true, external: false },
+    { href: "/cbt", label: "Ask the Tutor", ready: true, external: false },
+    { href: "https://nouonline.nou.edu.ng/", label: "NOUN fees and registration", ready: true, external: true },
+    { href: "https://elearn.nou.edu.ng/", label: "NOUN eLearn TMAs", ready: true, external: true },
+    { href: null, label: "Watch Tutorials", ready: false, external: false },
   ];
 
   return (
@@ -188,19 +190,37 @@ export default async function DashboardPage() {
             <div className="grid sm:grid-cols-2 gap-3">
               {actions.map((a) =>
                 a.ready && a.href ? (
-                  <Link
-                    key={a.label}
-                    href={a.href}
-                    className="btn-ghost group justify-between w-full"
-                  >
-                    <span>{a.label}</span>
-                    <span
-                      aria-hidden="true"
-                      className="text-gold transition-transform duration-200 group-hover:translate-x-1"
+                  a.external ? (
+                    <a
+                      key={a.label}
+                      href={a.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-ghost group justify-between w-full"
                     >
-                      <IconArrow />
-                    </span>
-                  </Link>
+                      <span>{a.label}</span>
+                      <span
+                        aria-hidden="true"
+                        className="text-gold transition-transform duration-200 group-hover:translate-x-1"
+                      >
+                        <IconArrow />
+                      </span>
+                    </a>
+                  ) : (
+                    <Link
+                      key={a.label}
+                      href={a.href}
+                      className="btn-ghost group justify-between w-full"
+                    >
+                      <span>{a.label}</span>
+                      <span
+                        aria-hidden="true"
+                        className="text-gold transition-transform duration-200 group-hover:translate-x-1"
+                      >
+                        <IconArrow />
+                      </span>
+                    </Link>
+                  )
                 ) : (
                   <span
                     key={a.label}

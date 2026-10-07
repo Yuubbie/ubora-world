@@ -37,11 +37,9 @@ export default async function HomePage() {
           </Link>
           <nav className="hidden items-center gap-7 text-sm text-muted md:flex">
             <a href="#walkthrough" className="hover:text-ink">Walkthrough</a>
+            <a href="#noun" className="hover:text-ink">NOUN portals</a>
             <a href="#courses" className="hover:text-ink">Courses</a>
             <a href="#pricing" className="hover:text-ink">Pricing</a>
-            <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="hover:text-ink">
-              NOUN eLearn
-            </a>
           </nav>
           <div className="flex items-center gap-2">
             <Link href="/login" className="btn-ghost btn-sm">Log in</Link>
@@ -65,9 +63,6 @@ export default async function HomePage() {
               <Link href="/signup" className="btn-gold">Start 30-day free trial</Link>
               <Link href="/login" className="btn-primary">Log in</Link>
               <Link href="/cbt" className="btn-ghost">Sit CBT</Link>
-              <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="btn-ghost">
-                NOUN eLearn · TMAs
-              </a>
             </div>
             <div className="mt-10 grid max-w-md grid-cols-3 gap-6">
               {[
@@ -84,19 +79,21 @@ export default async function HomePage() {
           </div>
 
           <div className="card-static overflow-hidden p-6 md:p-8">
-            <p className="eyebrow text-golddeep">Exam ticket · live banks</p>
-            <p className="mt-3 font-display text-2xl font-bold">Faculty. Department. Then the paper.</p>
-            <p className="mt-2 text-sm text-muted">Same CBT you already know: 30-question module sets, server-side scoring, Ask the Tutor on the course page.</p>
+            <p className="eyebrow text-golddeep">Live demo · 90 seconds</p>
+            <p className="mt-3 font-display text-2xl font-bold">Watch the path, then walk it.</p>
+            <p className="mt-2 text-sm text-muted">Tap each step. You land on the real screen — signup, login, faculty picker, then a 30-question set.</p>
             <div className="mt-6 space-y-3">
               {[
-                "Sign up — 30 days of Premium, no card",
-                "Log in, then faculty → department → course",
-                "Sit a 30-question set. Then ask a follow-up.",
-              ].map((line, i) => (
-                <div key={line} className="flex items-start gap-3 rounded-2xl bg-paper px-4 py-3 text-sm">
-                  <span className="font-mono-brand text-golddeep">0{i + 1}</span>
-                  <span>{line}</span>
-                </div>
+                { n: "01", t: "Create account", d: "Name, email, password. No card. 30 days of Premium starts now.", href: "/signup" },
+                { n: "02", t: "Log in", d: "Your new email, or the demo: demo.student@uboraworld.test / Password123!", href: "/login" },
+                { n: "03", t: "Pick a paper", d: "Faculty → department → course. Sit 30 questions. Ask the Tutor on that page.", href: "/cbt" },
+              ].map((step) => (
+                <Link key={step.n} href={step.href} className="flex items-start gap-3 rounded-2xl bg-paper px-4 py-3 text-sm no-underline hover:bg-white">
+                  <span className="font-mono-brand text-golddeep">{step.n}</span>
+                  <span>
+                    <span className="font-semibold">{step.t}.</span> {step.d}
+                  </span>
+                </Link>
               ))}
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -111,31 +108,45 @@ export default async function HomePage() {
         <p className="eyebrow text-golddeep">Live walkthrough</p>
         <h2 className="type-page-title mt-3">Sign up once. Thirty days of everything.</h2>
         <p className="mt-3 max-w-2xl text-muted">
-          This is the real app, not a mock. Create your own account for a 30-day Premium trial (CBT, summaries, Ask the Tutor). Or use the demo student. Official TMAs and courseware stay on NOUN eLearn.
+          This is the real app, not a mock. Create your account for a 30-day Premium trial (CBT, summaries, Ask the Tutor), or peek with the demo student. School fees, registration and official TMAs stay on NOUN — two portals, two jobs.
         </p>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {([
-            { n: "01", t: "Sign up", d: "Open Create account. Full name, email, password (8+). Matric is optional. Tap Start 30-day free trial. You are sent to login — no card, no Paystack.", href: "/signup", external: false },
-            { n: "02", t: "Log in", d: "Use the email and password you just set. Demo if you only want a peek: demo.student@uboraworld.test / Password123!", href: "/login", external: false },
-            { n: "03", t: "Sit CBT", d: "Dashboard → Start CBT Practice. Faculty, then department, then the 30-question set. Ask the Tutor lives on that course page.", href: "/cbt", external: false },
-            { n: "04", t: "Read summaries", d: "Same faculty path under Course summaries. Cram notes for the paper you are sitting.", href: "/summaries", external: false },
-            { n: "05", t: "Ask the Tutor", d: "From any CBT course page, open Ask. Grounded in that course bank. Same Premium trial unlocks it.", href: "/cbt", external: false },
-            { n: "06", t: "NOUN eLearn", d: "Official LMS: TMAs, course materials, facilitation. Opens NOUN, not Ubora.", href: "https://elearn.nou.edu.ng/", external: true },
-          ] as const).map((step) =>
-            step.external ? (
-              <a key={step.t} href={step.href} target="_blank" rel="noopener noreferrer" className="card-premium p-6 no-underline">
-                <p className="font-mono-brand text-golddeep">{step.n}</p>
-                <h3 className="type-card-title mt-2">{step.t}</h3>
-                <p className="mt-3 type-body text-muted">{step.d}</p>
-              </a>
-            ) : (
-              <Link key={step.t} href={step.href} className="card-premium p-6 no-underline">
-                <p className="font-mono-brand text-golddeep">{step.n}</p>
-                <h3 className="type-card-title mt-2">{step.t}</h3>
-                <p className="mt-3 type-body text-muted">{step.d}</p>
-              </Link>
-            )
-          )}
+            { n: "01", t: "Sign up", d: "Open Create account. Full name, email, password (8+). Matric is optional. Tap Start 30-day free trial. You land on login — no card, no Paystack.", href: "/signup" },
+            { n: "02", t: "Log in", d: "Use the email and password you just set. Demo peek: demo.student@uboraworld.test / Password123!", href: "/login" },
+            { n: "03", t: "Sit CBT", d: "Dashboard → Start CBT Practice. Faculty, then department, then the 30-question set. Ask the Tutor lives on that course page.", href: "/cbt" },
+            { n: "04", t: "Read summaries", d: "Same faculty path under Course summaries. Cram notes for the paper you are sitting.", href: "/summaries" },
+            { n: "05", t: "Ask the Tutor", d: "From any CBT course page, open Ask. Grounded in that course bank. Same Premium trial unlocks it.", href: "/cbt" },
+            { n: "06", t: "Ask Ubora", d: "Stuck on fees, TMAs, or a login? The gold Ask a question button stays on every page. An admin reads it. WhatsApp comes later.", href: "#noun" },
+          ] as const).map((step) => (
+            <Link key={step.t} href={step.href} className="card-premium p-6 no-underline">
+              <p className="font-mono-brand text-golddeep">{step.n}</p>
+              <h3 className="type-card-title mt-2">{step.t}</h3>
+              <p className="mt-3 type-body text-muted">{step.d}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section id="noun" className="mx-auto max-w-6xl px-5 py-8 md:px-8">
+        <p className="eyebrow text-golddeep">Official NOUN · not Ubora</p>
+        <h2 className="type-page-title mt-3">Two NOUN sites. Two jobs. Bookmark both.</h2>
+        <p className="mt-3 max-w-2xl text-muted">
+          Ubora is CBT practice and summaries. Fees, course registration and TMAs never run here — they stay on NOUN.
+        </p>
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          <a href="https://nouonline.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="card-premium p-6 no-underline">
+            <p className="font-mono-brand text-golddeep">01</p>
+            <h3 className="type-card-title mt-2">nouonline.nou.edu.ng</h3>
+            <p className="mt-3 type-body text-muted">School fees, course registration, and every other student admin activity on the NOUN portal.</p>
+            <p className="mt-4 text-sm font-semibold">Open student portal</p>
+          </a>
+          <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="card-premium p-6 no-underline">
+            <p className="font-mono-brand text-golddeep">02</p>
+            <h3 className="type-card-title mt-2">elearn.nou.edu.ng</h3>
+            <p className="mt-3 type-body text-muted">Official TMAs and tests. Courseware and facilitation stay on NOUN eLearn — not on Ubora.</p>
+            <p className="mt-4 text-sm font-semibold">Open eLearn for TMAs</p>
+          </a>
         </div>
       </section>
 
@@ -221,8 +232,11 @@ export default async function HomePage() {
             <Link href="/cbt" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
               Open CBT
             </Link>
+            <a href="https://nouonline.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
+              Fees and registration
+            </a>
             <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
-              NOUN eLearn
+              TMAs on eLearn
             </a>
           </div>
         </div>

@@ -1,6 +1,6 @@
 # Ubora World — Handover / Status Document
 
-**Last updated:** 4 October 2026
+**Last updated:** 7 October 2026
 **Purpose:** single source of truth for what's built, what's live, and what's still open. Check this anytime you need to know where things stand.
 
 ---
@@ -62,6 +62,54 @@ Scripts: `prisma/seed-data/seed-gst203.js` + `GST203_CBT_Bank_Module1-5.csv`; `a
 | ENT101 | Introduction to Entrepreneurship | Entrepreneurship (Faculty of Management Sciences) | **approved** — 98 questions (4 modules), 4-page summary. 100L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
 
 Scripts: `prisma/seed-data/seed-ent101.js` + `ENT101_CBT_Bank_Module1-4.csv`; `add-ent101-summary.js` (PDF in `private-uploads/ent101-summary.pdf`, gitignored). First department-owned course for Entrepreneurship. CSS136 is not in the current ZIP.
+
+### BUS105 — live (6 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| BUS105 | Element to Management 1 | Business Administration (Faculty of Management Sciences) | **approved** — 104 questions (4 modules), 4-page summary. 100L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-bus105.js` + `BUS105_CBT_Bank_Module1-4.csv`; `add-bus105-summary.js` (PDF in `private-uploads/bus105-summary.pdf`, gitignored). First department-owned course for Business Administration.
+
+### BUS106 — live (6 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| BUS106 | Elements of Management II | Business Administration (Faculty of Management Sciences) | **approved** — 81 questions (3 modules), 3-page summary. 100L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-bus106.js` + `BUS106_CBT_Bank_Module1-3.csv`; `add-bus106-summary.js` (PDF in `private-uploads/bus106-summary.pdf`, gitignored). Second department-owned course for Business Administration.
+
+### BUS205 — draft only (6 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| BUS205 | Introduction to Business | Business Administration (Faculty of Management Sciences) | **draft** — 78 questions (3 modules: 25/25/28), 4-page summary. 200L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. Do **not** approve until reviewed. |
+
+Scripts: `prisma/seed-data/seed-bus205.js` + `BUS205_CBT_Bank_Module1-3.csv`; `add-bus205-summary.js` (PDF in `private-uploads/bus205-summary.pdf`, gitignored). Third department-owned course for Business Administration. Course guide: Koce Henry Diko, first printed 2009, ISBN 978-058-187-1, 16 units in 3 modules. Bank `cmux515980003f7t710woz6tx`; summary `cmux51zcs0001gkh4nt8hr1u4`.
+
+### BUS207 — draft only (6 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| BUS207 | Business Communication | Business Administration (Faculty of Management Sciences) | **draft** — 100 questions (4 modules: 25/25/25/25), 4-page summary. 200L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. Do **not** approve until reviewed. |
+
+Scripts: `prisma/seed-data/seed-bus207.js` + `BUS207_CBT_Bank_Module1-4.csv`; `add-bus207-summary.js` (PDF in `private-uploads/bus207-summary.pdf`, gitignored). Fourth department-owned course for Business Administration. Course guide: Mrs. Eunice Adegbola, editor Dr. (Mrs) Rahila Gowon. Bank `cmux5e6vj0003vxn0pg11rofa`; summary `cmux5fx3l0001diy1alg2nv09`.
+
+### ACC203 — draft only (6 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ACC203 | Introduction to Financial Accounting I | Accounting (Faculty of Management Sciences) | **draft** — 100 questions (4 modules: 25 each), 4-page summary. 200L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. Do **not** approve until reviewed. |
+
+Scripts: `prisma/seed-data/seed-acc203.js` + `ACC203_CBT_Bank_Module1-4.csv`; `add-acc203-summary.js` (PDF in `private-uploads/acc203-summary.pdf`, gitignored). First department-owned course for Accounting. Writer Dr Onafowokan Oluyombo (FCA); editor Dr Chijioke Mgbame. 21 study units. Bank `cmux5nvvu0003qbewp16tp6vn`; summary `cmux5p00p00017eef7dk50srw`.
+
+### ACC204 — draft only (7 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ACC204 | Introduction to Financial Accounting II | Accounting (Faculty of Management Sciences) | **draft** — 100 questions (4 modules: 25 each), 4-page summary. 200L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. Do **not** approve until reviewed. |
+
+Scripts: `prisma/seed-data/seed-acc204.js` + `ACC204_CBT_Bank_Module1-4.csv`; `add-acc204-summary.js` (PDF in `private-uploads/acc204-summary.pdf`, gitignored). Second Accounting-owned course. Writer Dr Osamuyimen Egbon (ACA); editor Dr Joshua Okpanachi. 21 study units grouped into 4 CBT modules. Bank `cmuye3t9s0003y9btoogqfoso`; summary `cmuye500r0001gwkcgodzy9zb`.
 
 ---
 
@@ -127,13 +175,14 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 
 ## 9. What's Still Open Before Full Pilot Launch
 
-1. **CSS136** — last course needed to complete second-semester Criminology (waiting on Eunice; not in the current ZIP)
-2. **Switch Paystack from test to live keys** — currently no real payments can be processed
-3. **Migrate to a custom domain** — currently on default Vercel domain
-4. **Confirm/wire the subscription-expiry cron job** (`npm run db:expire-subscriptions`)
-5. **Test PWA install** on real Android + iPhone devices
-6. **Delete or archive the stale `origin/dev` branch**
-7. **Decide next department to build real course content for**, beyond GSTs (Danielson's call — Management Sciences, Sciences, Computing, and Education are the agreed "major" faculties to prioritize; others are minors, built on demand)
+1. **BUS205, BUS207, ACC203 and ACC204** — banks + summaries are in the live DB as **draft**. Review at `/admin/content` before approving. Inquiry inbox is at `/admin/inquiries` (WhatsApp not wired yet).
+2. **CSS136** — last course needed to complete second-semester Criminology (waiting on Eunice; not in the current ZIP)
+3. **Switch Paystack from test to live keys** — currently no real payments can be processed
+4. **Migrate to a custom domain** — currently on default Vercel domain
+5. **Confirm/wire the subscription-expiry cron job** (`npm run db:expire-subscriptions`)
+6. **Test PWA install** on real Android + iPhone devices
+7. **Delete or archive the stale `origin/dev` branch**
+8. **Decide next department to build real course content for**, beyond GSTs (Danielson's call — Management Sciences, Sciences, Computing, and Education are the agreed "major" faculties to prioritize; others are minors, built on demand)
 
 ---
 
@@ -147,3 +196,10 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 - **4 Oct 2026:** Launch 30-day Premium trial on public signup (`TRIAL_LENGTH_DAYS` / `TRIAL_TIER` in `lib/config.ts`). New students get CBT, summaries, and Ask the Tutor with no payment row. Landing walkthrough starts at `/signup`. Paid semester prices unchanged. No confirmation email (NextAuth credentials, not Supabase).
 - **4 Oct 2026:** ENT101 (Introduction to Entrepreneurship) seeded from the 2017 course guide / ZIP PDF: 98 CBT questions across 4 modules, 4-page private summary. Owned by Entrepreneurship (`cmtlzb39l000spalnd9pg5fob`), 100L first semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology.
 - **5 Oct 2026:** ENT101 bank and summary approved in the live DB. First department-owned Management Sciences course is live.
+- **6 Oct 2026:** BUS105 (Element to Management 1) seeded from the 2006/2007 course guide / ZIP PDF: 104 CBT questions across 4 modules, 4-page private summary. Owned by Business Administration (`cmtlzb2go000opaln531hcxou`), 100L first semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Bank and summary later approved in the live DB.
+- **6 Oct 2026:** BUS106 (Elements of Management II) seeded from the 2010 course guide / ZIP PDF: 81 CBT questions across 3 modules, 3-page private summary. Owned by Business Administration (`cmtlzb2go000opaln531hcxou`), 100L second semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Later **approved** in the live DB.
+- **6 Oct 2026:** BUS205 (Introduction to Business) seeded as draft from the 2009 course guide / ZIP PDF: 78 CBT questions across 3 modules (25/25/28), 4-page private summary. Owned by Business Administration (`cmtlzb2go000opaln531hcxou`), 200L first semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Not approved.
+- **6 Oct 2026:** BUS207 (Business Communication) seeded as draft from the course guide / ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Business Administration (`cmtlzb2go000opaln531hcxou`), 200L second semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Not approved. Writer Mrs. Eunice Adegbola.
+- **6 Oct 2026:** ACC203 (Introduction to Financial Accounting I) seeded as draft from the course guide / ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Accounting (`cmtlzb1lr000kpalnut4k8vzy`), 200L first semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Not approved. First Accounting-owned course. Writer Dr Onafowokan Oluyombo.
+- **7 Oct 2026:** ACC204 (Introduction to Financial Accounting II) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Accounting (`cmtlzb1lr000kpalnut4k8vzy`), 200L second semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Not approved. Writer Dr Osamuyimen Egbon (ACA). Bank `cmuye3t9s0003y9btoogqfoso`; summary `cmuye500r0001gwkcgodzy9zb`.
+- **7 Oct 2026:** Landing page no longer treats Ubora as eLearn. Official NOUN split: `nouonline.nou.edu.ng` for school fees/registration and other student admin; `elearn.nou.edu.ng` for TMAs/tests. Walkthrough is a tap-through demo (signup → login → CBT). Inquiry chat widget on landing + student UI; admin inbox at `/admin/inquiries`. WhatsApp button deferred.

@@ -19,6 +19,11 @@ export default async function AdminContentPage() {
         <BackLink href="/dashboard" label="Dashboard" />
       </div>
       <h1 className="text-3xl font-semibold mb-1">Content approval queue</h1>
+      <p className="mb-4">
+        <a href="/admin/inquiries" className="text-sm font-semibold text-golddeep hover:underline">
+          Inquiry inbox
+        </a>
+      </p>
       <p className="text-muted mb-8">
         {totalPending === 0
           ? "Nothing waiting for review — everything approved content is already visible to students."
