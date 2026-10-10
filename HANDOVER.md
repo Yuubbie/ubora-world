@@ -1,6 +1,6 @@
 # Ubora World — Handover / Status Document
 
-**Last updated:** 7 October 2026
+**Last updated:** 10 October 2026
 **Purpose:** single source of truth for what's built, what's live, and what's still open. Check this anytime you need to know where things stand.
 
 ---
@@ -79,37 +79,61 @@ Scripts: `prisma/seed-data/seed-bus105.js` + `BUS105_CBT_Bank_Module1-4.csv`; `a
 
 Scripts: `prisma/seed-data/seed-bus106.js` + `BUS106_CBT_Bank_Module1-3.csv`; `add-bus106-summary.js` (PDF in `private-uploads/bus106-summary.pdf`, gitignored). Second department-owned course for Business Administration.
 
-### BUS205 — draft only (6 Oct 2026)
+### BUS205 — live (6 Oct 2026; approved 6 Oct 2026)
 
 | Code | Title | Owner Dept | Status |
 |---|---|---|---|
-| BUS205 | Introduction to Business | Business Administration (Faculty of Management Sciences) | **draft** — 78 questions (3 modules: 25/25/28), 4-page summary. 200L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. Do **not** approve until reviewed. |
+| BUS205 | Introduction to Business | Business Administration (Faculty of Management Sciences) | **approved** — 78 questions (3 modules: 25/25/28), 4-page summary. 200L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
 
 Scripts: `prisma/seed-data/seed-bus205.js` + `BUS205_CBT_Bank_Module1-3.csv`; `add-bus205-summary.js` (PDF in `private-uploads/bus205-summary.pdf`, gitignored). Third department-owned course for Business Administration. Course guide: Koce Henry Diko, first printed 2009, ISBN 978-058-187-1, 16 units in 3 modules. Bank `cmux515980003f7t710woz6tx`; summary `cmux51zcs0001gkh4nt8hr1u4`.
 
-### BUS207 — draft only (6 Oct 2026)
+### BUS207 — live (6 Oct 2026; approved 6 Oct 2026)
 
 | Code | Title | Owner Dept | Status |
 |---|---|---|---|
-| BUS207 | Business Communication | Business Administration (Faculty of Management Sciences) | **draft** — 100 questions (4 modules: 25/25/25/25), 4-page summary. 200L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. Do **not** approve until reviewed. |
+| BUS207 | Business Communication | Business Administration (Faculty of Management Sciences) | **approved** — 100 questions (4 modules: 25/25/25/25), 4-page summary. 200L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
 
 Scripts: `prisma/seed-data/seed-bus207.js` + `BUS207_CBT_Bank_Module1-4.csv`; `add-bus207-summary.js` (PDF in `private-uploads/bus207-summary.pdf`, gitignored). Fourth department-owned course for Business Administration. Course guide: Mrs. Eunice Adegbola, editor Dr. (Mrs) Rahila Gowon. Bank `cmux5e6vj0003vxn0pg11rofa`; summary `cmux5fx3l0001diy1alg2nv09`.
 
-### ACC203 — draft only (6 Oct 2026)
+### ACC203 — live (6 Oct 2026; approved 6 Oct 2026)
 
 | Code | Title | Owner Dept | Status |
 |---|---|---|---|
-| ACC203 | Introduction to Financial Accounting I | Accounting (Faculty of Management Sciences) | **draft** — 100 questions (4 modules: 25 each), 4-page summary. 200L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. Do **not** approve until reviewed. |
+| ACC203 | Introduction to Financial Accounting I | Accounting (Faculty of Management Sciences) | **approved** — 100 questions (4 modules: 25 each), 4-page summary. 200L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
 
 Scripts: `prisma/seed-data/seed-acc203.js` + `ACC203_CBT_Bank_Module1-4.csv`; `add-acc203-summary.js` (PDF in `private-uploads/acc203-summary.pdf`, gitignored). First department-owned course for Accounting. Writer Dr Onafowokan Oluyombo (FCA); editor Dr Chijioke Mgbame. 21 study units. Bank `cmux5nvvu0003qbewp16tp6vn`; summary `cmux5p00p00017eef7dk50srw`.
 
-### ACC204 — draft only (7 Oct 2026)
+### ACC204 — live (7 Oct 2026; approved 10 Oct 2026)
 
 | Code | Title | Owner Dept | Status |
 |---|---|---|---|
-| ACC204 | Introduction to Financial Accounting II | Accounting (Faculty of Management Sciences) | **draft** — 100 questions (4 modules: 25 each), 4-page summary. 200L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. Do **not** approve until reviewed. |
+| ACC204 | Introduction to Financial Accounting II | Accounting (Faculty of Management Sciences) | **approved** — 100 questions (4 modules: 25 each), 4-page summary. 200L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
 
 Scripts: `prisma/seed-data/seed-acc204.js` + `ACC204_CBT_Bank_Module1-4.csv`; `add-acc204-summary.js` (PDF in `private-uploads/acc204-summary.pdf`, gitignored). Second Accounting-owned course. Writer Dr Osamuyimen Egbon (ACA); editor Dr Joshua Okpanachi. 21 study units grouped into 4 CBT modules. Bank `cmuye3t9s0003y9btoogqfoso`; summary `cmuye500r0001gwkcgodzy9zb`.
+
+### BFN209 — live (8 Oct 2026; approved 10 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| BFN209 | Introduction to Finance | Banking and Finance (Faculty of Management Sciences) | **approved** — 100 questions (3 modules: 33/32/35), 4-page summary. 100L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-bfn209.js` + `BFN209_CBT_Bank_Module1-3.csv`; `add-bfn209-summary.js` (PDF in `private-uploads/bfn209-summary.pdf`, gitignored). First Banking and Finance-owned course. Editor Dr. I.D. Idrisu; coordinator Mrs. Kunbi Lawal. 15 study units in 3 modules. Bank `cmuzqxrfd00032dy1s19kf4km`; summary `cmuzqyu2s0001x1ecxd9yseep`.
+
+### CRD204 — live (8 Oct 2026; approved 10 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| CRD204 | Man & His Environment | Cooperative and Rural Development (Faculty of Management Sciences) | **approved** — 100 questions (3 modules: 33/32/35), 4-page summary. 200L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-crd204.js` + `CRD204_CBT_Bank_Module1-3.csv`; `add-crd204-summary.js` (PDF in `private-uploads/crd204-summary.pdf`, gitignored). First Cooperative and Rural Development-owned course. Writer Dr. Ogunlana, F.O. (LASU); editor Prof. Grace Joktang. 15 study units in 3 modules. Bank `cmuzs4xm00003s7yodentpxo0`; summary `cmuzs5z740001me6q8i88e1iw`.
+
+### CRD208 — live (10 Oct 2026; approved 10 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| CRD208 | Nigerian & International Cooperatives | Cooperative and Rural Development (Faculty of Management Sciences) | **approved** — 100 questions (3 modules: 33/32/35), 4-page summary. 200L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-crd208.js` + `CRD208_CBT_Bank_Module1-3.csv`; `add-crd208-summary.js` (PDF in `private-uploads/crd208-summary.pdf`, gitignored). Second Cooperative and Rural Development-owned course. Writer Lawal Kamaldeen, A. A. Ph.D (NOUN Entrepreneurship); editor Prof. J.O.Y Aihonsu (OOU). 16 study units in 3 modules. Bank `cmv1ufy130003dbspgx8ctowu`; summary `cmv1uhj1w0001h2lvwt63otvd`.
 
 ---
 
@@ -175,7 +199,7 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 
 ## 9. What's Still Open Before Full Pilot Launch
 
-1. **BUS205, BUS207, ACC203 and ACC204** — banks + summaries are in the live DB as **draft**. Review at `/admin/content` before approving. Inquiry inbox is at `/admin/inquiries` (WhatsApp not wired yet).
+1. Inquiry inbox is at `/admin/inquiries` (WhatsApp not wired yet). Content queue is empty — no remaining drafts.
 2. **CSS136** — last course needed to complete second-semester Criminology (waiting on Eunice; not in the current ZIP)
 3. **Switch Paystack from test to live keys** — currently no real payments can be processed
 4. **Migrate to a custom domain** — currently on default Vercel domain
@@ -202,4 +226,8 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 - **6 Oct 2026:** BUS207 (Business Communication) seeded as draft from the course guide / ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Business Administration (`cmtlzb2go000opaln531hcxou`), 200L second semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Not approved. Writer Mrs. Eunice Adegbola.
 - **6 Oct 2026:** ACC203 (Introduction to Financial Accounting I) seeded as draft from the course guide / ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Accounting (`cmtlzb1lr000kpalnut4k8vzy`), 200L first semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Not approved. First Accounting-owned course. Writer Dr Onafowokan Oluyombo.
 - **7 Oct 2026:** ACC204 (Introduction to Financial Accounting II) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Accounting (`cmtlzb1lr000kpalnut4k8vzy`), 200L second semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Not approved. Writer Dr Osamuyimen Egbon (ACA). Bank `cmuye3t9s0003y9btoogqfoso`; summary `cmuye500r0001gwkcgodzy9zb`.
+- **8 Oct 2026:** BFN209 (Introduction to Finance) seeded as draft from the ZIP PDF: 100 CBT questions across 3 modules (33/32/35), 4-page private summary. Owned by Banking and Finance (`cmtlzb26v000mpalnvmwd4kb2`), 100L first semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Not approved. First Banking and Finance-owned course. Editor Dr. I.D. Idrisu; coordinator Mrs. Kunbi Lawal. Bank `cmuzqxrfd00032dy1s19kf4km`; summary `cmuzqyu2s0001x1ecxd9yseep`.
+- **8 Oct 2026:** CRD204 (Man & His Environment) seeded as draft from the ZIP PDF: 100 CBT questions across 3 modules (33/32/35), 4-page private summary. Owned by Cooperative and Rural Development (`cmtlzb2zz000qpalnbe9v2yg0`), 200L second semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Not approved. First CRD-owned course. Writer Dr. Ogunlana, F.O.; editor Prof. Grace Joktang. Bank `cmuzs4xm00003s7yodentpxo0`; summary `cmuzs5z740001me6q8i88e1iw`.
+- **10 Oct 2026:** CRD208 (Nigerian & International Cooperatives) seeded as draft from the ZIP PDF: 100 CBT questions across 3 modules (33/32/35), 4-page private summary. Owned by Cooperative and Rural Development (`cmtlzb2zz000qpalnbe9v2yg0`), 200L second semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Second CRD-owned course. Writer Lawal Kamaldeen, A. A. Ph.D; editor Prof. J.O.Y Aihonsu. Bank `cmv1ufy130003dbspgx8ctowu`; summary `cmv1uhj1w0001h2lvwt63otvd`. 31 owning-dept courses; 40 `CourseDepartment` rows.
+- **10 Oct 2026:** Admin approved remaining drafts at `/admin/content`. Now **approved**: ACC204, BFN209, CRD204, CRD208 (plus BUS205, BUS207, ACC203 already approved 6 Oct). Content queue empty.
 - **7 Oct 2026:** Landing page no longer treats Ubora as eLearn. Official NOUN split: `nouonline.nou.edu.ng` for school fees/registration and other student admin; `elearn.nou.edu.ng` for TMAs/tests. Walkthrough is a tap-through demo (signup → login → CBT). Inquiry chat widget on landing + student UI; admin inbox at `/admin/inquiries`. WhatsApp button deferred.
