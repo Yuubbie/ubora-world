@@ -1,6 +1,6 @@
 # Ubora World — Handover / Status Document
 
-**Last updated:** 10 October 2026
+**Last updated:** 11 October 2026
 **Purpose:** single source of truth for what's built, what's live, and what's still open. Check this anytime you need to know where things stand.
 
 ---
@@ -135,6 +135,14 @@ Scripts: `prisma/seed-data/seed-crd204.js` + `CRD204_CBT_Bank_Module1-3.csv`; `a
 
 Scripts: `prisma/seed-data/seed-crd208.js` + `CRD208_CBT_Bank_Module1-3.csv`; `add-crd208-summary.js` (PDF in `private-uploads/crd208-summary.pdf`, gitignored). Second Cooperative and Rural Development-owned course. Writer Lawal Kamaldeen, A. A. Ph.D (NOUN Entrepreneurship); editor Prof. J.O.Y Aihonsu (OOU). 16 study units in 3 modules. Bank `cmv1ufy130003dbspgx8ctowu`; summary `cmv1uhj1w0001h2lvwt63otvd`.
 
+### ECO122 — live (11 Oct 2026; approved 11 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ECO122 | Principle of Economics II | Economics (Faculty of Social Sciences) | **approved** — 100 questions (4 modules: 25 each), 4-page summary. 100L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-eco122.js` + `ECO122_CBT_Bank_Module1-4.csv`; `add-eco122-summary.js` (PDF in `private-uploads/eco122-summary.pdf`, gitignored). Second Economics-owned course (after ECO121). Developer/reviewer Samuel Olumuyiwa Olusanya (NOUN Economics); editor Dr. Kazeem Ajide (University of Lagos). 21 study units in 7 course-guide modules grouped into 4 CBT modules. Bank `cmv3a5n2j0003bznovm2m60mo`; summary `cmv3a6ln7000191rqi2vivdis`.
+
 ---
 
 ## 3. Faculty / Department Structure
@@ -230,4 +238,6 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 - **8 Oct 2026:** CRD204 (Man & His Environment) seeded as draft from the ZIP PDF: 100 CBT questions across 3 modules (33/32/35), 4-page private summary. Owned by Cooperative and Rural Development (`cmtlzb2zz000qpalnbe9v2yg0`), 200L second semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Not approved. First CRD-owned course. Writer Dr. Ogunlana, F.O.; editor Prof. Grace Joktang. Bank `cmuzs4xm00003s7yodentpxo0`; summary `cmuzs5z740001me6q8i88e1iw`.
 - **10 Oct 2026:** CRD208 (Nigerian & International Cooperatives) seeded as draft from the ZIP PDF: 100 CBT questions across 3 modules (33/32/35), 4-page private summary. Owned by Cooperative and Rural Development (`cmtlzb2zz000qpalnbe9v2yg0`), 200L second semester. Own-department CourseDepartment backfilled. Not GST. Not cross-listed into Criminology. Second CRD-owned course. Writer Lawal Kamaldeen, A. A. Ph.D; editor Prof. J.O.Y Aihonsu. Bank `cmv1ufy130003dbspgx8ctowu`; summary `cmv1uhj1w0001h2lvwt63otvd`. 31 owning-dept courses; 40 `CourseDepartment` rows.
 - **10 Oct 2026:** Admin approved remaining drafts at `/admin/content`. Now **approved**: ACC204, BFN209, CRD204, CRD208 (plus BUS205, BUS207, ACC203 already approved 6 Oct). Content queue empty.
+- **11 Oct 2026:** ECO122 (Principle of Economics II) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 100L second semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Second Economics-owned course (after ECO121). Developer/reviewer Samuel Olumuyiwa Olusanya; editor Dr. Kazeem Ajide. Bank `cmv3a5n2j0003bznovm2m60mo`; summary `cmv3a6ln7000191rqi2vivdis`. 32 owning-dept courses; 41 `CourseDepartment` rows.
+- **11 Oct 2026:** Admin approved ECO122 bank and summary at `/admin/content`. Content queue empty.
 - **7 Oct 2026:** Landing page no longer treats Ubora as eLearn. Official NOUN split: `nouonline.nou.edu.ng` for school fees/registration and other student admin; `elearn.nou.edu.ng` for TMAs/tests. Walkthrough is a tap-through demo (signup → login → CBT). Inquiry chat widget on landing + student UI; admin inbox at `/admin/inquiries`. WhatsApp button deferred.
