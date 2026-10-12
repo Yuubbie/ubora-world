@@ -1,6 +1,6 @@
 # Ubora World — Handover / Status Document
 
-**Last updated:** 11 October 2026
+**Last updated:** 12 October 2026
 **Purpose:** single source of truth for what's built, what's live, and what's still open. Check this anytime you need to know where things stand.
 
 ---
@@ -143,6 +143,14 @@ Scripts: `prisma/seed-data/seed-crd208.js` + `CRD208_CBT_Bank_Module1-3.csv`; `a
 
 Scripts: `prisma/seed-data/seed-eco122.js` + `ECO122_CBT_Bank_Module1-4.csv`; `add-eco122-summary.js` (PDF in `private-uploads/eco122-summary.pdf`, gitignored). Second Economics-owned course (after ECO121). Developer/reviewer Samuel Olumuyiwa Olusanya (NOUN Economics); editor Dr. Kazeem Ajide (University of Lagos). 21 study units in 7 course-guide modules grouped into 4 CBT modules. Bank `cmv3a5n2j0003bznovm2m60mo`; summary `cmv3a6ln7000191rqi2vivdis`.
 
+### ECO146 — live (12 Oct 2026; approved 12 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ECO146 | Nigerian Economy in Perspective 1 | Economics (Faculty of Social Sciences) | **approved** — 100 questions (4 modules: 25 each), 4-page summary. 100L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-eco146.js` + `ECO146_CBT_Bank_Module1-4.csv`; `add-eco146-summary.js` (PDF in `private-uploads/eco146-summary.pdf`, gitignored). Third Economics-owned course (after ECO121/ECO122). Developer Ayanwale Abiodun Olayinka Samsideen (Agricultural Economics/Postgraduate School, University of Ibadan); editor Dr. Ayila Ngustar. 20 study units in 5 course-guide modules grouped into 4 CBT modules. Bank `cmv3cdzg900031324rusdmpdk`; summary `cmv3ceznb00017ja9y0oowp9y`.
+
 ---
 
 ## 3. Faculty / Department Structure
@@ -207,7 +215,7 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 
 ## 9. What's Still Open Before Full Pilot Launch
 
-1. Inquiry inbox is at `/admin/inquiries` (WhatsApp not wired yet). Content queue is empty — no remaining drafts.
+1. Inquiry inbox is at `/admin/inquiries` (WhatsApp not wired yet). Content queue empty after ECO146 approval.
 2. **CSS136** — last course needed to complete second-semester Criminology (waiting on Eunice; not in the current ZIP)
 3. **Switch Paystack from test to live keys** — currently no real payments can be processed
 4. **Migrate to a custom domain** — currently on default Vercel domain
@@ -240,4 +248,5 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 - **10 Oct 2026:** Admin approved remaining drafts at `/admin/content`. Now **approved**: ACC204, BFN209, CRD204, CRD208 (plus BUS205, BUS207, ACC203 already approved 6 Oct). Content queue empty.
 - **11 Oct 2026:** ECO122 (Principle of Economics II) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 100L second semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Second Economics-owned course (after ECO121). Developer/reviewer Samuel Olumuyiwa Olusanya; editor Dr. Kazeem Ajide. Bank `cmv3a5n2j0003bznovm2m60mo`; summary `cmv3a6ln7000191rqi2vivdis`. 32 owning-dept courses; 41 `CourseDepartment` rows.
 - **11 Oct 2026:** Admin approved ECO122 bank and summary at `/admin/content`. Content queue empty.
+- **12 Oct 2026:** ECO146 (Nigerian Economy in Perspective 1) seeded from the ZIP PDF and **approved** at `/admin/content`: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 100L second semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Third Economics-owned course (after ECO121/ECO122). Developer Ayanwale Abiodun Olayinka Samsideen; editor Dr. Ayila Ngustar. Bank `cmv3cdzg900031324rusdmpdk`; summary `cmv3ceznb00017ja9y0oowp9y`. 33 owning-dept courses; 42 `CourseDepartment` rows. Seed scripts on branch `261012-feat-eco146`.
 - **7 Oct 2026:** Landing page no longer treats Ubora as eLearn. Official NOUN split: `nouonline.nou.edu.ng` for school fees/registration and other student admin; `elearn.nou.edu.ng` for TMAs/tests. Walkthrough is a tap-through demo (signup → login → CBT). Inquiry chat widget on landing + student UI; admin inbox at `/admin/inquiries`. WhatsApp button deferred.
