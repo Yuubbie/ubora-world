@@ -112,7 +112,7 @@ export default async function DashboardPage() {
     { href: "/cbt", label: "Start CBT Practice", ready: true, external: false },
     { href: "/summaries", label: "Open Course Summaries", ready: true, external: false },
     { href: "/cbt", label: "Ask the Tutor", ready: true, external: false },
-    { href: "https://nouonline.nou.edu.ng/", label: "NOUN fees and registration", ready: true, external: true },
+    { href: "https://www.nouonline.nou.edu.ng/", label: "NOUN fees and registration", ready: true, external: true },, label: "NOUN fees and registration", ready: true, external: true },
     { href: "https://elearn.nou.edu.ng/", label: "NOUN eLearn TMAs", ready: true, external: true },
     { href: null, label: "Watch Tutorials", ready: false, external: false },
   ];

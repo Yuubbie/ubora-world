@@ -75,7 +75,7 @@ const links = [
   { href: "/cbt", label: "CBT Practice", Icon: IconCbt, external: false },
   { href: "/summaries", label: "Summaries", Icon: IconSummaries, external: false },
   { href: "/subscribe", label: "Subscribe", Icon: IconSubscribe, external: false },
-  { href: "https://nouonline.nou.edu.ng/", label: "Fees & registration", Icon: IconNoun, external: true },
+  { href: "https://www.nouonline.nou.edu.ng/", label: "Fees & registration", Icon: IconNoun, external: true },", label: "Fees & registration", Icon: IconNoun, external: true },
   { href: "https://elearn.nou.edu.ng/", label: "TMAs on eLearn", Icon: IconNoun, external: true },
 ];
 

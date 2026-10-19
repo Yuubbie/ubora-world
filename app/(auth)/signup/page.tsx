@@ -39,7 +39,7 @@ export default function SignupPage() {
       <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white border border-line rounded-xl p-6">
         <h1 className="text-2xl font-semibold mb-1">Create your account</h1>
         <p className="text-sm text-muted mb-6">
-          30 days of Premium free — CBT, summaries, and Ask the Tutor. Then log in and pick your faculty.
+          10 days of Premium free — CBT, summaries, and Ask the Tutor. Then choose monthly or semester billing.
         </p>
         {error && <p className="text-sm text-coral mb-4">{error}</p>}
         {[
@@ -62,7 +62,7 @@ export default function SignupPage() {
           disabled={loading}
           className="w-full bg-ink text-white rounded-lg py-2.5 text-sm font-semibold disabled:opacity-50 mt-2"
         >
-          {loading ? "Creating account…" : "Start 30-day free trial"}
+          {loading ? "Creating account…" : "Start 10-day free trial"}
         </button>
         <p className="text-sm text-muted mt-5 text-center">
           Already have an account?{" "}
