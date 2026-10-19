@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { ENQUIRY_NUMBER } from "@/lib/config";
 
 type Msg = { id?: string; sender: "visitor" | "admin"; content: string; createdAt?: string };
 
@@ -18,6 +19,11 @@ export default function InquiryChat() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const hide = pathname?.startsWith("/admin");
+
+  // Format phone number for WhatsApp link (removes spaces, adds country code 234 if starting with 0)
+  const cleanPhone = ENQUIRY_NUMBER.replace(/\s+/g, "");
+  const whatsappNumber = cleanPhone.startsWith("0") ? `234${cleanPhone.slice(1)}` : cleanPhone;
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=Hello,%20I%20need%20help%20with%20Admission,%20TMA,%20Project,%20or%20IT/SIWES.`;
 
   useEffect(() => {
     if (hide) return;
@@ -74,15 +80,31 @@ export default function InquiryChat() {
   return (
     <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3">
       {open && (
-        <div className="card-static flex h-[460px] w-[min(22rem,calc(100vw-2rem))] flex-col overflow-hidden shadow-cardHover">
+        <div className="card-static flex h-[480px] w-[min(22rem,calc(100vw-2rem))] flex-col overflow-hidden shadow-cardHover">
           <div className="bg-ink px-4 py-3 text-white">
-            <p className="font-display text-base font-semibold">Ask Ubora</p>
-            <p className="mt-0.5 text-xs text-white/65">Inquiries only. WhatsApp comes later. We reply here.</p>
+            <p className="font-display text-base font-semibold">Ubora Support & Admissions</p>
+            <p className="mt-0.5 text-xs text-white/75">
+              Admissions, TMAs, Projects, IT/SIWES & general help.
+            </p>
           </div>
+
+          {/* Direct WhatsApp Call-to-Action Banner */}
+          <div className="bg-gold/10 border-b border-line px-4 py-2.5 flex items-center justify-between text-xs">
+            <span className="text-ink font-medium">Chat directly on WhatsApp:</span>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-golddeep underline hover:text-ink"
+            >
+              {ENQUIRY_NUMBER}
+            </a>
+          </div>
+
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-paper px-4 py-3">
             {loaded && messages.length === 0 && (
               <p className="type-body text-muted">
-                Fees, registration, TMAs, CBT, or a stuck login? Leave a name and your question. An admin reads this inbox.
+                Need help with School Admission, Project Write-up, IT/SIWES, TMA assistance, or login? Leave a message here or chat us on WhatsApp!
               </p>
             )}
             {messages.map((m, i) => (
@@ -128,7 +150,7 @@ export default function InquiryChat() {
                   }
                 }}
                 rows={1}
-                placeholder="Type your question…"
+                placeholder="Ask about admissions, TMAs, projects..."
                 className="flex-1 resize-none rounded-lg border border-line px-2.5 py-2 text-sm"
               />
               <button onClick={send} disabled={loading || !input.trim()} className="btn-gold btn-sm disabled:opacity-40">
@@ -144,7 +166,7 @@ export default function InquiryChat() {
         className="btn-gold shadow-cardHover"
         aria-expanded={open}
       >
-        {open ? "Close chat" : "Ask a question"}
+        {open ? "Close chat" : "Need Help? Chat Us"}
       </button>
     </div>
   );

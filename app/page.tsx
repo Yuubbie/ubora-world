@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
-import { TIER_PRICES_KOBO } from "@/lib/config";
+import { TIER_PRICES_KOBO, ENQUIRY_NUMBER } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -26,6 +26,9 @@ export default async function HomePage() {
       orderBy: { code: "asc" },
     }),
   ]);
+
+  const cleanPhone = ENQUIRY_NUMBER.replace(/\s+/g, "");
+  const whatsappUrl = `https://wa.me/234${cleanPhone.startsWith("0") ? cleanPhone.slice(1) : cleanPhone}?text=Hello,%20I%20need%20help%20with%20Admission,%20TMA,%20Project,%20or%20IT/SIWES.`;
 
   return (
     <div className="min-h-[100dvh] bg-paper text-ink">
@@ -104,6 +107,25 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Direct WhatsApp Admissions & Project Support Banner */}
+      <section className="mx-auto max-w-6xl px-5 py-4 md:px-8">
+        <div className="card-premium p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-paper to-white border-gold/40">
+          <div>
+            <span className="tag-gold mb-2 inline-block">Direct Help Desk</span>
+            <h3 className="font-display text-xl font-bold tracking-tight">Need Admission, Project Write-up, IT/SIWES, or TMA Assistance?</h3>
+            <p className="text-muted text-sm mt-1">Chat directly with our administrative team for immediate support.</p>
+          </div>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-gold shrink-0"
+          >
+            Chat on WhatsApp ({ENQUIRY_NUMBER})
+          </a>
+        </div>
+      </section>
+
       <section id="walkthrough" className="mx-auto max-w-6xl px-5 py-14 md:px-8">
         <p className="eyebrow text-golddeep">Live walkthrough</p>
         <h2 className="type-page-title mt-3">Sign up once. Thirty days of everything.</h2>
@@ -135,17 +157,18 @@ export default async function HomePage() {
           Ubora is CBT practice and summaries. Fees, course registration and TMAs never run here — they stay on NOUN.
         </p>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
-          <a href="https://nouonline.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="card-premium p-6 no-underline">
+          {/* Fixed with www. to prevent broken links */}
+          <a href="https://www.nouonline.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="card-premium p-6 no-underline">
             <p className="font-mono-brand text-golddeep">01</p>
-            <h3 className="type-card-title mt-2">nouonline.nou.edu.ng</h3>
+            <h3 className="type-card-title mt-2">www.nouonline.nou.edu.ng</h3>
             <p className="mt-3 type-body text-muted">School fees, course registration, and every other student admin activity on the NOUN portal.</p>
-            <p className="mt-4 text-sm font-semibold">Open student portal</p>
+            <p className="mt-4 text-sm font-semibold">Open student portal ↗</p>
           </a>
           <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="card-premium p-6 no-underline">
             <p className="font-mono-brand text-golddeep">02</p>
             <h3 className="type-card-title mt-2">elearn.nou.edu.ng</h3>
             <p className="mt-3 type-body text-muted">Official TMAs and tests. Courseware and facilitation stay on NOUN eLearn — not on Ubora.</p>
-            <p className="mt-4 text-sm font-semibold">Open eLearn for TMAs</p>
+            <p className="mt-4 text-sm font-semibold">Open eLearn for TMAs ↗</p>
           </a>
         </div>
       </section>
@@ -201,7 +224,7 @@ export default async function HomePage() {
               <h3 className="font-display text-xl font-bold">{t.label}</h3>
               <p className="font-mono-brand mt-3 mb-5">
                 <span className="text-sm text-muted mr-1">NGN</span>
-                <span className="text-3xl font-semibold">{naira(TIER_PRICES_KOBO[t.id])}</span>
+                <span className="text-3xl font-semibold">{naira(TIER_PRICES_KOBO[t.id].semester)}</span>
               </p>
               <ul className="mb-8 flex-1 space-y-2.5 text-sm text-muted">
                 {t.features.map((f) => (
@@ -232,7 +255,8 @@ export default async function HomePage() {
             <Link href="/cbt" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
               Open CBT
             </Link>
-            <a href="https://nouonline.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
+            {/* Fixed with www. */}
+            <a href="https://www.nouonline.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
               Fees and registration
             </a>
             <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
