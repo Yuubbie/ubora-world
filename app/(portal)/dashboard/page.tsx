@@ -11,7 +11,6 @@ const TIER_LABELS: Record<string, string> = {
   premium: "Premium",
 };
 
-// basic unlocks 2 feature categories, standard 3, premium 4 - see spec 6.2
 const TIER_FEATURE_COUNT: Record<string, number> = {
   basic: 2,
   standard: 3,
@@ -19,7 +18,6 @@ const TIER_FEATURE_COUNT: Record<string, number> = {
 };
 
 function getGreeting() {
-  // Nigeria is UTC+1 (WAT) year-round, no DST
   const watHour = (new Date().getUTCHours() + 1) % 24;
   if (watHour < 12) return "Good morning";
   if (watHour < 17) return "Good afternoon";
@@ -30,10 +28,6 @@ function getDaysRemaining(endDate: Date) {
   const ms = endDate.getTime() - Date.now();
   return Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
 }
-
-/* Inline SVG rather than Unicode glyphs - the previous check, diamond,
-   hourglass and arrow characters rendered as emoji on some devices and as
-   blank boxes on others. */
 
 function IconCheck() {
   return (
@@ -109,32 +103,24 @@ export default async function DashboardPage() {
   const firstName = (session!.user?.name || "").split(" ")[0];
 
   const actions = [
-    { href: "/cbt", label: "Start CBT Practice", ready: true, external: false },
-    { href: "/summaries", label: "Open Course Summaries", ready: true, external: false },
-    { href: "/cbt", label: "Ask the Tutor", ready: true, external: false },
-    { href: "https://www.nouonline.nou.edu.ng/", label: "NOUN fees and registration", ready: true, external: true },, label: "NOUN fees and registration", ready: true, external: true },
-    { href: "https://elearn.nou.edu.ng/", label: "NOUN eLearn TMAs", ready: true, external: true },
-    { href: null, label: "Watch Tutorials", ready: false, external: false },
+    { href: "/cbt", label: "Start CBT Practice", ready: true },
+    { href: "/summaries", label: "Open Course Summaries", ready: true },
+    { href: "https://www.nouonline.nou.edu.ng/", label: "NOUN fees and registration", ready: true, external: true },
+    { href: null, label: "Browse Past Questions", ready: false },
   ];
 
   return (
     <div className="md:flex md:min-h-screen">
       <PortalNav tier={access.active ? access.tier : null} userName={session!.user?.name || undefined} />
-      {/* bg-dot-grid and page-shell, matching every other portal screen.
-          This page previously used bg-cream and max-w-5xl, so it was a
-          different width and background from the rest of the app. */}
       <div className="flex-1 bg-dot-grid min-h-screen">
         <div className="page-shell">
           <PageHeader
-            back={{ href: "/", label: "Home" }}
             eyebrow="Dashboard"
             title={firstName ? `${getGreeting()}, ${firstName}` : getGreeting()}
             subtitle={
               access.active
-                ? access.trial
-                  ? `Your 30-day Premium trial is open until ${access.endDate.toLocaleDateString("en-GB")}. CBT, summaries, and Ask the Tutor are unlocked.`
-                  : `Your ${access.tier} subscription is active until ${access.endDate.toLocaleDateString("en-GB")}.`
-                : "Your trial has ended. Subscribe to keep CBT, summaries, and Ask the Tutor."
+                ? `Your ${access.tier} subscription is active until ${access.endDate.toLocaleDateString("en-GB")}.`
+                : "You don't have an active subscription yet - subscribe to unlock content."
             }
           />
 
@@ -144,10 +130,10 @@ export default async function DashboardPage() {
           >
             <StatCard
               icon={<IconCheck />}
-              value={access.active ? (access.trial ? "Trial" : "Active") : "Inactive"}
+              value={access.active ? "Active" : "Inactive"}
               label="Subscription"
             />
-            <StatCard icon={<IconPlan />} value={access.active && access.trial ? "Premium trial" : tierLabel} label="Current Plan" />
+            <StatCard icon={<IconPlan />} value={tierLabel} label="Current Plan" />
             <StatCard
               icon={<IconClock />}
               value={access.active ? daysRemaining : "None"}
@@ -163,16 +149,7 @@ export default async function DashboardPage() {
           {!access.active ? (
             <div className="notice notice-warn mb-8">
               <p className="notice-warn-text">
-                Your 30-day trial has ended. Subscribe to keep CBT practice and course summaries.
-              </p>
-              <Link href="/subscribe" className="btn-gold btn-sm shrink-0">
-                View plans
-              </Link>
-            </div>
-          ) : access.trial ? (
-            <div className="notice notice-warn mb-8">
-              <p className="notice-warn-text">
-                Launch trial — {daysRemaining} day{daysRemaining === 1 ? "" : "s"} of Premium left. After that, pick a semester plan.
+                Subscribe to unlock CBT practice and course summaries.
               </p>
               <Link href="/subscribe" className="btn-gold btn-sm shrink-0">
                 View plans
@@ -188,7 +165,7 @@ export default async function DashboardPage() {
             <h2 className="type-section-title mb-6">What would you like to do?</h2>
 
             <div className="grid sm:grid-cols-2 gap-3">
-              {actions.map((a) =>
+              {actions.map((a: any) =>
                 a.ready && a.href ? (
                   a.external ? (
                     <a
