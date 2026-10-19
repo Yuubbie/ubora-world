@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { FREE_TRIAL_DAYS } from "@/lib/config";
 
 const signupSchema = z.object({
   fullName: z.string().min(2),
@@ -30,11 +29,8 @@ export async function POST(req: Request) {
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
-  
-  // Calculate the 10-day free trial expiration based on the config
-  const subscriptionExpiresAt = new Date(Date.now() + FREE_TRIAL_DAYS * 24 * 60 * 60 * 1000);
 
-  // Public signup always creates a `student` role.
+  // Public signup creates a `student` role safely matching your Prisma schema
   const user = await db.user.create({
     data: { 
       fullName, 
@@ -42,9 +38,7 @@ export async function POST(req: Request) {
       phone, 
       passwordHash, 
       matricNumber, 
-      role: "student",
-      subscriptionTier: "basic", 
-      subscriptionExpiresAt 
+      role: "student" 
     },
   });
 
