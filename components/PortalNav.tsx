@@ -4,13 +4,6 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
-/*
-  Icons are inline SVG, not Unicode glyphs. Characters like the house or
-  clock symbol render as emoji on some Android builds, as a blank box on
-  others, and differently again on iOS - which made the nav look different
-  on every device. SVG renders identically everywhere and inherits colour.
-*/
-
 function IconDashboard() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -75,7 +68,7 @@ const links = [
   { href: "/cbt", label: "CBT Practice", Icon: IconCbt, external: false },
   { href: "/summaries", label: "Summaries", Icon: IconSummaries, external: false },
   { href: "/subscribe", label: "Subscribe", Icon: IconSubscribe, external: false },
-  { href: "https://www.nouonline.nou.edu.ng/", label: "Fees & registration", Icon: IconNoun, external: true },", label: "Fees & registration", Icon: IconNoun, external: true },
+  { href: "https://www.nouonline.nou.edu.ng/", label: "Fees & registration", Icon: IconNoun, external: true },
   { href: "https://elearn.nou.edu.ng/", label: "TMAs on eLearn", Icon: IconNoun, external: true },
 ];
 
@@ -108,7 +101,6 @@ export default function PortalNav({
 
   return (
     <>
-      {/* Desktop sidebar */}
       <aside className="hidden md:flex md:flex-col md:w-64 md:shrink-0 md:min-h-screen md:sticky md:top-0 bg-ink text-white px-5 py-6">
         <Link href="/dashboard" className="flex items-center gap-2.5 mb-1">
           <img src="/brand/ubora-icon-navy.svg" alt="Ubora World" className="h-9 w-9 rounded-xl object-cover shrink-0 bg-white/10" />
@@ -160,7 +152,6 @@ export default function PortalNav({
         </div>
       </aside>
 
-      {/* Mobile top bar */}
       <div className="md:hidden border-b border-line bg-white sticky top-0 z-10">
         <div className="px-5 py-4 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2.5">
