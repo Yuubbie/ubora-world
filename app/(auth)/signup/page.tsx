@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import BackLink from "@/components/BackLink";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -27,10 +28,19 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+      <div className="mb-6">
+        <BackLink href="/" label="Home" />
+      </div>
+      <a href="/" className="flex items-center gap-3 mb-8">
+        <img src="/brand/ubora-logo.jpeg" alt="Ubora World" className="h-12 w-12 rounded-xl object-cover" />
+        <span className="font-display font-bold text-2xl tracking-tight">Ubora World</span>
+      </a>
       <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white border border-line rounded-xl p-6">
         <h1 className="text-2xl font-semibold mb-1">Create your account</h1>
-        <p className="text-sm text-muted mb-6">Subscriptions are activated after payment (Phase 2).</p>
+        <p className="text-sm text-muted mb-6">
+          30 days of Premium free — CBT, summaries, and Ask the Tutor. Then log in and pick your faculty.
+        </p>
         {error && <p className="text-sm text-coral mb-4">{error}</p>}
         {[
           { key: "fullName", label: "Full name", type: "text" },
@@ -52,8 +62,14 @@ export default function SignupPage() {
           disabled={loading}
           className="w-full bg-ink text-white rounded-lg py-2.5 text-sm font-semibold disabled:opacity-50 mt-2"
         >
-          {loading ? "Creating account…" : "Sign up"}
+          {loading ? "Creating account…" : "Start 30-day free trial"}
         </button>
+        <p className="text-sm text-muted mt-5 text-center">
+          Already have an account?{" "}
+          <a href="/login" className="text-ink2 font-semibold hover:text-gold transition-colors duration-150">
+            Log in
+          </a>
+        </p>
       </form>
     </div>
   );

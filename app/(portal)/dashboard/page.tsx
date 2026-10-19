@@ -109,10 +109,12 @@ export default async function DashboardPage() {
   const firstName = (session!.user?.name || "").split(" ")[0];
 
   const actions = [
-    { href: "/cbt", label: "Start CBT Practice", ready: true },
-    { href: "/summaries", label: "Open Course Summaries", ready: true },
-    { href: null, label: "Browse Past Questions", ready: false },
-    { href: null, label: "Watch Tutorials", ready: false },
+    { href: "/cbt", label: "Start CBT Practice", ready: true, external: false },
+    { href: "/summaries", label: "Open Course Summaries", ready: true, external: false },
+    { href: "/cbt", label: "Ask the Tutor", ready: true, external: false },
+    { href: "https://nouonline.nou.edu.ng/", label: "NOUN fees and registration", ready: true, external: true },
+    { href: "https://elearn.nou.edu.ng/", label: "NOUN eLearn TMAs", ready: true, external: true },
+    { href: null, label: "Watch Tutorials", ready: false, external: false },
   ];
 
   return (
@@ -124,12 +126,15 @@ export default async function DashboardPage() {
       <div className="flex-1 bg-dot-grid min-h-screen">
         <div className="page-shell">
           <PageHeader
+            back={{ href: "/", label: "Home" }}
             eyebrow="Dashboard"
             title={firstName ? `${getGreeting()}, ${firstName}` : getGreeting()}
             subtitle={
               access.active
-                ? `Your ${access.tier} subscription is active until ${access.endDate.toLocaleDateString("en-GB")}.`
-                : "You don't have an active subscription yet - subscribe to unlock content."
+                ? access.trial
+                  ? `Your 30-day Premium trial is open until ${access.endDate.toLocaleDateString("en-GB")}. CBT, summaries, and Ask the Tutor are unlocked.`
+                  : `Your ${access.tier} subscription is active until ${access.endDate.toLocaleDateString("en-GB")}.`
+                : "Your trial has ended. Subscribe to keep CBT, summaries, and Ask the Tutor."
             }
           />
 
@@ -139,10 +144,10 @@ export default async function DashboardPage() {
           >
             <StatCard
               icon={<IconCheck />}
-              value={access.active ? "Active" : "Inactive"}
+              value={access.active ? (access.trial ? "Trial" : "Active") : "Inactive"}
               label="Subscription"
             />
-            <StatCard icon={<IconPlan />} value={tierLabel} label="Current Plan" />
+            <StatCard icon={<IconPlan />} value={access.active && access.trial ? "Premium trial" : tierLabel} label="Current Plan" />
             <StatCard
               icon={<IconClock />}
               value={access.active ? daysRemaining : "None"}
@@ -158,7 +163,16 @@ export default async function DashboardPage() {
           {!access.active ? (
             <div className="notice notice-warn mb-8">
               <p className="notice-warn-text">
-                Subscribe to unlock CBT practice and course summaries.
+                Your 30-day trial has ended. Subscribe to keep CBT practice and course summaries.
+              </p>
+              <Link href="/subscribe" className="btn-gold btn-sm shrink-0">
+                View plans
+              </Link>
+            </div>
+          ) : access.trial ? (
+            <div className="notice notice-warn mb-8">
+              <p className="notice-warn-text">
+                Launch trial — {daysRemaining} day{daysRemaining === 1 ? "" : "s"} of Premium left. After that, pick a semester plan.
               </p>
               <Link href="/subscribe" className="btn-gold btn-sm shrink-0">
                 View plans
@@ -176,19 +190,37 @@ export default async function DashboardPage() {
             <div className="grid sm:grid-cols-2 gap-3">
               {actions.map((a) =>
                 a.ready && a.href ? (
-                  <Link
-                    key={a.label}
-                    href={a.href}
-                    className="btn-ghost group justify-between w-full"
-                  >
-                    <span>{a.label}</span>
-                    <span
-                      aria-hidden="true"
-                      className="text-gold transition-transform duration-200 group-hover:translate-x-1"
+                  a.external ? (
+                    <a
+                      key={a.label}
+                      href={a.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-ghost group justify-between w-full"
                     >
-                      <IconArrow />
-                    </span>
-                  </Link>
+                      <span>{a.label}</span>
+                      <span
+                        aria-hidden="true"
+                        className="text-gold transition-transform duration-200 group-hover:translate-x-1"
+                      >
+                        <IconArrow />
+                      </span>
+                    </a>
+                  ) : (
+                    <Link
+                      key={a.label}
+                      href={a.href}
+                      className="btn-ghost group justify-between w-full"
+                    >
+                      <span>{a.label}</span>
+                      <span
+                        aria-hidden="true"
+                        className="text-gold transition-transform duration-200 group-hover:translate-x-1"
+                      >
+                        <IconArrow />
+                      </span>
+                    </Link>
+                  )
                 ) : (
                   <span
                     key={a.label}

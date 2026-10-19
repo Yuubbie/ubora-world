@@ -60,11 +60,23 @@ function IconSignOut() {
   );
 }
 
+function IconNoun() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 3h7v7" />
+      <path d="M10 14 21 3" />
+      <path d="M21 14v7H3V3h7" />
+    </svg>
+  );
+}
+
 const links = [
-  { href: "/dashboard", label: "Dashboard", Icon: IconDashboard },
-  { href: "/cbt", label: "CBT Practice", Icon: IconCbt },
-  { href: "/summaries", label: "Summaries", Icon: IconSummaries },
-  { href: "/subscribe", label: "Subscribe", Icon: IconSubscribe },
+  { href: "/dashboard", label: "Dashboard", Icon: IconDashboard, external: false },
+  { href: "/cbt", label: "CBT Practice", Icon: IconCbt, external: false },
+  { href: "/summaries", label: "Summaries", Icon: IconSummaries, external: false },
+  { href: "/subscribe", label: "Subscribe", Icon: IconSubscribe, external: false },
+  { href: "https://nouonline.nou.edu.ng/", label: "Fees & registration", Icon: IconNoun, external: true },
+  { href: "https://elearn.nou.edu.ng/", label: "TMAs on eLearn", Icon: IconNoun, external: true },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -105,21 +117,26 @@ export default function PortalNav({
         <p className="text-xs text-white/50 mb-8 pl-[46px]">NOUN &middot; WAEC &middot; NECO &middot; JAMB</p>
 
         <nav className="flex flex-col gap-1 flex-1">
-          {links.map(({ href, label, Icon }) => {
-            const active = isActive(pathname, href);
-            return (
-              <Link
-                key={href}
-                href={href}
-                aria-current={active ? "page" : undefined}
-                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors duration-150 ${
-                  active ? "bg-white/10 text-white" : "text-white/65 hover:bg-white/5 hover:text-white"
-                }`}
-              >
+          {links.map(({ href, label, Icon, external }) => {
+            const active = !external && isActive(pathname, href);
+            const className = `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors duration-150 ${
+              active ? "bg-white/10 text-white" : "text-white/65 hover:bg-white/5 hover:text-white"
+            }`;
+            const inner = (
+              <>
                 <span className={`w-[18px] shrink-0 ${active ? "text-gold" : ""}`}>
                   <Icon />
                 </span>
                 {label}
+              </>
+            );
+            return external ? (
+              <a key={href} href={href} target="_blank" rel="noopener noreferrer" className={className}>
+                {inner}
+              </a>
+            ) : (
+              <Link key={href} href={href} aria-current={active ? "page" : undefined} className={className}>
+                {inner}
               </Link>
             );
           })}
@@ -165,24 +182,32 @@ export default function PortalNav({
         {open && (
           <div className="border-t border-line px-5 py-4 flex flex-col gap-1 bg-white">
             <div className="mb-3"><TierBadge tier={tier} /></div>
-            {links.map(({ href, label, Icon }) => {
-              const active = isActive(pathname, href);
-              return (
+            {links.map(({ href, label, Icon, external }) => {
+              const active = !external && isActive(pathname, href);
+              const className = `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors duration-150 ${
+                active ? "bg-ink text-white" : "text-ink/70 hover:bg-paper"
+              }`;
+              const inner = (
+                <>
+                  <span className={`w-[18px] shrink-0 ${active ? "text-gold" : "text-muted"}`}>
+                    <Icon />
+                  </span>
+                  {label}
+                </>
+              );
+              return external ? (
+                <a key={href} href={href} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className={className}>
+                  {inner}
+                </a>
+              ) : (
                 <Link
                   key={href}
                   href={href}
                   onClick={() => setOpen(false)}
                   aria-current={active ? "page" : undefined}
-                  /* Same pill treatment as desktop, so the active item reads
-                     identically on both. */
-                  className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors duration-150 ${
-                    active ? "bg-ink text-white" : "text-ink/70 hover:bg-paper"
-                  }`}
+                  className={className}
                 >
-                  <span className={`w-[18px] shrink-0 ${active ? "text-gold" : "text-muted"}`}>
-                    <Icon />
-                  </span>
-                  {label}
+                  {inner}
                 </Link>
               );
             })}

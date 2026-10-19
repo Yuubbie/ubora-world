@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import BackLink from "@/components/BackLink";
 
 type SetInfo = { module: number; set: number; count: number };
 type Question = { id: string; text: string; options: string[]; optionOrder: number[] };
@@ -221,6 +222,9 @@ export default function CbtQuizPage() {
       const message = ERROR_MESSAGES[setListError] ?? (isPlanIssue ? setListError : "Something went wrong loading this course.");
       return (
         <div className="max-w-md mx-auto p-8 pt-20 text-center">
+          <div className="mb-6 text-left">
+            <BackLink href="/cbt" label="CBT practice" />
+          </div>
           <div className="card-premium p-7">
             <p className="font-display text-lg font-semibold mb-2">Can't load this course yet</p>
             <p className="text-sm text-muted mb-6">{message}</p>
@@ -248,6 +252,9 @@ export default function CbtQuizPage() {
     return (
       <div className="max-w-2xl mx-auto p-8">
         <div className="mb-9">
+          <div className="mb-4">
+            <BackLink href="/cbt" label="CBT practice" />
+          </div>
           <p className="font-mono-brand text-[11px] tracking-[0.2em] text-muted uppercase mb-3">CSS121 · Introduction to Psychology</p>
           <h1 className="font-display text-3xl font-bold mb-2">Choose a practice set</h1>
           <p className="text-sm text-muted max-w-md leading-relaxed">
@@ -335,6 +342,9 @@ export default function CbtQuizPage() {
     const message = ERROR_MESSAGES[quizError] ?? (isPlanIssue ? quizError : "Something went wrong loading this practice test.");
     return (
       <div className="max-w-md mx-auto p-8 pt-20 text-center">
+        <div className="mb-6 text-left">
+          <BackLink href="/cbt" label="CBT practice" />
+        </div>
         <div className="card-premium p-7">
           <p className="font-display text-lg font-semibold mb-2">Can't start this practice test</p>
           <p className="text-sm text-muted mb-6">{message}</p>
@@ -356,6 +366,9 @@ export default function CbtQuizPage() {
     const serial = "UW-" + Math.floor(100000 + Math.random() * 899999);
     return (
       <div className="max-w-2xl mx-auto p-8">
+        <div className="mb-6">
+          <BackLink href="/cbt" label="CBT practice" />
+        </div>
         <h1 className="font-display text-2xl font-semibold mb-1 text-center">Practice complete</h1>
         <p className="text-sm text-muted text-center mb-6">{moduleTitle(selected.module)} · Set {selected.set}</p>
         <div className="bg-white border border-line rounded-2xl overflow-hidden shadow-sm">
@@ -461,6 +474,9 @@ export default function CbtQuizPage() {
 
   return (
     <div className="max-w-2xl mx-auto p-8">
+      <div className="mb-4">
+        <BackLink href="/cbt" label="CBT practice" />
+      </div>
       <div className="flex justify-between items-center mb-2">
         <p className="font-mono-brand text-xs text-muted">{moduleTitle(selected.module)} · Set {selected.set}</p>
         <button onClick={backToSetPicker} className="font-mono-brand text-xs text-muted underline">

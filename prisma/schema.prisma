@@ -22,6 +22,8 @@ model User {
   agent             Agent?
   attempts          Attempt[]
   subscriptions     Subscription[]
+  inquiryThreads    InquiryThread[]
+  inquiryReplies    InquiryMessage[]   @relation("inquiryAdmin")
 
   @@index([email])
   @@index([matricNumber])
@@ -350,4 +352,43 @@ model TutorChatMessage {
 enum ChatRole {
   user
   assistant
+}
+
+model InquiryThread {
+  id         String          @id @default(cuid())
+  visitorKey String?         @unique
+  userId     String?
+  name       String?
+  email      String?
+  status     InquiryStatus   @default(open)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  messages   InquiryMessage[]
+  user       User?           @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([status, updatedAt])
+}
+
+model InquiryMessage {
+  id        String        @id @default(cuid())
+  threadId  String
+  sender    InquirySender
+  content   String
+  adminId   String?
+  createdAt DateTime      @default(now())
+  thread    InquiryThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  admin     User?         @relation("inquiryAdmin", fields: [adminId], references: [id])
+
+  @@index([threadId, createdAt])
+}
+
+enum InquiryStatus {
+  open
+  closed
+}
+
+enum InquirySender {
+  visitor
+  admin
 }

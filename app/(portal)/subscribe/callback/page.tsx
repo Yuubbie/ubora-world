@@ -1,6 +1,7 @@
 "use client";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import BackLink from "@/components/BackLink";
 
 function CallbackContent() {
   const params = useSearchParams();
@@ -21,6 +22,9 @@ function CallbackContent() {
 
   return (
     <div className="max-w-md mx-auto px-6 py-20 text-center">
+      <div className="mb-6 text-left">
+        <BackLink href="/subscribe" label="Plans" />
+      </div>
       {status === "checking" && <p className="text-muted">Confirming your payment...</p>}
       {status === "success" && (
         <>

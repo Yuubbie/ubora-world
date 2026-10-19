@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { getAccessState } from "@/lib/access";
 import { db } from "@/lib/db";
 import PortalNav from "@/components/PortalNav";
+import BackLink from "@/components/BackLink";
 
 export default async function SummariesDepartmentPickerPage({
   params,
@@ -34,9 +35,9 @@ export default async function SummariesDepartmentPickerPage({
       <PortalNav tier={access.active ? access.tier : null} userName={session!.user?.name || undefined} />
       <div className="flex-1 bg-dot-grid min-h-screen">
         <div className="max-w-4xl mx-auto px-6 py-14">
-          <Link href="/summaries" className="eyebrow text-muted hover:text-gold mb-3 inline-block transition-colors">
-            ← Faculties
-          </Link>
+          <div className="mb-3">
+            <BackLink href="/summaries" label="Faculties" />
+          </div>
           <p className="eyebrow text-golddeep mb-3 animate-fade-up" style={{ opacity: 0 }}>
             {faculty.name}
           </p>

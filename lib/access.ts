@@ -3,7 +3,7 @@ import { tierIncludes, type Tier } from "./config";
 
 export type AccessState =
   | { active: false; tier: null }
-  | { active: true; tier: Tier; endDate: Date };
+  | { active: true; tier: Tier; endDate: Date; trial: boolean };
 
 /**
  * Master Spec 6.1 rule 3: expiry must be correct even if a background job hasn't
@@ -11,6 +11,10 @@ export type AccessState =
  * on every check, rather than trusting a possibly-stale `status` field alone.
  * (The scheduled job in Phase 2 keeps `status` correct for reporting; this
  * function is what actually gates access.)
+ *
+ * A subscription with no paymentId is the launch 30-day Premium trial granted
+ * at signup. Paid plans always have a paymentId and take precedence when both
+ * exist because we order by endDate desc (90-day paid outlasts 30-day trial).
  */
 export async function getAccessState(userId: string): Promise<AccessState> {
   const sub = await db.subscription.findFirst({
@@ -21,7 +25,12 @@ export async function getAccessState(userId: string): Promise<AccessState> {
   if (!sub) return { active: false, tier: null };
   if (sub.endDate < new Date()) return { active: false, tier: null };
 
-  return { active: true, tier: sub.tier as Tier, endDate: sub.endDate };
+  return {
+    active: true,
+    tier: sub.tier as Tier,
+    endDate: sub.endDate,
+    trial: sub.paymentId == null,
+  };
 }
 
 /**

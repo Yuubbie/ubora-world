@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import BackLink from "@/components/BackLink";
 
 const WHATSAPP_GROUP_LINK = "https://chat.whatsapp.com/HcnOnFikr3EFCImHJbkqVA";
 
@@ -47,6 +48,9 @@ export default function WaitlistPage() {
           <p className="text-xs text-muted mt-4">
             Optional - for early updates and a place to ask questions before launch.
           </p>
+          <div className="mt-6">
+            <BackLink href="/" label="Home" />
+          </div>
         </div>
       </div>
     );
@@ -60,6 +64,9 @@ export default function WaitlistPage() {
           style={{ top: "-100px", left: "-100px", background: "radial-gradient(circle, #C99A2E, transparent)" }}
         />
         <div className="relative z-10">
+          <div className="mb-6">
+            <BackLink href="/" label="Home" className="text-white/70 hover:text-gold" />
+          </div>
           <div className="flex items-center gap-3 mb-7 animate-fade-up" style={{ opacity: 0 }}>
             <img src="/brand/ubora-icon-cream.svg" alt="Ubora World" className="h-11 w-11 rounded-full object-cover" />
             <span className="font-display font-bold text-xl tracking-tight">Ubora World</span>

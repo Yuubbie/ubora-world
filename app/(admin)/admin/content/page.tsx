@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import ApproveButton from "@/components/ApproveButton";
+import BackLink from "@/components/BackLink";
 
 export default async function AdminContentPage() {
   const [questionBanks, summaries, pastQuestionSets, tutorials] = await Promise.all([
@@ -14,7 +15,15 @@ export default async function AdminContentPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-10">
+      <div className="mb-4">
+        <BackLink href="/dashboard" label="Dashboard" />
+      </div>
       <h1 className="text-3xl font-semibold mb-1">Content approval queue</h1>
+      <p className="mb-4">
+        <a href="/admin/inquiries" className="text-sm font-semibold text-golddeep hover:underline">
+          Inquiry inbox
+        </a>
+      </p>
       <p className="text-muted mb-8">
         {totalPending === 0
           ? "Nothing waiting for review — everything approved content is already visible to students."
