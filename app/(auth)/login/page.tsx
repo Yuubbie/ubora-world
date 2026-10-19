@@ -6,7 +6,7 @@ import BackLink from "@/components/BackLink";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [identifier, setIdentifier] = useState("");
+  const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -15,64 +15,69 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const res = await signIn("credentials", { identifier, password, redirect: false });
+
+    const res = await signIn("credentials", {
+      redirect: false,
+      emailOrPhone,
+      password,
+    });
+
     setLoading(false);
-    if (res?.error) setError("Incorrect email/phone or password.");
-    else router.push("/dashboard");
+
+    if (res?.error) {
+      setError("Invalid email/phone or password.");
+      return;
+    }
+
+    router.push("/dashboard");
+    router.refresh();
   }
 
   return (
-    <div className="bg-dot-grid relative min-h-screen flex flex-col items-center justify-center px-4 bg-paper overflow-hidden">
-      <div
-        className="absolute w-[500px] h-[500px] rounded-full opacity-[0.12] blur-3xl pointer-events-none"
-        style={{ top: "-120px", right: "-120px", background: "radial-gradient(circle, #C99A2E, transparent)" }}
-      />
-      <div className="relative mb-6">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+      <div className="mb-6">
         <BackLink href="/" label="Home" />
       </div>
-      <a href="/" className="relative flex items-center gap-3 mb-8 animate-fade-up">
+      <a href="/" className="flex items-center gap-3 mb-8">
         <img src="/brand/ubora-logo.jpeg" alt="Ubora World" className="h-12 w-12 rounded-xl object-cover" />
         <span className="font-display font-bold text-2xl tracking-tight">Ubora World</span>
       </a>
-      <form
-        onSubmit={handleSubmit}
-        className="relative card-premium w-full max-w-sm p-9 animate-fade-up-scale"
-        style={{ animationDelay: "0.1s", opacity: 0 }}
-      >
-        <p className="eyebrow text-gold mb-3">
-          Secure Student Portal
+      <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white border border-line rounded-xl p-6">
+        <h1 className="text-2xl font-semibold mb-1">Welcome back</h1>
+        <p className="text-sm text-muted mb-6">
+          Log in to access your CBT practice and course summaries.
         </p>
-        <h1 className="font-display text-3xl font-bold mb-2 tracking-tight">Student login</h1>
-        <p className="text-sm text-muted mb-7">
-          New here? Create an account for 30 days of Premium, then come back and log in. Demo: demo.student@uboraworld.test / Password123!
-        </p>
-        {error && <p className="text-sm text-coral mb-4 font-medium">{error}</p>}
-        <label className="text-sm font-medium block mb-1.5">Email or phone</label>
-        <input
-          value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl border border-line text-base mb-5 transition-colors duration-150 hover:border-muted focus:border-gold focus:outline-none"
-        />
-        <label className="text-sm font-medium block mb-1.5">Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl border border-line text-base mb-7 transition-colors duration-150 hover:border-muted focus:border-gold focus:outline-none"
-        />
+        {error && <p className="text-sm text-coral mb-4">{error}</p>}
+        <div className="mb-4">
+          <label className="text-sm font-medium block mb-1.5">Email or Phone</label>
+          <input
+            type="text"
+            value={emailOrPhone}
+            onChange={(e) => setEmailOrPhone(e.target.value)}
+            className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm"
+            required
+          />
+        </div>
+        <div className="mb-6">
+          <label className="text-sm font-medium block mb-1.5">Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm"
+            required
+          />
+        </div>
         <button
           disabled={loading}
-          className="btn-primary group w-full text-base py-3.5 disabled:opacity-50 disabled:pointer-events-none"
+          className="w-full bg-ink text-white rounded-lg py-2.5 text-sm font-semibold disabled:opacity-50"
         >
-          <span>{loading ? "Logging in…" : "Log in"}</span>
-          {!loading && (
-            <span className="ml-2 transition-transform duration-200 group-hover:translate-x-1">→</span>
-          )}
+          {loading ? "Logging in…" : "Log in"}
         </button>
         <p className="text-sm text-muted mt-5 text-center">
-          No account?{" "}
+          New here?{" "}
           <a href="/signup" className="text-ink2 font-semibold hover:text-gold transition-colors duration-150">
-            Sign up
+            Create an account for 10 days free.
           </a>
         </p>
       </form>
