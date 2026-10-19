@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { FREE_TRIAL_DAYS } from "@/lib/config";
 
 const signupSchema = z.object({
   fullName: z.string().min(2),
@@ -29,13 +30,22 @@ export async function POST(req: Request) {
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
+  
+  // Calculate the 10-day free trial expiration based on the config
+  const subscriptionExpiresAt = new Date(Date.now() + FREE_TRIAL_DAYS * 24 * 60 * 60 * 1000);
 
-  // Public signup always creates a `student` role. Agent, content_partner, and
-  // admin accounts are provisioned separately (Phase 2/3 admin tooling) — this
-  // is what makes Spec 6.7 rule 1 (content partners can't hold referral codes)
-  // structurally true rather than just a policy someone has to remember.
+  // Public signup always creates a `student` role.
   const user = await db.user.create({
-    data: { fullName, email, phone, passwordHash, matricNumber, role: "student" },
+    data: { 
+      fullName, 
+      email, 
+      phone, 
+      passwordHash, 
+      matricNumber, 
+      role: "student",
+      subscriptionTier: "basic", 
+      subscriptionExpiresAt 
+    },
   });
 
   return NextResponse.json({ id: user.id, fullName: user.fullName }, { status: 201 });

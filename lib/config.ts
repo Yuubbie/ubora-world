@@ -20,14 +20,24 @@ export function tierIncludes(subscriptionTier: Tier, requiredTier: Tier): boolea
   return TIER_RANK[subscriptionTier] >= TIER_RANK[requiredTier];
 }
 
-// Master Spec Section 6.1 — subscription length.
-export const SUBSCRIPTION_LENGTH_DAYS = 90; // 3 months
+// Master Spec Section 6.1 — subscription length & trials
+export const BILLING_CYCLES = {
+  monthly: 30,
+  semester: 90
+} as const;
+export type BillingCycle = keyof typeof BILLING_CYCLES;
+
+export const FREE_TRIAL_DAYS = 10; // New signups get exactly 10 days
 export const RENEWAL_REMINDER_DAYS_BEFORE = [7, 1];
 
-// Prices in kobo (smallest Naira unit) — one place to change pricing, per
-// semester (3 months). Placeholder amounts — set real prices before launch.
-export const TIER_PRICES_KOBO: Record<Tier, number> = {
-  basic: 150000,     // ₦1,500
-  standard: 350000,  // ₦3,500
-  premium: 600000,   // ₦6,000
+// Platform URLs & Contact
+export const ENQUIRY_NUMBER = "0810 013 3673";
+export const STUDENT_PORTAL_URL = "https://www.nouonline.nou.edu.ng/";
+
+// Prices in kobo (smallest Naira unit) — one place to change pricing
+// Basic: ₦2,000/mo or ₦4,500/sem | Standard: ₦3,000/mo or ₦7,500/sem | Premium: ₦3,500/mo or ₦9,000/sem
+export const TIER_PRICES_KOBO: Record<Tier, { monthly: number; semester: number }> = {
+  basic: { monthly: 200000, semester: 450000 },
+  standard: { monthly: 300000, semester: 750000 },
+  premium: { monthly: 350000, semester: 900000 },
 };

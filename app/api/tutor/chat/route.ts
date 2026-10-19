@@ -29,12 +29,19 @@
 //      — this route depends on the TutorChatMessage model.
 //
 // A NOTE ON THE FREE TIER'S LIMITS: free-tier Gemini access is
-// rate-limited (requests per minute and per day, not unlimited). If
-// you outgrow it, Google's own upgrade path is to add billing to the
-// same project — no code change needed, just a higher ceiling. Check
-// ai.google.dev for the current free-tier model name and limits, since
-// Google updates these periodically and a model name that works today
-// could be renamed later.
+// rate-limited (requests per minute and per day, not unlimited), and
+// its requests get lower priority than paid tier during Google's own
+// server load — this shows up as occasional 503 "overloaded" errors
+// even well within the rate limit, and can be sustained for longer
+// stretches right after Google ships a new model everyone is testing
+// at once. The retry + fallback-model logic below absorbs most of
+// this. If you outgrow the free tier entirely, Google's own upgrade
+// path is to add billing to the same project — no code change needed
+// beyond simplifying this workaround if you want, since a paid tier
+// gets priority and won't need it as much. Check ai.google.dev for
+// the current free-tier model names and limits, since Google updates
+// these periodically and a model name that works today could be
+// renamed later.
 
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
@@ -47,19 +54,67 @@ export const dynamic = "force-dynamic";
 
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-// Using Google's "latest" alias rather than a specific dated model
-// name. Google rotates and deprecates specific model versions
-// frequently (this project already hit one such deprecation) — the
-// -latest alias is maintained by Google to always point at their
-// current recommended flash model, so this shouldn't need updating
-// again as new versions ship. If you ever want to pin a specific
-// version deliberately (for consistency during testing, for example),
-// run this to see what's currently live on your key:
+// Primary model, plus a fallback used only if the primary keeps
+// reporting 503 (overloaded) after retrying. "-latest" aliases tend
+// to get hit hardest right after Google ships a new model — everyone
+// testing the newest release at once — so a slightly older, more
+// established model name is a reasonable fallback with likely lower
+// contention. If Google renames/retires "gemini-2.0-flash" later,
+// swap this constant the same way you'd update the primary one. Run
+// this to see what's currently live on your key:
 //   curl "https://generativelanguage.googleapis.com/v1beta/models?key=YOUR_KEY"
-const MODEL = "gemini-flash-latest";
+const MODEL_PRIMARY = "gemini-flash-latest";
+const MODEL_FALLBACK = "gemini-2.0-flash";
 
 const MAX_GROUNDING_QUESTIONS = 60;
 const MAX_HISTORY_MESSAGES = 20;
+
+// Retries only on 503 (the model is temporarily overloaded on
+// Google's end) — not on 400/401/404/etc, since those are real
+// problems a retry won't fix and would just waste quota. Uses a
+// short exponential backoff (500ms, then 1000ms) rather than
+// retrying instantly, since an instant retry is unlikely to land on
+// a moment when the model has freed up. Kept to one retry per model
+// (rather than two) so trying two models back-to-back doesn't leave
+// the student waiting too long overall.
+async function generateWithRetry(
+  params: Parameters<typeof genAI.models.generateContent>[0],
+  maxRetries = 1
+) {
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await genAI.models.generateContent(params);
+    } catch (err: any) {
+      lastError = err;
+      const status = err?.status ?? err?.response?.status ?? err?.code;
+      const isOverloaded = status === 503 || status === "503";
+      if (!isOverloaded || attempt === maxRetries) throw err;
+      const delayMs = 500 * Math.pow(2, attempt);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+  throw lastError;
+}
+
+// Tries the primary model first (with its own short retry above). If
+// that's exhausted and the failure was specifically "overloaded",
+// falls through to the fallback model once, rather than giving up on
+// the whole request just because one specific model is busy right
+// now.
+async function generateWithFallback(
+  baseParams: Omit<Parameters<typeof genAI.models.generateContent>[0], "model">
+) {
+  try {
+    return await generateWithRetry({ ...baseParams, model: MODEL_PRIMARY });
+  } catch (err: any) {
+    const status = err?.status ?? err?.response?.status ?? err?.code;
+    const isOverloaded = status === 503 || status === "503";
+    if (!isOverloaded) throw err;
+    console.warn(`Tutor chat: ${MODEL_PRIMARY} overloaded, falling back to ${MODEL_FALLBACK}`);
+    return await generateWithRetry({ ...baseParams, model: MODEL_FALLBACK });
+  }
+}
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -144,8 +199,7 @@ ${groundingMaterial}`;
   let assistantReply: string;
   try {
     // ---- MODEL CALL (swap this block to change AI provider) ----
-    const response = await genAI.models.generateContent({
-      model: MODEL,
+    const response = await generateWithFallback({
       contents: geminiHistory,
       config: {
         systemInstruction: systemPrompt,
@@ -160,7 +214,10 @@ ${groundingMaterial}`;
     }
   } catch (err) {
     console.error("Tutor chat: Gemini API call failed", err);
-    return NextResponse.json({ error: "The tutor is temporarily unavailable. Please try again." }, { status: 502 });
+    return NextResponse.json(
+      { error: "Our tutor is a bit busy right now — please try again in a few seconds." },
+      { status: 502 }
+    );
   }
 
   await db.tutorChatMessage.createMany({

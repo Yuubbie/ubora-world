@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { verifyTransaction } from "./paystack";
-import { SUBSCRIPTION_LENGTH_DAYS, TIER_PRICES_KOBO, type Tier } from "./config";
+// We import BILLING_CYCLES instead of the old SUBSCRIPTION_LENGTH_DAYS
+import { BILLING_CYCLES, TIER_PRICES_KOBO, type Tier, type BillingCycle } from "./config";
 
 export type ConfirmResult =
   | { ok: true; alreadyProcessed: boolean }
@@ -24,8 +25,13 @@ export async function confirmPaymentAndActivate(reference: string): Promise<Conf
     return { ok: true, alreadyProcessed: true };
   }
 
+  // Read both tier and cycle from the Paystack metadata (default to semester for safety)
   const tier = (verified.metadata?.tier ?? "basic") as Tier;
-  const expectedAmount = TIER_PRICES_KOBO[tier];
+  const cycle = (verified.metadata?.cycle ?? "semester") as BillingCycle;
+  
+  // Look up the exact price for that specific tier and cycle
+  const expectedAmount = TIER_PRICES_KOBO[tier][cycle];
+  
   if (verified.amount !== expectedAmount) {
     await db.payment.update({ where: { reference }, data: { status: "failed" } });
     return { ok: false, reason: "amount_mismatch" };
@@ -34,8 +40,12 @@ export async function confirmPaymentAndActivate(reference: string): Promise<Conf
   await db.payment.update({ where: { reference }, data: { status: "success" } });
 
   const startDate = new Date();
-  const endDate = new Date(startDate.getTime() + SUBSCRIPTION_LENGTH_DAYS * 24 * 60 * 60 * 1000);
+  
+  // Calculate end date based on the cycle (30 days for monthly, 90 days for semester)
+  const lengthDays = BILLING_CYCLES[cycle];
+  const endDate = new Date(startDate.getTime() + lengthDays * 24 * 60 * 60 * 1000);
 
+  // Create the active subscription record
   await db.subscription.create({
     data: { userId: payment.userId, tier, startDate, endDate, status: "active", paymentId: payment.id },
   });

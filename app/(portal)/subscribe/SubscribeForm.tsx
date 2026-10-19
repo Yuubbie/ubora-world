@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import { TIER_PRICES_KOBO } from "@/lib/config";
+// Import the new BillingCycle type
+import { TIER_PRICES_KOBO, type BillingCycle } from "@/lib/config";
 
 const TIERS: { id: "basic" | "standard" | "premium"; label: string; features: string[]; highlight?: boolean }[] = [
   { id: "basic", label: "Basic", features: ["Past questions", "Course summaries (view only)"] },
@@ -11,6 +12,8 @@ const TIERS: { id: "basic" | "standard" | "premium"; label: string; features: st
 export default function SubscribeForm() {
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // State to track whether the user wants monthly or semester billing
+  const [cycle, setCycle] = useState<BillingCycle>("semester");
 
   async function subscribe(tier: string) {
     setLoading(tier);
@@ -18,7 +21,8 @@ export default function SubscribeForm() {
     const res = await fetch("/api/payments/initialize", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tier }),
+      // Pass both the tier and the chosen cycle to the API
+      body: JSON.stringify({ tier, cycle }),
     });
     const data = await res.json();
     setLoading(null);
@@ -31,25 +35,55 @@ export default function SubscribeForm() {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-14">
-      <p className="eyebrow text-golddeep mb-3 animate-fade-up" style={{ opacity: 0 }}>
+      <p className="eyebrow text-golddeep mb-3 animate-fade-up" style={{ opacity: 0, animationFillMode: "forwards" }}>
         Pricing
       </p>
-      <h1
-        className="font-display text-3xl md:text-4xl font-bold mb-2 tracking-tight animate-fade-up"
-        style={{ animationDelay: "0.05s", opacity: 0 }}
-      >
-        Choose your <span className="italic font-medium text-gold">plan</span>.
-      </h1>
-      <p className="text-muted mb-10 animate-fade-up" style={{ animationDelay: "0.1s", opacity: 0 }}>
-        Per semester (3 months). Renews manually - no surprise charges.
-      </p>
+      
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+        <div>
+          <h1
+            className="font-display text-3xl md:text-4xl font-bold mb-2 tracking-tight animate-fade-up"
+            style={{ animationDelay: "0.05s", opacity: 0, animationFillMode: "forwards" }}
+          >
+            Choose your <span className="italic font-medium text-gold">plan</span>.
+          </h1>
+          <p className="text-muted animate-fade-up" style={{ animationDelay: "0.1s", opacity: 0, animationFillMode: "forwards" }}>
+            Renews manually - no surprise charges.
+          </p>
+        </div>
+
+        {/* The Billing Cycle Toggle Switch */}
+        <div 
+          className="flex items-center p-1 bg-surface-alt rounded-lg border border-line w-fit animate-fade-up"
+          style={{ animationDelay: "0.15s", opacity: 0, animationFillMode: "forwards" }}
+        >
+          <button
+            onClick={() => setCycle("monthly")}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+              cycle === "monthly" ? "bg-white shadow-sm text-ink" : "text-muted hover:text-ink"
+            }`}
+          >
+            Per month (30 days)
+          </button>
+          <button
+            onClick={() => setCycle("semester")}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+              cycle === "semester" ? "bg-white shadow-sm text-ink" : "text-muted hover:text-ink"
+            }`}
+          >
+            Per semester (90 days)
+          </button>
+        </div>
+      </div>
+
       {error && <p className="text-coral mb-4 font-medium">{error}</p>}
+      
       <div className="grid sm:grid-cols-3 gap-5">
         {TIERS.map((t, i) => (
           <div
             key={t.id}
             className={`card-premium flex flex-col p-7 animate-fade-up-scale ${t.highlight ? "border-2 border-gold shadow-cardHover" : ""}`}
-            style={{ animationDelay: `${0.15 + i * 0.05}s`, opacity: 0 }}
+            style={{ animationDelay: `${0.2 + i * 0.05}s`, opacity: 0, animationFillMode: "forwards" }}
           >
             {t.highlight && (
               <span className="eyebrow self-start mb-3 rounded-full bg-gold/15 px-2.5 py-1 text-[10px] text-golddeep">
@@ -59,8 +93,12 @@ export default function SubscribeForm() {
             <h3 className="font-display font-bold text-xl mb-3 tracking-tight">{t.label}</h3>
             <p className="font-mono-brand mb-6">
               <span className="text-sm text-muted mr-1">NGN</span>
-              <span className="text-3xl font-semibold text-ink">
-                {(TIER_PRICES_KOBO[t.id] / 100).toLocaleString()}
+              <span className="text-3xl font-semibold text-ink transition-all">
+                {/* Dynamically display the correct price based on the toggle */}
+                {(TIER_PRICES_KOBO[t.id][cycle] / 100).toLocaleString()}
+              </span>
+              <span className="text-sm text-muted ml-1 font-sans">
+                /{cycle === "monthly" ? "mo" : "sem"}
               </span>
             </p>
             <ul className="text-sm text-muted mb-8 flex-1 space-y-2.5">
