@@ -82,13 +82,13 @@ export default async function HomePage() {
           </div>
 
           <div className="card-static overflow-hidden p-6 md:p-8">
-            <p className="eyebrow text-golddeep">Live demo · 90 seconds</p>
+            <p className="eyebrow text-golddeep">Live walkthrough · 90 seconds</p>
             <p className="mt-3 font-display text-2xl font-bold">Watch the path, then walk it.</p>
-            <p className="mt-2 text-sm text-muted">Tap each step. You land on the real screen — signup, login, faculty picker, then a 30-question set.</p>
+            <p className="mt-2 text-sm text-muted">Tap each step. Set up your personal account, pick your faculty, and test your knowledge.</p>
             <div className="mt-6 space-y-3">
               {[
-                { n: "01", t: "Create account", d: "Name, email, password. No card. 10 days of trial access starts now.", href: "/signup" },
-                { n: "02", t: "Log in", d: "Your new email, or the demo: demo.student@uboraworld.test / Password123!", href: "/login" },
+                { n: "01", t: "Create account", d: "Name, email, password. No card required. 10 days of trial access starts immediately.", href: "/signup" },
+                { n: "02", t: "Log in", d: "Sign in securely with the email and password you just created.", href: "/login" },
                 { n: "03", t: "Pick a paper", d: "Faculty → department → course. Sit 30 questions. Ask the Tutor on that page.", href: "/cbt" },
               ].map((step) => (
                 <Link key={step.n} href={step.href} className="flex items-start gap-3 rounded-2xl bg-paper px-4 py-3 text-sm no-underline hover:bg-white">
@@ -127,19 +127,19 @@ export default async function HomePage() {
       </section>
 
       <section id="walkthrough" className="mx-auto max-w-6xl px-5 py-14 md:px-8">
-        <p className="eyebrow text-golddeep">Live walkthrough</p>
+        <p className="eyebrow text-golddeep">Platform guide</p>
         <h2 className="type-page-title mt-3">Sign up once. Ten days of everything free.</h2>
         <p className="mt-3 max-w-2xl text-muted">
-          This is the real app, not a mock. Create your account for a 10-day free trial (CBT, summaries, Ask the Tutor), or peek with the demo student. School fees, registration and official TMAs stay on NOUN — two portals, two jobs.
+          Create your personal account for a 10-day free trial (CBT, summaries, Ask the Tutor). School fees, registration and official TMAs stay on NOUN — two portals, two jobs.
         </p>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {([
             { n: "01", t: "Sign up", d: "Open Create account. Full name, email, password (8+). Matric is optional. Tap Start 10-day free trial. You land on login — no card, no Paystack.", href: "/signup" },
-            { n: "02", t: "Log in", d: "Use the email and password you just set. Demo peek: demo.student@uboraworld.test / Password123!", href: "/login" },
+            { n: "02", t: "Log in", d: "Use the email and password you just set during your account creation.", href: "/login" },
             { n: "03", t: "Sit CBT", d: "Dashboard → Start CBT Practice. Faculty, then department, then the 30-question set. Ask the Tutor lives on that course page.", href: "/cbt" },
             { n: "04", t: "Read summaries", d: "Same faculty path under Course summaries. Cram notes for the paper you are sitting.", href: "/summaries" },
             { n: "05", t: "Ask the Tutor", d: "From any CBT course page, open Ask. Grounded in that course bank. Trial unlocks it.", href: "/cbt" },
-            { n: "06", t: "Ask Ubora", d: "Need quick help? Use the in-app chat widget or reach out directly via our WhatsApp support line above for Ubora World, admissions, and project inquiries.", href: "#noun" },
+            { n: "06", t: "Support & Help", d: "Need quick help? Use the in-app chat widget or reach out directly via our WhatsApp support line above for Ubora World, admissions, and project inquiries.", href: "#noun" },
           ] as const).map((step) => (
             <Link key={step.t} href={step.href} className="card-premium p-6 no-underline">
               <p className="font-mono-brand text-golddeep">{step.n}</p>
