@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-// Import the new BillingCycle type
 import { TIER_PRICES_KOBO, type BillingCycle } from "@/lib/config";
 
 const TIERS: { id: "basic" | "standard" | "premium"; label: string; features: string[]; highlight?: boolean }[] = [
@@ -12,8 +11,8 @@ const TIERS: { id: "basic" | "standard" | "premium"; label: string; features: st
 export default function SubscribeForm() {
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  // State to track whether the user wants monthly or semester billing
-  const [cycle, setCycle] = useState<BillingCycle>("semester");
+  // Track which billing cycle the user has selected for payment (defaults to semester)
+  const [selectedCycle, setSelectedCycle] = useState<BillingCycle>("semester");
 
   async function subscribe(tier: string) {
     setLoading(tier);
@@ -21,8 +20,7 @@ export default function SubscribeForm() {
     const res = await fetch("/api/payments/initialize", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // Pass both the tier and the chosen cycle to the API
-      body: JSON.stringify({ tier, cycle }),
+      body: JSON.stringify({ tier, cycle: selectedCycle }),
     });
     const data = await res.json();
     setLoading(null);
@@ -36,7 +34,7 @@ export default function SubscribeForm() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-14">
       <p className="eyebrow text-golddeep mb-3 animate-fade-up" style={{ opacity: 0, animationFillMode: "forwards" }}>
-        Pricing
+        Pricing & Subscriptions
       </p>
       
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
@@ -48,30 +46,32 @@ export default function SubscribeForm() {
             Choose your <span className="italic font-medium text-gold">plan</span>.
           </h1>
           <p className="text-muted animate-fade-up" style={{ animationDelay: "0.1s", opacity: 0, animationFillMode: "forwards" }}>
-            Renews manually - no surprise charges.
+            Select your preferred billing cycle below, then choose your plan to checkout securely via Paystack.
           </p>
         </div>
 
-        {/* The Billing Cycle Toggle Switch */}
+        {/* Global Cycle Selector for Checkout */}
         <div 
           className="flex items-center p-1 bg-surface-alt rounded-lg border border-line w-fit animate-fade-up"
           style={{ animationDelay: "0.15s", opacity: 0, animationFillMode: "forwards" }}
         >
           <button
-            onClick={() => setCycle("monthly")}
+            type="button"
+            onClick={() => setSelectedCycle("monthly")}
             className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              cycle === "monthly" ? "bg-white shadow-sm text-ink" : "text-muted hover:text-ink"
+              selectedCycle === "monthly" ? "bg-white shadow-sm text-ink font-bold" : "text-muted hover:text-ink"
             }`}
           >
-            Per month (30 days)
+            Billing: Monthly (30 days)
           </button>
           <button
-            onClick={() => setCycle("semester")}
+            type="button"
+            onClick={() => setSelectedCycle("semester")}
             className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              cycle === "semester" ? "bg-white shadow-sm text-ink" : "text-muted hover:text-ink"
+              selectedCycle === "semester" ? "bg-white shadow-sm text-ink font-bold" : "text-muted hover:text-ink"
             }`}
           >
-            Per semester (90 days)
+            Billing: Semester (90 days)
           </button>
         </div>
       </div>
@@ -91,16 +91,23 @@ export default function SubscribeForm() {
               </span>
             )}
             <h3 className="font-display font-bold text-xl mb-3 tracking-tight">{t.label}</h3>
-            <p className="font-mono-brand mb-6">
-              <span className="text-sm text-muted mr-1">NGN</span>
-              <span className="text-3xl font-semibold text-ink transition-all">
-                {/* Dynamically display the correct price based on the toggle */}
-                {(TIER_PRICES_KOBO[t.id][cycle] / 100).toLocaleString()}
-              </span>
-              <span className="text-sm text-muted ml-1 font-sans">
-                /{cycle === "monthly" ? "mo" : "sem"}
-              </span>
-            </p>
+
+            {/* Display Both Tariffs Clearly inside the Dashboard */}
+            <div className="space-y-2 mb-6 pb-4 border-b border-line">
+              <div className={`flex items-center justify-between text-sm p-2 rounded-lg ${selectedCycle === "monthly" ? "bg-gold/10 border border-gold/40" : ""}`}>
+                <span className="text-muted">Monthly (30d)</span>
+                <span className="font-mono-brand font-semibold">
+                  ₦{(TIER_PRICES_KOBO[t.id].monthly / 100).toLocaleString()}
+                </span>
+              </div>
+              <div className={`flex items-center justify-between text-sm p-2 rounded-lg ${selectedCycle === "semester" ? "bg-gold/10 border border-gold/40" : ""}`}>
+                <span className="font-medium text-ink">Semester (90d)</span>
+                <span className="font-mono-brand font-bold text-golddeep">
+                  ₦{(TIER_PRICES_KOBO[t.id].semester / 100).toLocaleString()}
+                </span>
+              </div>
+            </div>
+
             <ul className="text-sm text-muted mb-8 flex-1 space-y-2.5">
               {t.features.map((f) => (
                 <li key={f} className="flex items-start gap-2">
@@ -108,12 +115,17 @@ export default function SubscribeForm() {
                 </li>
               ))}
             </ul>
+
             <button
               onClick={() => subscribe(t.id)}
               disabled={loading !== null}
               className={`group text-sm disabled:opacity-50 disabled:pointer-events-none ${t.highlight ? "btn-gold" : "btn-primary"}`}
             >
-              <span>{loading === t.id ? "Redirecting..." : `Subscribe to ${t.label}`}</span>
+              <span>
+                {loading === t.id 
+                  ? "Redirecting..." 
+                  : `Pay for ${selectedCycle === "monthly" ? "Month" : "Semester"} (${t.label})`}
+              </span>
               {loading !== t.id && (
                 <span className="ml-2 transition-transform duration-200 group-hover:translate-x-1">→</span>
               )}
