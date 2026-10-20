@@ -11,16 +11,28 @@ export default async function AdminDashboard() {
     redirect("/login"); 
   }
 
+  const currentUserEmail = session.user.email;
+  // ONLY YOU (Yubbie) can delete users
+  const canDelete = currentUserEmail === "yubbiepen.pixel@gmail.com";
+
+  // Get total user counts & subscription lists
   const users = await db.user.findMany({
     orderBy: { createdAt: "desc" },
   });
+
+  // Calculate subscription details
+  const subscribers = users.filter(u => (u as any).role === "premium" || (u as any).isPremium);
+  
+  const totalSubscribersCount = subscribers.length;
+  const ESTIMATED_SUB_PRICE = 3000; 
+  const totalSubRevenue = totalSubscribersCount * ESTIMATED_SUB_PRICE;
 
   async function deleteUser(formData: FormData) {
     "use server";
     
     const currentSession = await getServerSession(authOptions);
-    if (!currentSession?.user || (currentSession.user as any).role !== "admin") {
-      throw new Error("Unauthorized access");
+    if (!currentSession?.user || (currentSession.user as any).role !== "admin" || currentSession.user.email !== "yubbiepen.pixel@gmail.com") {
+      throw new Error("Unauthorized action. Only the Master Admin can delete users.");
     }
 
     const userId = formData.get("userId") as string;
@@ -46,16 +58,37 @@ export default async function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8 text-gray-900 font-sans">
       <div className="max-w-6xl mx-auto">
+        
+        {/* TOP BAR */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-[#101B33]">Admin Dashboard</h1>
-            <p className="text-gray-500 mt-1">Manage users and platform access.</p>
+            <p className="text-gray-500 mt-1">Manage users, view subscriber statistics, and assess platforms.</p>
           </div>
           <div className="bg-[#101B33] text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm">
-            Admin: {(session.user as any).name}
+            Admin Session: {session.user.name} ({canDelete ? "Master Admin" : "View-Only"})
           </div>
         </div>
 
+        {/* METRICS & STATS CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Users</p>
+            <h3 className="text-3xl font-extrabold text-[#101B33] mt-2">{users.length}</h3>
+          </div>
+          
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Subscribers (Premium)</p>
+            <h3 className="text-3xl font-extrabold text-[#C79A3D] mt-2">{totalSubscribersCount}</h3>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Estimated Revenue</p>
+            <h3 className="text-3xl font-extrabold text-green-600 mt-2">₦{totalSubRevenue.toLocaleString()}</h3>
+          </div>
+        </div>
+
+        {/* DATA TABLE */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
@@ -86,10 +119,12 @@ export default async function AdminDashboard() {
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      {user.role !== "admin" ? (
+                      {user.role !== "admin" && canDelete ? (
                         <DeleteButton userId={user.id} deleteAction={deleteUser} />
-                      ) : (
+                      ) : user.role === "admin" ? (
                         <span className="text-gray-400 text-xs uppercase font-semibold">Protected</span>
+                      ) : (
+                        <span className="text-gray-400 text-xs italic">View-Only</span>
                       )}
                     </td>
                   </tr>
@@ -105,6 +140,7 @@ export default async function AdminDashboard() {
             </table>
           </div>
         </div>
+
       </div>
     </div>
   );
