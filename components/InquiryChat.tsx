@@ -83,7 +83,7 @@ export default function InquiryChat() {
   }
 
   return (
-    <div className="fixed bottom-24 left-4 z-50 flex flex-col items-start gap-3">
+    <div className="fixed bottom-24 right-4 z-50 flex flex-col items-end gap-3">
       {open && (
         <div className="card-static flex h-[480px] w-[min(22rem,calc(100vw-2rem))] flex-col overflow-hidden shadow-cardHover">
           <div className="bg-ink px-4 py-3 text-white">
