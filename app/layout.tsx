@@ -4,13 +4,55 @@ import Providers from "@/components/Providers";
 import ServiceWorkerRegistrar from "@/components/ServiceWorkerRegistrar";
 import InstallAppBanner from "@/components/InstallAppBanner";
 import InquiryChat from "@/components/InquiryChat";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Ubora World",
-  description: "CBT practice, course summaries, past questions and tutorials for NOUN students.",
-  applicationName: "Ubora World",
-  // iOS never prompts to install - the user adds to home screen manually.
-  // These control how it behaves once they do.
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Ubora World | NOUN CBT Practice, Past Questions & Summaries",
+    template: "%s | Ubora World",
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "NOUN CBT",
+    "NOUN past questions",
+    "National Open University of Nigeria",
+    "NOUN exam practice",
+    "NOUN TMA practice",
+    "NOUN course summaries",
+    "GST101",
+    "Ubora World",
+    "NOUN elearn",
+    "nouonline",
+  ],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "en_NG",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: "Ubora World | NOUN CBT Practice, Past Questions & Summaries",
+    description: SITE_DESCRIPTION,
+    images: [{ url: "/brand/ubora-logo.jpeg", width: 512, height: 512, alt: "Ubora World" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ubora World | NOUN CBT Practice, Past Questions & Summaries",
+    description: SITE_DESCRIPTION,
+    images: ["/brand/ubora-logo.jpeg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
   appleWebApp: {
     capable: true,
     title: "Ubora",

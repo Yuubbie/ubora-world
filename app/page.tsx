@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { TIER_PRICES_KOBO, ENQUIRY_NUMBER } from "@/lib/config";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, courseSlug } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: { absolute: "Ubora World | NOUN CBT Practice, Past Questions & Summaries" },
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+};
 
 function naira(kobo: number) {
   return (kobo / 100).toLocaleString("en-NG");
@@ -30,8 +38,37 @@ export default async function HomePage() {
   const cleanPhone = ENQUIRY_NUMBER.replace(/\s+/g, "");
   const whatsappUrl = `https://wa.me/234${cleanPhone.startsWith("0") ? cleanPhone.slice(1) : cleanPhone}?text=Hello,%20I%20need%20help%20with%20Ubora%20World,%20Admission,%20TMA,%20Project,%20or%20IT/SIWES.`;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: SITE_URL,
+        logo: `${SITE_URL}/brand/ubora-logo.jpeg`,
+        telephone: "+2348100133673",
+        sameAs: [whatsappUrl],
+      },
+      {
+        "@type": "WebSite",
+        name: SITE_NAME,
+        url: SITE_URL,
+        description: SITE_DESCRIPTION,
+        publisher: { "@type": "Organization", name: SITE_NAME },
+      },
+      {
+        "@type": "EducationalOrganization",
+        name: SITE_NAME,
+        url: SITE_URL,
+        description: "CBT practice and course summaries for National Open University of Nigeria (NOUN) students.",
+        areaServed: "NG",
+      },
+    ],
+  };
+
   return (
     <div className="min-h-[100dvh] bg-paper text-ink">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 md:px-8">
           <Link href="/" className="flex items-center gap-2.5">
@@ -41,6 +78,7 @@ export default async function HomePage() {
           <nav className="hidden items-center gap-7 text-sm text-muted md:flex">
             <a href="#walkthrough" className="hover:text-ink">Walkthrough</a>
             <a href="#noun" className="hover:text-ink">NOUN portals</a>
+            <Link href="/noun" className="hover:text-ink">NOUN courses</Link>
             <a href="#courses" className="hover:text-ink">Courses</a>
             <a href="#pricing" className="hover:text-ink">Pricing</a>
           </nav>
@@ -55,12 +93,12 @@ export default async function HomePage() {
         <div className="pointer-events-none absolute inset-0 bg-grain" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-12 md:grid-cols-2 md:px-8 md:py-20">
           <div>
-            <p className="eyebrow text-golddeep mb-4">NOUN · WAEC · NECO · JAMB</p>
+            <p className="eyebrow text-golddeep mb-4">NOUN CBT · past questions · summaries</p>
             <h1 className="font-display text-4xl font-bold leading-[1.12] tracking-tight md:text-6xl">
-              Everything between you and your next result slip.
+              NOUN CBT practice for the paper you sit next.
             </h1>
             <p className="mt-5 max-w-lg text-base leading-7 text-muted md:text-lg">
-              CBT practice, course summaries, and a tutor you can ask on the go — organised by faculty, department, course, level and semester. One pass. Your phone. The paper you actually sit.
+              Past questions, timed CBT sets, and course summaries for National Open University of Nigeria students — organised by faculty, department, course, level and semester. One pass. Your phone.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/signup" className="btn-gold">Start 10-day free trial</Link>
@@ -196,18 +234,22 @@ export default async function HomePage() {
             <p className="eyebrow text-golddeep">Live catalogue</p>
             <h2 className="type-page-title mt-3">Approved courses, served from the live bank.</h2>
           </div>
-          <Link href="/cbt" className="btn-ghost btn-sm">Browse in CBT</Link>
+          <Link href="/noun" className="btn-ghost btn-sm">NOUN course pages</Link>
         </div>
         <div className="mt-8 overflow-hidden rounded-3xl border border-line bg-white">
           {liveCourses.map((c) => (
-            <div key={c.code} className="grid grid-cols-2 items-center gap-3 border-b border-line px-5 py-3.5 last:border-0 md:grid-cols-5">
+            <Link
+              key={c.code}
+              href={`/noun/${courseSlug(c.code)}`}
+              className="grid grid-cols-2 items-center gap-3 border-b border-line px-5 py-3.5 last:border-0 no-underline md:grid-cols-5 hover:bg-paper"
+            >
               <p className="font-mono-brand text-golddeep">{c.code}</p>
               <p className="col-span-2 text-sm">{c.title}</p>
               <p className="hidden text-sm text-muted md:block">{c.isGST ? "GST · all depts" : c.department?.name}</p>
               <p className="text-right font-mono-brand text-[11px] uppercase tracking-[0.14em] text-green">
                 {c.level}L · {c.semester}
               </p>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -274,6 +316,18 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <footer className="border-t border-line bg-paper">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-8 text-sm text-muted md:flex-row md:items-center md:justify-between md:px-8">
+          <p>Ubora World — NOUN CBT practice. Not the official NOUN portal.</p>
+          <nav className="flex flex-wrap gap-4">
+            <Link href="/noun" className="hover:text-ink">NOUN courses</Link>
+            <Link href="/signup" className="hover:text-ink">Free trial</Link>
+            <a href="https://www.nouonline.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="hover:text-ink">NOUN portal</a>
+            <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="hover:text-ink">eLearn TMAs</a>
+          </nav>
+        </div>
+      </footer>
     </div>
   );
 }

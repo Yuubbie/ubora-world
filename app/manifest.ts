@@ -11,7 +11,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Ubora World",
     short_name: "Ubora",
     description:
-      "CBT practice, course summaries, past questions and tutorial videos for NOUN, WAEC, NECO and JAMB - organised by faculty.",
+      "NOUN CBT practice, past questions and course summaries for National Open University of Nigeria students.",
     start_url: "/dashboard",
     scope: "/",
     display: "standalone",
