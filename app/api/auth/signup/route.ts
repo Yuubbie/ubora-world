@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { sendWelcomeEmail } from "@/lib/email";
 
 const signupSchema = z.object({
   fullName: z.string().min(2),
@@ -47,6 +48,10 @@ export async function POST(req: Request) {
       role: "student" 
     },
   });
+
+  if (email) {
+    sendWelcomeEmail(email, fullName).catch(() => {});
+  }
 
   return NextResponse.json({ id: user.id, fullName: user.fullName }, { status: 201 });
 }

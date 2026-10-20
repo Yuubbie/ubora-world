@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { createResetToken, genericForgotMessage, hashResetToken, RESET_TTL_MS, resetUrl } from "@/lib/passwordReset";
+import { sendPasswordResetEmail } from "@/lib/email";
 
 const schema = z.object({
   identifier: z.string().trim().min(3).max(120),
@@ -43,6 +44,10 @@ export async function POST(req: Request) {
   });
 
   const link = resetUrl(token);
+  if (user.email) {
+    await sendPasswordResetEmail(user.email, user.fullName, link).catch(() => {});
+  }
+
   const thread = await db.inquiryThread.findFirst({
     where: { userId: user.id },
     orderBy: { updatedAt: "desc" },
