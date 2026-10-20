@@ -3,6 +3,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import BackLink from "@/components/BackLink";
+import PasswordField from "@/components/PasswordField";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function LoginPage() {
 
     const res = await signIn("credentials", {
       redirect: false,
+      identifier: emailOrPhone,
       emailOrPhone,
       password,
     });
@@ -58,16 +60,12 @@ export default function LoginPage() {
             required
           />
         </div>
-        <div className="mb-6">
-          <label className="text-sm font-medium block mb-1.5">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm"
-            required
-          />
-        </div>
+        <PasswordField value={password} onChange={setPassword} className="mb-2" />
+        <p className="mb-6 text-right text-sm">
+          <a href="/forgot-password" className="font-semibold text-ink2 hover:text-gold transition-colors duration-150">
+            Forgot password?
+          </a>
+        </p>
         <button
           disabled={loading}
           className="w-full bg-ink text-white rounded-lg py-2.5 text-sm font-semibold disabled:opacity-50"

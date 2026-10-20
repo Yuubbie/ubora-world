@@ -11,14 +11,16 @@ export const authOptions: NextAuthOptions = {
       name: "credentials",
       credentials: {
         identifier: { label: "Email or phone", type: "text" },
+        emailOrPhone: { label: "Email or phone", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.identifier || !credentials?.password) return null;
+        const identifier = (credentials?.identifier || credentials?.emailOrPhone || "").trim();
+        if (!identifier || !credentials?.password) return null;
 
         const user = await db.user.findFirst({
           where: {
-            OR: [{ email: credentials.identifier }, { phone: credentials.identifier }],
+            OR: [{ email: identifier }, { phone: identifier }],
           },
         });
         if (!user) return null;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Site-wide install banner.
@@ -48,9 +49,15 @@ function IconClose() {
 }
 
 export default function InstallAppBanner() {
+  const pathname = usePathname();
   const [deferred, setDeferred] = useState<InstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [visible, setVisible] = useState(false);
+  const hideOnAuth =
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname === "/forgot-password" ||
+    pathname?.startsWith("/reset-password");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -119,7 +126,7 @@ export default function InstallAppBanner() {
     else dismiss();
   }
 
-  if (!visible) return null;
+  if (!visible || hideOnAuth) return null;
 
   return (
     <div

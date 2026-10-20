@@ -24,6 +24,7 @@ model User {
   subscriptions     Subscription[]
   inquiryThreads    InquiryThread[]
   inquiryReplies    InquiryMessage[]   @relation("inquiryAdmin")
+  passwordResets    PasswordResetToken[]
 
   @@index([email])
   @@index([matricNumber])
@@ -391,4 +392,17 @@ enum InquiryStatus {
 enum InquirySender {
   visitor
   admin
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
 }

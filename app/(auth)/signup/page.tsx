@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import BackLink from "@/components/BackLink";
+import PasswordField from "@/components/PasswordField";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -46,7 +47,6 @@ export default function SignupPage() {
           { key: "fullName", label: "Full name", type: "text" },
           { key: "email", label: "Email", type: "email" },
           { key: "matricNumber", label: "Matric number (optional)", type: "text" },
-          { key: "password", label: "Password", type: "password" },
         ].map((f) => (
           <div key={f.key} className="mb-4">
             <label className="text-sm font-medium block mb-1.5">{f.label}</label>
@@ -58,6 +58,13 @@ export default function SignupPage() {
             />
           </div>
         ))}
+        <PasswordField
+          value={form.password}
+          onChange={(password) => setForm({ ...form, password })}
+          autoComplete="new-password"
+          minLength={8}
+          className="mb-4"
+        />
         <button
           disabled={loading}
           className="w-full bg-ink text-white rounded-lg py-2.5 text-sm font-semibold disabled:opacity-50 mt-2"

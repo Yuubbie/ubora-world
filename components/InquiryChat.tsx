@@ -18,7 +18,12 @@ export default function InquiryChat() {
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const hide = pathname?.startsWith("/admin");
+  const hide =
+    pathname?.startsWith("/admin") ||
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname === "/forgot-password" ||
+    pathname?.startsWith("/reset-password");
 
   // Format phone number for WhatsApp link (removes spaces, adds country code 234 if starting with 0)
   const cleanPhone = ENQUIRY_NUMBER.replace(/\s+/g, "");
@@ -78,7 +83,7 @@ export default function InquiryChat() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-4 left-4 z-50 flex flex-col items-start gap-3">
       {open && (
         <div className="card-static flex h-[480px] w-[min(22rem,calc(100vw-2rem))] flex-col overflow-hidden shadow-cardHover">
           <div className="bg-ink px-4 py-3 text-white">
