@@ -132,7 +132,7 @@ export default function InstallAppBanner() {
     <div
       role="region"
       aria-label="Install Ubora World"
-      className="fixed inset-x-0 bottom-0 z-50 px-4 pb-4 animate-fade-up"
+      className="fixed inset-x-0 bottom-0 z-40 px-4 pb-4 animate-fade-up"
       style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}
     >
       <div className="mx-auto max-w-2xl rounded-2xl border border-line bg-ink text-white shadow-cardHover px-5 py-4 flex items-center gap-4">

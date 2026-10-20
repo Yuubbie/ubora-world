@@ -1,12 +1,14 @@
 "use client";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import BackLink from "@/components/BackLink";
 import PasswordField from "@/components/PasswordField";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const justCreated = searchParams.get("created") === "1";
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -49,6 +51,11 @@ export default function LoginPage() {
         <p className="text-sm text-muted mb-6">
           Log in to access your CBT practice and course summaries.
         </p>
+        {justCreated && (
+          <p className="mb-4 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm text-ink">
+            Account created. Check your email from Ubora World, then log in. Your 10-day Premium trial (CBT, summaries, tutor) starts now.
+          </p>
+        )}
         {error && <p className="text-sm text-coral mb-4">{error}</p>}
         <div className="mb-4">
           <label className="text-sm font-medium block mb-1.5">Email or Phone</label>
@@ -80,5 +87,13 @@ export default function LoginPage() {
         </p>
       </form>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <LoginForm />
+    </Suspense>
   );
 }

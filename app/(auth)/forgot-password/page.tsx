@@ -49,7 +49,8 @@ export default function ForgotPasswordPage() {
         {error && <p className="text-sm text-coral mb-4">{error}</p>}
         {done ? (
           <div className="space-y-4 text-sm text-muted">
-            <p>If an account exists for those details, a reset link will be sent.</p>
+            <p>If an account exists for those details, a reset link will be sent to that inbox from Ubora World.</p>
+            <p>Check spam and promotions. The link expires in one hour.</p>
             <p>Did not get it? Chat us on WhatsApp and we will send the link.</p>
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-gold w-full text-center">
               Chat on WhatsApp

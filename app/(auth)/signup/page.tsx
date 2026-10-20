@@ -25,7 +25,7 @@ export default function SignupPage() {
       setError(data.error?.formErrors?.[0] ?? data.error ?? "Something went wrong.");
       return;
     }
-    router.push("/login");
+    router.push("/login?created=1");
   }
 
   return (

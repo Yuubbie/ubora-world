@@ -12,9 +12,9 @@ export type AccessState =
  * (The scheduled job in Phase 2 keeps `status` correct for reporting; this
  * function is what actually gates access.)
  *
- * A subscription with no paymentId is the launch 30-day Premium trial granted
+ * A subscription with no paymentId is the launch 10-day Premium trial granted
  * at signup. Paid plans always have a paymentId and take precedence when both
- * exist because we order by endDate desc (90-day paid outlasts 30-day trial).
+ * exist because we order by endDate desc (90-day paid outlasts 10-day trial).
  */
 export async function getAccessState(userId: string): Promise<AccessState> {
   const sub = await db.subscription.findFirst({

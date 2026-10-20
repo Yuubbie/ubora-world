@@ -16,5 +16,5 @@ export function resetUrl(token: string) {
 }
 
 export function genericForgotMessage() {
-  return "If an account exists for those details, a reset link will be sent. Check WhatsApp or your email, or chat us if it does not arrive.";
+  return "If an account exists for those details, a reset link will be sent. Check inbox and spam, or chat us on WhatsApp if it does not arrive.";
 }

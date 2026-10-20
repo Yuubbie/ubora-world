@@ -146,7 +146,7 @@ export default async function HomePage() {
       </section>
 
       {/* Direct WhatsApp Support, Admissions & Project Help Banner */}
-      <section className="mx-auto max-w-6xl px-5 py-4 md:px-8">
+      <section className="mx-auto max-w-6xl px-5 py-4 pb-28 md:px-8">
         <div className="card-premium p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-paper to-white border-gold/40">
           <div>
             <span className="tag-gold mb-2 inline-block">Direct Help Desk</span>
@@ -317,7 +317,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <footer className="border-t border-line bg-paper">
+      <footer className="border-t border-line bg-paper pb-24">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-8 text-sm text-muted md:flex-row md:items-center md:justify-between md:px-8">
           <p>Ubora World — NOUN CBT practice. Not the official NOUN portal.</p>
           <nav className="flex flex-wrap gap-4">

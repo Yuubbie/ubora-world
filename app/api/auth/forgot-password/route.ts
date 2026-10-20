@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { userLookupWhere } from "@/lib/identifiers";
 import { createResetToken, genericForgotMessage, hashResetToken, RESET_TTL_MS, resetUrl } from "@/lib/passwordReset";
 import { sendPasswordResetEmail } from "@/lib/email";
 
@@ -16,9 +17,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Enter the email or phone on your account." }, { status: 400 });
   }
 
-  const identifier = parsed.data.identifier;
+  const identifier = parsed.data.identifier.trim();
   const user = await db.user.findFirst({
-    where: { OR: [{ email: identifier }, { phone: identifier }] },
+    where: userLookupWhere(identifier),
     select: { id: true, fullName: true, email: true, phone: true },
   });
 

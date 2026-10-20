@@ -2,6 +2,7 @@ import { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { db } from "./db";
+import { userLookupWhere } from "./identifiers";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
@@ -19,9 +20,7 @@ export const authOptions: NextAuthOptions = {
         if (!identifier || !credentials?.password) return null;
 
         const user = await db.user.findFirst({
-          where: {
-            OR: [{ email: identifier }, { phone: identifier }],
-          },
+          where: userLookupWhere(identifier),
         });
         if (!user) return null;
 
