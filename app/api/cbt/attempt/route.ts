@@ -6,21 +6,18 @@ import { db } from "@/lib/db";
 import { requireTier } from "@/lib/access";
 import { gradeFor } from "@/lib/config";
 
+const SET_SIZE = 30;
+
 const answerSchema = z.object({
   questionId: z.string(),
-  selectedDisplayIndex: z.number().int(),
-  optionOrder: z.array(z.number().int()), // returned by the questions endpoint, echoed back here
+  selectedText: z.string().min(1).max(2000),
 });
 
 const attemptSchema = z.object({
   courseId: z.string(),
-  module: z.number().int().nullable().optional(), // which module was practiced, if any (for records only now)
-  // Every question ID that was actually shown in this session (answered or
-  // skipped), as returned by the /questions endpoint. This is what scoring
-  // is based on — not the whole module — since sessions are randomly
-  // sampled down to a cap and can differ attempt to attempt.
-  sessionQuestionIds: z.array(z.string()),
-  answers: z.array(answerSchema),
+  module: z.number().int().nullable().optional(),
+  set: z.number().int().positive().optional(),
+  answers: z.array(answerSchema).max(200),
 });
 
 export async function POST(req: Request) {
@@ -32,24 +29,22 @@ export async function POST(req: Request) {
 
   const parsed = attemptSchema.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
-  const { courseId, sessionQuestionIds, answers } = parsed.data;
+  const { courseId, module, set: setNumber, answers } = parsed.data;
 
-  // Re-derive the *legitimate* question set server-side — the same approved
-  // bank the /questions endpoint would have served for this course. We never
-  // trust that questionIds in the request actually came from there.
   const bank = await db.questionBank.findFirst({
     where: { courseId, status: "approved" },
     include: { questions: true },
   });
   if (!bank) return NextResponse.json({ error: "no_approved_question_bank" }, { status: 404 });
 
-  const bankQuestionsById = new Map(bank.questions.map((q) => [q.id, q]));
-
-  // Only IDs that genuinely belong to this course's approved bank are
-  // trusted as "part of this session" — anything forged or stale is dropped.
-  const scopedQuestions = sessionQuestionIds
-    .filter((id) => bankQuestionsById.has(id))
-    .map((id) => bankQuestionsById.get(id)!);
+  let poolQuestions = bank.questions;
+  if (module !== null && module !== undefined && !Number.isNaN(module)) {
+    poolQuestions = poolQuestions.filter((q) => (q.module ?? 0) === module);
+  }
+  const sortedPool = [...poolQuestions].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  const useSet = setNumber && setNumber > 0 ? setNumber : 1;
+  const start = (useSet - 1) * SET_SIZE;
+  const scopedQuestions = sortedPool.slice(start, start + SET_SIZE);
 
   if (scopedQuestions.length === 0) {
     return NextResponse.json({ error: "invalid_session" }, { status: 400 });
@@ -87,19 +82,16 @@ export async function POST(req: Request) {
       continue;
     }
 
-    const originalSelectedIndex = a.optionOrder[a.selectedDisplayIndex];
+    const originalSelectedIndex = q.options.findIndex((opt) => opt === a.selectedText);
     const isCorrect = originalSelectedIndex === q.correctOptionIndex;
     if (isCorrect) correct += 1;
-
-    const displayOptions = a.optionOrder.map((originalIdx) => q.options[originalIdx]);
-    const correctDisplayIndex = a.optionOrder.indexOf(q.correctOptionIndex);
 
     review.push({
       questionId: q.id,
       text: q.text,
-      options: displayOptions,
-      selectedIndex: a.selectedDisplayIndex,
-      correctIndex: correctDisplayIndex,
+      options: q.options,
+      selectedIndex: originalSelectedIndex,
+      correctIndex: q.correctOptionIndex,
       isCorrect,
       explanation: q.explanation ?? null,
     });

@@ -86,6 +86,19 @@ export async function POST(req: Request) {
       ? await db.inquiryThread.findUnique({ where: { visitorKey } })
       : null;
 
+  if (existing) {
+    const recent = await db.inquiryMessage.count({
+      where: {
+        threadId: existing.id,
+        sender: "visitor",
+        createdAt: { gt: new Date(Date.now() - 60 * 1000) },
+      },
+    });
+    if (recent >= 8) {
+      return NextResponse.json({ error: "Too many messages. Wait a minute and try again." }, { status: 429 });
+    }
+  }
+
   const name = (parsed.data.name || userName || existing?.name || "").trim() || null;
   const email = (parsed.data.email || userEmail || existing?.email || "").trim() || null;
 

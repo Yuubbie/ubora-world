@@ -54,5 +54,9 @@ export async function verifyWebhookSignature(rawBody: string, signatureHeader: s
   if (!signatureHeader) return false;
   const crypto = await import("crypto");
   const hash = crypto.createHmac("sha512", secretKey()).update(rawBody).digest("hex");
-  return hash === signatureHeader;
+  try {
+    return crypto.timingSafeEqual(Buffer.from(hash, "utf8"), Buffer.from(signatureHeader, "utf8"));
+  } catch {
+    return false;
+  }
 }

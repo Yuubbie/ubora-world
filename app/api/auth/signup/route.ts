@@ -22,7 +22,13 @@ export async function POST(req: Request) {
   const { fullName, email, phone, password, matricNumber } = parsed.data;
 
   const existing = await db.user.findFirst({
-    where: { OR: [{ email }, { phone }, { matricNumber }] },
+    where: {
+      OR: [
+        ...(email ? [{ email }] : []),
+        ...(phone ? [{ phone }] : []),
+        ...(matricNumber ? [{ matricNumber }] : []),
+      ],
+    },
   });
   if (existing) {
     return NextResponse.json({ error: "An account already exists with these details" }, { status: 409 });

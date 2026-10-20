@@ -167,18 +167,23 @@ export default function CbtQuizPage() {
     submittingRef.current = true;
     if (timerRef.current) clearInterval(timerRef.current);
 
-    const payload = Object.entries(answers).map(([questionId, a]) => ({
-      questionId,
-      selectedDisplayIndex: a.selectedDisplayIndex,
-      optionOrder: a.optionOrder,
-    }));
-
-    const sessionQuestionIds = (questions ?? []).map((q) => q.id);
+    const payload = Object.entries(answers).map(([questionId, a]) => {
+      const q = (questions ?? []).find((item) => item.id === questionId);
+      return {
+        questionId,
+        selectedText: q?.options[a.selectedDisplayIndex] ?? "",
+      };
+    }).filter((a) => a.selectedText);
 
     const res = await fetch("/api/cbt/attempt", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ courseId, module: selected?.module ?? null, sessionQuestionIds, answers: payload }),
+      body: JSON.stringify({
+        courseId,
+        module: selected?.module ?? null,
+        set: selected?.set ?? 1,
+        answers: payload,
+      }),
     });
     const data = await res.json();
     setResult(data);
