@@ -54,7 +54,7 @@ export default function AdminInquiriesPage() {
         <BackLink href="/admin/content" label="Content queue" />
       </div>
       <h1 className="type-page-title">Inquiry inbox</h1>
-      <p className="mt-2 text-muted">Landing-page and student questions. WhatsApp is not wired yet — reply here.</p>
+      <p className="mt-2 text-muted">Landing-page and student questions. Enquiry line: 0810 013 3673. Reply here as well.</p>
 
       <div className="mt-8 grid gap-4 md:grid-cols-[16rem_1fr]">
         <div className="card-static overflow-hidden">

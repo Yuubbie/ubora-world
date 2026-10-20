@@ -1,6 +1,6 @@
 # Ubora World — Handover / Status Document
 
-**Last updated:** 12 October 2026
+**Last updated:** 19 October 2026
 **Purpose:** single source of truth for what's built, what's live, and what's still open. Check this anytime you need to know where things stand.
 
 ---
@@ -151,6 +151,102 @@ Scripts: `prisma/seed-data/seed-eco122.js` + `ECO122_CBT_Bank_Module1-4.csv`; `a
 
 Scripts: `prisma/seed-data/seed-eco146.js` + `ECO146_CBT_Bank_Module1-4.csv`; `add-eco146-summary.js` (PDF in `private-uploads/eco146-summary.pdf`, gitignored). Third Economics-owned course (after ECO121/ECO122). Developer Ayanwale Abiodun Olayinka Samsideen (Agricultural Economics/Postgraduate School, University of Ibadan); editor Dr. Ayila Ngustar. 20 study units in 5 course-guide modules grouped into 4 CBT modules. Bank `cmv3cdzg900031324rusdmpdk`; summary `cmv3ceznb00017ja9y0oowp9y`.
 
+### ECO153 — live (12 Oct 2026; approved 13 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ECO153 | Introduction to Quantitative Method I | Economics (Faculty of Social Sciences) | **approved** — 100 questions (4 modules: 25 each), 4-page summary. 100L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-eco153.js` + `ECO153_CBT_Bank_Module1-4.csv`; `add-eco153-summary.js` (PDF in `private-uploads/eco153-summary.pdf`, gitignored). Fourth Economics-owned course (after ECO121/ECO122/ECO146). Developer Mr O. E. Maku (NOUN); editor Dr (Mrs) Ganiyat A. Adesina-Uthman (NOUN Economics); reviewer Adeyinka M. Olure-Bank (NOUN Economics). 28 study units in 6 course-guide modules grouped into 4 CBT modules. Bank `cmv50d8cu0003131vwd6yaeey`; summary `cmv50ea0s0001138fh0qvx9xx`.
+
+### ECO154 — live (12 Oct 2026; approved 13 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ECO154 | Introduction to Quantitative Method II | Economics (Faculty of Social Sciences) | **approved** — 100 questions (4 modules: 25 each), 4-page summary. 100L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-eco154.js` + `ECO154_CBT_Bank_Module1-4.csv`; `add-eco154-summary.js` (PDF in `private-uploads/eco154-summary.pdf`, gitignored). Fifth Economics-owned course. Developer MAKU, Olukayode Emmanuel (NOUN); editor Dr. Ibrahim Adeolu Bakare. 24 study units in 6 course-guide modules grouped into 4 CBT modules. Bank `cmv50zaoh00034bfdtdhv12xt`; summary `cmv510a7p0001taucvt609ej9`.
+
+### ECO231 — live (13 Oct 2026; approved 13 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ECO231 | Micro-Economic Theory I | Economics (Faculty of Social Sciences) | **approved** — 100 questions (4 modules: 25 each), 4-page summary. 200L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-eco231.js` + `ECO231_CBT_Bank_Module1-4.csv`; `add-eco231-summary.js` (PDF in `private-uploads/eco231-summary.pdf`, gitignored). Sixth Economics-owned course. Developer Adedeji Abiodun Liadi (NOUN); editor Dr. 'Diran Akinleye (UNILAG); printed 2014, ISBN 978-058-333-8; builds on ECO 102. 16 study units in 4 course-guide modules grouped into 4 CBT modules. Bank `cmv51haw100039u71su3jtfg5`; summary `cmv6cwnwv0001ynj93vrvgczd`.
+
+### ECO232 — live (13 Oct 2026; approved 13 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ECO232 | Microeconomic Theory II | Economics (Faculty of Social Sciences) | **approved** — 100 questions (4 modules: 25 each), 4-page summary. 200L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-eco232.js` + `ECO232_CBT_Bank_Module1-4.csv`; `add-eco232-summary.js` (PDF in `private-uploads/eco232-summary.pdf`, gitignored). Seventh Economics-owned course. Developer Adedeji Biodun Liadi (NOUN Economics); editor Dr. Femi Saibu (UNILAG); reviewer Dr. Jonathan Oniore (Bingham University); printed 2023, ISBN 978-058-977-0; builds on ECO 231. 16 study units in 4 course-guide modules grouped into 4 CBT modules. Bank `cmv6d8au40003l5quyxb600nv`; summary `cmv6d9bm800017vx27avu5f37`.
+
+### ECO247 — live (13 Oct 2026; approved 13 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ECO247 | Nigerian Economy in Perspective 2 | Economics (Faculty of Social Sciences) | **approved** — 100 questions (4 modules: 25 each), 4-page summary. 100L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-eco247.js` + `ECO247_CBT_Bank_Module1-4.csv`; `add-eco247-summary.js` (PDF in `private-uploads/eco247-summary.pdf`, gitignored). Eighth Economics-owned course. Developer Ayanwale Abiodun Olayinka Samsideen (University of Ibadan); editor Dr. Ayila Ngustar (NOUN); printed 2017, ISBN 978-058-004-1; complementary to ECO146. 20 study units in 5 course-guide modules grouped into 4 CBT modules. Bank `cmv6dkgtn0003fhrfwc3lmoy3`; summary `cmv6dlldm0001x39gqu9log8z`.
+
+### ECO253 — draft / pending review (13 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ECO253 | Statistics for Economist 1 | Economics (Faculty of Social Sciences) | **draft / pending review** — 100 questions (4 modules: 25 each), 4-page summary. 200L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-eco253.js` + `ECO253_CBT_Bank_Module1-4.csv`; `add-eco253-summary.js` (PDF in `private-uploads/eco253-summary.pdf`, gitignored). Ninth Economics-owned course (after ECO121/122/146/153/154/231/232/247). Writer Okojie, Daniel Esene (UNILAG); editor Dr. Ibrahim Bakare (LASU); reviewer Dr. Mutiu Rasaki (Augustine University, Ilara, Epe, Lagos State); printed 2023 by NOUN Press. 20 study units in 5 course-guide modules grouped into 4 CBT modules. Bank `cmv6pzexy00039tia9h7vxyfh`; summary `cmv6q0hhd0001hd9sxsal1fto`. Pending admin review at `/admin/content`.
+
+### ECO255 — draft / pending review (14 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ECO255 | Mathematics for Economists I | Economics (Faculty of Social Sciences) | **draft / pending review** — 100 questions (4 modules: 25 each), 4-page summary. 200L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-eco255.js` + `ECO255_CBT_Bank_Module1-4.csv`; `add-eco255-summary.js` (PDF in `private-uploads/eco255-summary.pdf`, gitignored). Tenth Economics-owned course (after ECO121/122/146/153/154/231/232/247/253). Writer/Developer Odishika Vivian Anietem (NOUN); editor Dr. Ibrahim Adeolu Bakare (Lagos State University); printed 2017 by NOUN Press, ISBN 978-058-550-0; two-credit first-semester course. 12 study units in 4 course-guide modules grouped into 4 CBT modules (Number System/Inequalities/Exponents and Roots; Systems/Simultaneous/Quadratic Equations; Set Theory/Logarithms/Partial Derivatives; Integral Calculus/Optimization/Linear Programming). Bank `cmv6y4ihr00038p19cyymvin7`; summary `cmv6y5gtc0001cryxclgjqm75`. Pending admin review at `/admin/content`.
+
+### ECO256 — draft / pending review (14 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ECO256 | Mathematics for Economists II | Economics (Faculty of Social Sciences) | **draft / pending review** — 100 questions (4 modules: 25 each), 4-page summary. 200L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-eco256.js` + `ECO256_CBT_Bank_Module1-4.csv`; `add-eco256-summary.js` (PDF in `private-uploads/eco256-summary.pdf`, gitignored). Eleventh Economics-owned course (after ECO121/122/146/153/154/231/232/247/253/255). Writer/Developer Wilson Friday Ohioze (NOUN); editor Dr. Sunday F. Ayadi (UNILAG); printed 2016 by NOUN Press, ISBN 978-058-540-8; two-credit second-semester course; builds on ECO255 (prerequisite). 12 study units in 3 course-guide modules (Calculus, Optimisation, Linear Algebra) grouped into 4 CBT modules. Bank `cmv8m5c220003a63dea6epfh3`; summary `cmv8m6awk00011240sbrtzmmw`. Pending admin review at `/admin/content`.
+
+### ENT204 — draft / pending review (14 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| ENT204 | Entrepreneurship and Change Management | Entrepreneurship (Faculty of Management Sciences) | **draft / pending review** — 100 questions (4 modules: 25 each), 4-page summary. 200L second semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-ent204.js` + `ENT204_CBT_Bank_Module1-4.csv`; `add-ent204-summary.js` (PDF in `private-uploads/ent204-summary.pdf`, gitignored). Second Entrepreneurship-owned course (after ENT101). Course Writer Dr. John Aliu (Department of Banking and Finance, Kaduna State Polytechnic); Course Editor Dr. Adekunle Binuyo (NOUN); H.O.D. Dr. Lawal Kamaldeen A.A.; Dean Dr. Timothy Ishola; printed 2017 by NOUN Press (ISBN line present but number not printed); two-unit one-semester course. 17 study units in 4 course-guide modules grouped into 4 CBT modules (entrepreneurship concepts/approaches; corporate outlook/leadership/change models; teams/team building/quality gurus; quality tools/change management/resistance/business plan). Bank `cmva9lyux0003gety0xpcch05`; summary `cmva9mycc0001j5beyn35qzwd`. Pending admin review at `/admin/content`.
+
+### PCR113 — draft / pending review (14 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| PCR113 | Introduction to Peace Education | Peace and Conflict Resolution (Faculty of Social Sciences) | **draft / pending review** — 100 questions (4 modules: 25 each), 4-page summary. 100L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-pcr113.js` + `PCR113_CBT_Bank_Module1-4.csv`; `add-pcr113-summary.js` (PDF in `private-uploads/pcr113-summary.pdf`, gitignored). New course (PCR111/PCR114 already live; PCR113 did not exist). Course Developer/Writer Dr. Joshua Olusegun Bolarinwa (Nigeria Institute of International Affairs, Victoria Island, Lagos); Course Editor Dr. Ms. Joan Mbagwu (C/o Olive Branch Konsult, Lagos); Course Reviewer Dr. Olusola Matthew Ojo (Kampala International University, Uganda); H.O.D. Iroye Samuel Opeyemi PhD. First printed 2006, reviewed 2022, ISBN 978-058-889-2, NOUN Press; three-credit one-semester course. 24 study units in 6 course-guide modules grouped into 4 CBT modules (concepts/history/culture/prevention; gender & anti-prejudice education/leadership/civic education & national unity; human rights/conflict transformation/peace enforcement/war in Africa; peace-education theory/dimensions/in-service training/peace pedagogy/management/agents of peace-building). Bank `cmvbaikz50003xpf3e5j0engm`; summary `cmvbajjpe0001yhe830nemnuj`. 43 owning-dept courses; 52 `CourseDepartment` rows. Pending admin review at `/admin/content`.
+
+### PCR211 — draft / pending review (16 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| PCR211 | Education for Peace II | Peace and Conflict Resolution (Faculty of Social Sciences) | **draft / pending review** — 100 questions (4 modules: 25 each), 4-page summary. 200L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-pcr211.js` + `PCR211_CBT_Bank_Module1-4.csv`; `add-pcr211-summary.js` (PDF in `private-uploads/pcr211-summary.pdf`, gitignored). New course (PCR111/PCR113/PCR114 already live; PCR211 did not exist). Course Writer Dr. S. A. Faleti (University of Ibadan, Ibadan); Course Editor Dr. R. O. Olaniyi (University of Ibadan, Ibadan); Course Reviewer Mrs. Adebowale Alade PhD (University of Ibadan, Ibadan); H.O.D. Iroye Samuel Opeyemi PhD. First printed 2011, reviewed January 2022, ISBN 978-058-471-4, (c) 2022 NOUN Press; three-credit one-semester course. 20 study units in 4 course-guide modules grouped into 4 CBT modules (education origin/development & peace concepts/values; peace in human societies/types/components/dimensions; peace classified/culture of war & peace/cultures of peace in Africa/peace studies & related concepts; activities in pursuit of peace/peace operations/peacekeeping/peacemaking/enforcement/peacebuilding). Level derived from NOUN code convention (2xx = 200L, trailing '1' = first semester; matches PCR111/PCR113 first and PCR114/PCR274 second already in DB). Bank `cmvbatxli0003gfvfh6998ybt`; summary `cmvbauvn20001awxe4j51n24x`. 44 owning-dept courses; 53 `CourseDepartment` rows. Pending admin review at `/admin/content`.
+
+### POL223 — draft / pending review (17 Oct 2026)
+
+| Code | Title | Owner Dept | Status |
+|---|---|---|---|
+| POL223 | Foundations of Political Economy | Political Science (Faculty of Social Sciences) | **draft / pending review** — 100 questions (4 modules: 25 each), 4-page summary. 200L first semester. Own-department `CourseDepartment` backfilled. Do **not** add to `CROSS_LISTINGS`. |
+
+Scripts: `prisma/seed-data/seed-pol223.js` + `POL223_CBT_Bank_Module1-4.csv`; `add-pol223-summary.js` (PDF in `private-uploads/pol223-summary.pdf`, gitignored). New course. Course Developer/Writer C. Nna-Emeka Okereke PhD (National Defence College, Abuja); Course Editor Dr. Stella Akintola (University of Ibadan); Programme Leader Prof. A. R. Yesufu (NOUN); Coordinator Abdul-Rahoof Adebayo Bello (NOUN). First printed 2010, ISBN 978-058-104-9; three-credit course. 22 study units in 4 course-guide modules grouped into 4 CBT modules (subject matter/perspectives/basic concepts/primitive accumulation/historical materialism; primitive communalism/slavery/feudalism/capitalism/socialism; development/modernisation/dependency/Baran/Frank/Amin; imperialism/colonialism/neo-colonialism/globalisation/MNCs/Bretton Woods). Level derived from NOUN code convention (2xx = 200L, trailing '3' treated as first semester). Bank `cmvcwgm0q0003rws1yaobpck8`; summary `cmvcwhjpg000114idyevnnf9p`. 45 owning-dept courses; 54 `CourseDepartment` rows. Pending admin review at `/admin/content`. Last course in the current ZIP: ZIP build complete (36/36).
+
 ---
 
 ## 3. Faculty / Department Structure
@@ -215,11 +311,11 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 
 ## 9. What's Still Open Before Full Pilot Launch
 
-1. Inquiry inbox is at `/admin/inquiries` (WhatsApp not wired yet). Content queue empty after ECO146 approval.
+1. Inquiry inbox is at `/admin/inquiries` (WhatsApp not wired yet). Content queue: approve the CSC 103 summary (`cmvea7h9q0001x676eimfxmbr`) at `/admin/content`. Earlier drafts (ECO253/255/256, ENT204, PCR113/211, POL223) were already approved in the live database.
 2. **CSS136** — last course needed to complete second-semester Criminology (waiting on Eunice; not in the current ZIP)
 3. **Switch Paystack from test to live keys** — currently no real payments can be processed
 4. **Migrate to a custom domain** — currently on default Vercel domain
-5. **Confirm/wire the subscription-expiry cron job** (`npm run db:expire-subscriptions`)
+5. **Subscription expiry cron wired** — job run 19 Oct 2026 (9 marked expired, 6 remain active). Route `GET/POST /api/cron/expire-subscriptions` + `vercel.json` daily 01:00 UTC. Still needs `CRON_SECRET` in Vercel Production env and a redeploy before the schedule fires.
 6. **Test PWA install** on real Android + iPhone devices
 7. **Delete or archive the stale `origin/dev` branch**
 8. **Decide next department to build real course content for**, beyond GSTs (Danielson's call — Management Sciences, Sciences, Computing, and Education are the agreed "major" faculties to prioritize; others are minors, built on demand)
@@ -248,5 +344,18 @@ Live Neon Postgres instance (`ep-old-king-as9a3w8y.c-4.eu-central-1.aws.neon.tec
 - **10 Oct 2026:** Admin approved remaining drafts at `/admin/content`. Now **approved**: ACC204, BFN209, CRD204, CRD208 (plus BUS205, BUS207, ACC203 already approved 6 Oct). Content queue empty.
 - **11 Oct 2026:** ECO122 (Principle of Economics II) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 100L second semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Second Economics-owned course (after ECO121). Developer/reviewer Samuel Olumuyiwa Olusanya; editor Dr. Kazeem Ajide. Bank `cmv3a5n2j0003bznovm2m60mo`; summary `cmv3a6ln7000191rqi2vivdis`. 32 owning-dept courses; 41 `CourseDepartment` rows.
 - **11 Oct 2026:** Admin approved ECO122 bank and summary at `/admin/content`. Content queue empty.
-- **12 Oct 2026:** ECO146 (Nigerian Economy in Perspective 1) seeded from the ZIP PDF and **approved** at `/admin/content`: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 100L second semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Third Economics-owned course (after ECO121/ECO122). Developer Ayanwale Abiodun Olayinka Samsideen; editor Dr. Ayila Ngustar. Bank `cmv3cdzg900031324rusdmpdk`; summary `cmv3ceznb00017ja9y0oowp9y`. 33 owning-dept courses; 42 `CourseDepartment` rows. Seed scripts on branch `261012-feat-eco146`.
+- **12 Oct 2026:** ECO146 (Nigerian Economy in Perspective 1) seeded from the ZIP PDF and **approved** at `/admin/content`: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 100L second semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Third Economics-owned course (after ECO121/ECO122). Developer Ayanwale Abiodun Olayinka Samsideen; editor Dr. Ayila Ngustar. Bank `cmv3cdzg900031324rusdmpdk`; summary `cmv3ceznb00017ja9y0oowp9y`. Seed scripts on `upstream/main` at `eda2643` (branch `261012-feat-eco146`).
+- **12 Oct 2026:** ECO153 (Introduction to Quantitative Method I) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 100L first semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Fourth Economics-owned course. Developer Mr O. E. Maku; editor Dr (Mrs) Ganiyat A. Adesina-Uthman; reviewer Adeyinka M. Olure-Bank. Bank `cmv50d8cu0003131vwd6yaeey`; summary `cmv50ea0s0001138fh0qvx9xx`.
+- **12 Oct 2026:** ECO154 (Introduction to Quantitative Method II) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 100L second semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Fifth Economics-owned course. Developer MAKU, Olukayode Emmanuel; editor Dr. Ibrahim Adeolu Bakare. Bank `cmv50zaoh00034bfdtdhv12xt`; summary `cmv510a7p0001taucvt609ej9`. 35 owning-dept courses; 44 `CourseDepartment` rows. Pending admin review at `/admin/content`.
+- **13 Oct 2026:** ECO231 (Micro-Economic Theory I) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 200L first semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Sixth Economics-owned course. Developer Adedeji Abiodun Liadi (NOUN); editor Dr. 'Diran Akinleye (UNILAG). Printed 2014, ISBN 978-058-333-8; builds on ECO 102. Bank `cmv51haw100039u71su3jtfg5`; summary `cmv6cwnwv0001ynj93vrvgczd`. 36 owning-dept courses; 45 `CourseDepartment` rows. Pending admin review at `/admin/content`.
+- **13 Oct 2026:** ECO232 (Microeconomic Theory II) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 200L second semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Seventh Economics-owned course. Developer Adedeji Biodun Liadi (NOUN Economics); editor Dr. Femi Saibu (UNILAG); reviewer Dr. Jonathan Oniore (Bingham University). Printed 2023, ISBN 978-058-977-0; builds on ECO 231. Bank `cmv6d8au40003l5quyxb600nv`; summary `cmv6d9bm800017vx27avu5f37`. 37 owning-dept courses; 46 `CourseDepartment` rows. Pending admin review at `/admin/content`.
+- **13 Oct 2026:** ECO247 (Nigerian Economy in Perspective 2) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 100L second semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Eighth Economics-owned course. Developer Ayanwale Abiodun Olayinka Samsideen; editor Dr. Ayila Ngustar. Printed 2017, ISBN 978-058-004-1; complementary to ECO146. Bank `cmv6dkgtn0003fhrfwc3lmoy3`; summary `cmv6dlldm0001x39gqu9log8z`. 38 owning-dept courses; 47 `CourseDepartment` rows.
+- **13 Oct 2026:** Admin approved remaining drafts at `/admin/content`. Now **approved**: ECO153, ECO154, ECO231, ECO232, ECO247. Content queue empty.
+- **13 Oct 2026:** ECO253 (Statistics for Economist 1) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 200L first semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Ninth Economics-owned course. Writer Okojie, Daniel Esene (UNILAG); editor Dr. Ibrahim Bakare (LASU); reviewer Dr. Mutiu Rasaki (Augustine University); printed 2023 by NOUN Press. Bank `cmv6pzexy00039tia9h7vxyfh`; summary `cmv6q0hhd0001hd9sxsal1fto`. 39 owning-dept courses; 48 `CourseDepartment` rows. Pending admin review at `/admin/content`.
+- **14 Oct 2026:** ECO255 (Mathematics for Economists I) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 200L first semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Tenth Economics-owned course. Writer/Developer Odishika Vivian Anietem (NOUN); editor Dr. Ibrahim Adeolu Bakare (Lagos State University); printed 2017 by NOUN Press, ISBN 978-058-550-0; two-credit course. 12 study units in 4 course-guide modules grouped into 4 CBT modules. Bank `cmv6y4ihr00038p19cyymvin7`; summary `cmv6y5gtc0001cryxclgjqm75`. 40 owning-dept courses; 49 `CourseDepartment` rows. Pending admin review at `/admin/content`.
+- **14 Oct 2026:** ECO256 (Mathematics for Economists II) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Economics (`cms7arxjf0004sgbyb4vqx8et`), 200L second semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Eleventh Economics-owned course. Writer/Developer Wilson Friday Ohioze (NOUN); editor Dr. Sunday F. Ayadi (UNILAG); printed 2016 by NOUN Press, ISBN 978-058-540-8; two-credit course; builds on ECO255 (prerequisite). 12 study units in 3 course-guide modules (Calculus, Optimisation, Linear Algebra) grouped into 4 CBT modules. Bank `cmv8m5c220003a63dea6epfh3`; summary `cmv8m6awk00011240sbrtzmmw`. 41 owning-dept courses; 50 `CourseDepartment` rows. Pending admin review at `/admin/content`.
+- **14 Oct 2026:** ENT204 (Entrepreneurship and Change Management) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. Owned by Entrepreneurship (`cmtlzb39l000spalnd9pg5fob`), 200L second semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Second Entrepreneurship-owned course (after ENT101). Course Writer Dr. John Aliu (Banking and Finance, Kaduna State Polytechnic); course editor Dr. Adekunle Binuyo (NOUN); H.O.D. Dr. Lawal Kamaldeen A.A.; Dean Dr. Timothy Ishola; printed 2017 by NOUN Press. 17 study units in 4 course-guide modules grouped into 4 CBT modules. Bank `cmva9lyux0003gety0xpcch05`; summary `cmva9mycc0001j5beyn35qzwd`. 42 owning-dept courses; 51 `CourseDepartment` rows. Pending admin review at `/admin/content`.
+- **14 Oct 2026:** PCR113 (Introduction to Peace Education) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. New course (PCR111/PCR114 already live). Owned by Peace and Conflict Resolution (`cms7arz16000csgby9l8g60gw`), 100L first semester. Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Course Developer/Writer Dr. Joshua Olusegun Bolarinwa (Nigeria Institute of International Affairs, Victoria Island, Lagos); Course Editor Dr. Ms. Joan Mbagwu (C/o Olive Branch Konsult, Lagos); Course Reviewer Dr. Olusola Matthew Ojo (Kampala International University, Uganda); H.O.D. Iroye Samuel Opeyemi PhD. First printed 2006, reviewed 2022, ISBN 978-058-889-2, NOUN Press; three-credit one-semester course. 24 study units in 6 course-guide modules grouped into 4 CBT modules. Bank `cmvbaikz50003xpf3e5j0engm`; summary `cmvbajjpe0001yhe830nemnuj`. 43 owning-dept courses; 52 `CourseDepartment` rows. Pending admin review at `/admin/content`.
+- **16 Oct 2026:** PCR211 (Education for Peace II) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. New course (PCR111/PCR113/PCR114 already live). Owned by Peace and Conflict Resolution (`cms7arz16000csgby9l8g60gw`), 200L first semester (level from NOUN code convention: 2xx = 200L, trailing '1' = first semester). Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Course Writer Dr. S. A. Faleti (University of Ibadan, Ibadan); Course Editor Dr. R. O. Olaniyi (University of Ibadan, Ibadan); Course Reviewer Mrs. Adebowale Alade PhD (University of Ibadan, Ibadan); H.O.D. Iroye Samuel Opeyemi PhD. First printed 2011, reviewed January 2022, ISBN 978-058-471-4, (c) 2022 NOUN Press; three-credit one-semester course. 20 study units in 4 course-guide modules grouped into 4 CBT modules. Bank `cmvbatxli0003gfvfh6998ybt`; summary `cmvbauvn20001awxe4j51n24x`. 44 owning-dept courses; 53 `CourseDepartment` rows. Pending admin review at `/admin/content`.
+- **17 Oct 2026:** POL223 (Foundations of Political Economy) seeded as draft from the ZIP PDF: 100 CBT questions across 4 modules (25 each), 4-page private summary. New course. Owned by Political Science (`cms7arxwt0006sgbyf5hcu000`), 200L first semester (level from NOUN code convention: 2xx = 200L). Own-department CourseDepartment backfilled. Not GST. Not added to `CROSS_LISTINGS`. Developer/Writer C. Nna-Emeka Okereke PhD (National Defence College, Abuja); editor Dr. Stella Akintola (University of Ibadan); programme leader Prof. A. R. Yesufu (NOUN); coordinator Abdul-Rahoof Adebayo Bello (NOUN). First printed 2010, ISBN 978-058-104-9; three-credit course. 22 study units in 4 course-guide modules grouped into 4 CBT modules. Bank `cmvcwgm0q0003rws1yaobpck8`; summary `cmvcwhjpg000114idyevnnf9p`. 45 owning-dept courses; 54 `CourseDepartment` rows. Pending admin review at `/admin/content`. ZIP build complete (36/36).
 - **7 Oct 2026:** Landing page no longer treats Ubora as eLearn. Official NOUN split: `nouonline.nou.edu.ng` for school fees/registration and other student admin; `elearn.nou.edu.ng` for TMAs/tests. Walkthrough is a tap-through demo (signup → login → CBT). Inquiry chat widget on landing + student UI; admin inbox at `/admin/inquiries`. WhatsApp button deferred.
