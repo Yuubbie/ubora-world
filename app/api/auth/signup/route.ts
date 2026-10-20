@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { sendWelcomeEmail } from "@/lib/email";
 
 // Helper to convert empty strings "" to undefined before validation
 const emptyToUndef = (val: any) => (val === "" ? undefined : val);
@@ -67,6 +68,13 @@ export async function POST(req: Request) {
         role: "student" 
       },
     });
+
+    // Fire the welcome email if an email address was provided
+    if (user.email) {
+      await sendWelcomeEmail(user.email, user.fullName).catch((err) => {
+        console.error("Non-fatal error: Welcome email failed to send", err);
+      });
+    }
 
     return NextResponse.json({ id: user.id, fullName: user.fullName }, { status: 201 });
   } catch (error) {
