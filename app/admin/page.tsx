@@ -6,22 +6,18 @@ import { revalidatePath } from "next/cache";
 import DeleteButton from "./DeleteButton";
 
 export default async function AdminDashboard() {
-  // 1. SECURE THE ROUTE: Kick out anyone who isn't logged in as an Admin
   const session = await getServerSession(authOptions);
   if (!session?.user || (session.user as any).role !== "admin") {
     redirect("/login"); 
   }
 
-  // 2. FETCH ALL USERS
   const users = await db.user.findMany({
     orderBy: { createdAt: "desc" },
   });
 
-  // 3. SECURE SERVER ACTION FOR DELETION
   async function deleteUser(formData: FormData) {
     "use server";
     
-    // Security Check: Re-verify session inside the action to prevent direct API attacks
     const currentSession = await getServerSession(authOptions);
     if (!currentSession?.user || (currentSession.user as any).role !== "admin") {
       throw new Error("Unauthorized access");
@@ -31,7 +27,6 @@ export default async function AdminDashboard() {
     if (!userId) return;
 
     try {
-      // Manual cascade: Delete related data first so Prisma doesn't throw a foreign-key error
       await db.passwordResetToken.deleteMany({ where: { userId } });
       
       const threads = await db.inquiryThread.findMany({ where: { userId } });
@@ -41,15 +36,13 @@ export default async function AdminDashboard() {
         await db.inquiryThread.deleteMany({ where: { userId } });
       }
       
-      // Finally, delete the actual user
       await db.user.delete({ where: { id: userId } });
-      revalidatePath("/admin"); // Instantly refresh the table on the screen
+      revalidatePath("/admin"); 
     } catch (error) {
       console.error("Failed to delete user:", error);
     }
   }
 
-  // 4. RENDER THE DASHBOARD
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8 text-gray-900 font-sans">
       <div className="max-w-6xl mx-auto">
