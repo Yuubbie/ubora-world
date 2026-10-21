@@ -5,6 +5,8 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import DeleteButton from "./DeleteButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
   if (!session?.user || (session.user as any).role !== "admin") {
