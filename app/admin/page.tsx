@@ -21,7 +21,7 @@ export default async function AdminDashboard() {
   });
 
   // Calculate subscription details
-  const subscribers = users.filter(u => (u as any).role === "premium" || (u as any).isPremium);
+  const subscribers = users.filter(u => ["basic", "standard", "premium"].includes((u as any).role) || (u as any).tier);
   
   const totalSubscribersCount = subscribers.length;
   const ESTIMATED_SUB_PRICE = 3000; 
