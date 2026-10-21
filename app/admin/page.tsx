@@ -4,18 +4,19 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import DeleteButton from "./DeleteButton";
+import { isPaidSubscription, isRealStudent } from "@/lib/adminStats";
+import { deleteUserAndRelated } from "@/lib/deleteUser";
+import { expirePastDueSubscriptions } from "@/lib/expireSubscriptions";
 
 export const dynamic = "force-dynamic";
-
-function isPaidSubscription(sub: { paymentId: string | null; payment: { status: string } | null } | undefined) {
-  return Boolean(sub?.paymentId && sub.payment?.status === "success");
-}
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
   if (!session?.user || (session.user as any).role !== "admin") {
     redirect("/login");
   }
+
+  await expirePastDueSubscriptions();
 
   const currentUserEmail = session.user.email;
   const canDelete = currentUserEmail === "yubbiepen.pixel@gmail.com";
@@ -24,21 +25,38 @@ export default async function AdminDashboard() {
     orderBy: { createdAt: "desc" },
     include: {
       subscriptions: {
-        where: { status: "active" },
+        orderBy: { endDate: "desc" },
         include: { payment: true },
         take: 1,
       },
     },
   });
 
-  const paidSubscribers = users.filter((u) => isPaidSubscription(u.subscriptions[0]));
+  const now = new Date();
+  const paidSubscribers = users.filter((user) => {
+    if (!isRealStudent(user)) return false;
+    const sub = user.subscriptions[0];
+    return isPaidSubscription(sub) && sub.status === "active" && sub.endDate >= now;
+  });
   const totalSubscribersCount = paidSubscribers.length;
 
-  const paid = await db.payment.aggregate({
+  const successPayments = await db.payment.findMany({
     where: { status: "success" },
-    _sum: { amount: true },
+    select: { amount: true, userId: true },
   });
-  const totalSubRevenue = (paid._sum.amount ?? 0) / 100;
+  const payerIds = [...new Set(successPayments.map((payment) => payment.userId))];
+  const payers = await db.user.findMany({
+    where: { id: { in: payerIds } },
+    select: { id: true, email: true, role: true },
+  });
+  const payerById = new Map(payers.map((payer) => [payer.id, payer]));
+  const totalSubRevenue =
+    successPayments
+      .filter((payment) => {
+        const payer = payerById.get(payment.userId);
+        return Boolean(payer && isRealStudent(payer));
+      })
+      .reduce((sum, payment) => sum + payment.amount, 0) / 100;
 
   async function deleteUser(formData: FormData) {
     "use server";
@@ -52,21 +70,7 @@ export default async function AdminDashboard() {
     if (!userId) return;
 
     try {
-      await db.passwordResetToken.deleteMany({ where: { userId } });
-      await db.tutorChatMessage.deleteMany({ where: { userId } });
-      await db.attempt.deleteMany({ where: { userId } });
-      await db.admissionRequest.deleteMany({ where: { userId } });
-      await db.subscription.deleteMany({ where: { userId } });
-      await db.payment.deleteMany({ where: { userId } });
-
-      const threads = await db.inquiryThread.findMany({ where: { userId } });
-      if (threads.length > 0) {
-        const threadIds = threads.map((t) => t.id);
-        await db.inquiryMessage.deleteMany({ where: { threadId: { in: threadIds } } });
-        await db.inquiryThread.deleteMany({ where: { userId } });
-      }
-
-      await db.user.delete({ where: { id: userId } });
+      await deleteUserAndRelated(userId);
       revalidatePath("/admin");
     } catch (error) {
       console.error("Failed to delete user:", error);
@@ -120,6 +124,7 @@ export default async function AdminDashboard() {
                   const sub = user.subscriptions[0];
                   const hasSub = Boolean(sub);
                   const isPaid = isPaidSubscription(sub);
+                  const trialExpired = hasSub && !isPaid && sub.endDate < now;
 
                   return (
                     <tr key={user.id} className="hover:bg-gray-50 transition-colors">
@@ -133,9 +138,9 @@ export default async function AdminDashboard() {
                         </span>
                         {hasSub && (
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium uppercase ${
-                            isPaid ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"
+                            isPaid ? "bg-green-100 text-green-800" : trialExpired ? "bg-gray-100 text-gray-600" : "bg-blue-100 text-blue-800"
                           }`}>
-                            {isPaid ? sub.tier : "TRIAL"}
+                            {isPaid ? sub.tier : trialExpired ? "EXPIRED" : "TRIAL"}
                           </span>
                         )}
                       </td>

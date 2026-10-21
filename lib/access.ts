@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { tierIncludes, type Tier } from "./config";
+import { FREE_TRIAL_MS, tierIncludes, type Tier } from "./config";
 
 export type AccessState =
   | { active: false; tier: null }
@@ -20,15 +20,23 @@ export async function getAccessState(userId: string): Promise<AccessState> {
   const sub = await db.subscription.findFirst({
     where: { userId, status: "active" },
     orderBy: { endDate: "desc" },
+    include: { user: { select: { role: true } } },
   });
 
   if (!sub) return { active: false, tier: null };
-  if (sub.endDate < new Date()) return { active: false, tier: null };
+
+  const now = new Date();
+  let endDate = sub.endDate;
+  if (sub.paymentId == null && sub.user.role === "student") {
+    const trialCap = new Date(sub.startDate.getTime() + FREE_TRIAL_MS);
+    if (trialCap < endDate) endDate = trialCap;
+  }
+  if (endDate < now) return { active: false, tier: null };
 
   return {
     active: true,
     tier: sub.tier as Tier,
-    endDate: sub.endDate,
+    endDate,
     trial: sub.paymentId == null,
   };
 }

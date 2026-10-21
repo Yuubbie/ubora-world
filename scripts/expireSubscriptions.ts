@@ -1,19 +1,36 @@
-// Run this on a schedule (e.g. daily) via Windows Task Scheduler, cron, or
-// Vercel Cron (`/api/cron/expire-subscriptions`, vercel.json, 01:00 UTC).
-// It exists because lib/access.ts's live check protects content access
-// correctly even without this job running — but admin reporting (e.g. "how
-// many active subscribers do we have") needs the `status` field itself to
-// be accurate, per Spec 6.1 rule 3.
 import { PrismaClient } from "@prisma/client";
+import { FREE_TRIAL_MS } from "../lib/config";
 
 const db = new PrismaClient();
 
 async function main() {
+  const now = new Date();
+  const unpaid = await db.subscription.findMany({
+    where: {
+      paymentId: null,
+      user: { role: "student" },
+    },
+    select: { id: true, startDate: true, endDate: true, status: true },
+  });
+
+  let clamped = 0;
+  for (const sub of unpaid) {
+    const cap = new Date(sub.startDate.getTime() + FREE_TRIAL_MS);
+    const endDate = cap < sub.endDate ? cap : sub.endDate;
+    const status = endDate < now ? "expired" : sub.status === "expired" ? "expired" : "active";
+    if (endDate.getTime() === sub.endDate.getTime() && status === sub.status) continue;
+    await db.subscription.update({
+      where: { id: sub.id },
+      data: { endDate, status },
+    });
+    clamped += 1;
+  }
+
   const result = await db.subscription.updateMany({
     where: { status: "active", endDate: { lt: new Date() } },
     data: { status: "expired" },
   });
-  console.log(`Marked ${result.count} subscription(s) as expired.`);
+  console.log(`Clamped ${clamped} unpaid student trial(s); marked ${result.count} subscription(s) as expired.`);
 }
 
 main()
