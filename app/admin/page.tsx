@@ -17,17 +17,29 @@ export default async function AdminDashboard() {
   // ONLY YOU (Yubbie) can delete users
   const canDelete = currentUserEmail === "yubbiepen.pixel@gmail.com";
 
-  // Get total user counts & subscription lists
+  // Fetch users and INCLUDE their active subscriptions
   const users = await db.user.findMany({
     orderBy: { createdAt: "desc" },
+    include: {
+      subscriptions: {
+        where: { status: "active" },
+        take: 1
+      }
+    }
   });
 
-  // Calculate subscription details
-  const subscribers = users.filter(u => ["basic", "standard", "premium"].includes((u as any).role) || (u as any).tier);
-  
+  // Calculate actual subscribers and revenue
+  const subscribers = users.filter(u => u.subscriptions.length > 0);
   const totalSubscribersCount = subscribers.length;
-  const ESTIMATED_SUB_PRICE = 3000; 
-  const totalSubRevenue = totalSubscribersCount * ESTIMATED_SUB_PRICE;
+  
+  // Calculate revenue dynamically based on active subscription tiers (Semester pricing)
+  let totalSubRevenue = 0;
+  for (const sub of subscribers) {
+    const tier = sub.subscriptions[0].tier;
+    if (tier === "basic") totalSubRevenue += 4500;
+    else if (tier === "standard") totalSubRevenue += 7500;
+    else if (tier === "premium") totalSubRevenue += 9000;
+  }
 
   async function deleteUser(formData: FormData) {
     "use server";
@@ -41,8 +53,17 @@ export default async function AdminDashboard() {
     if (!userId) return;
 
     try {
+      // 1. Delete all relational data to prevent Foreign Key Constraint errors
       await db.passwordResetToken.deleteMany({ where: { userId } });
+      await db.tutorChatMessage.deleteMany({ where: { userId } });
+      await db.attempt.deleteMany({ where: { userId } });
+      await db.admissionRequest.deleteMany({ where: { userId } });
       
+      // Delete financial records
+      await db.subscription.deleteMany({ where: { userId } });
+      await db.payment.deleteMany({ where: { userId } });
+      
+      // Delete threads and messages
       const threads = await db.inquiryThread.findMany({ where: { userId } });
       if (threads.length > 0) {
         const threadIds = threads.map(t => t.id);
@@ -50,6 +71,7 @@ export default async function AdminDashboard() {
         await db.inquiryThread.deleteMany({ where: { userId } });
       }
       
+      // 2. Finally, delete the actual user
       await db.user.delete({ where: { id: userId } });
       revalidatePath("/admin"); 
     } catch (error) {
@@ -80,7 +102,7 @@ export default async function AdminDashboard() {
           </div>
           
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Subscribers (Premium)</p>
+            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Subscribers (Active)</p>
             <h3 className="text-3xl font-extrabold text-[#C79A3D] mt-2">{totalSubscribersCount}</h3>
           </div>
 
@@ -98,8 +120,7 @@ export default async function AdminDashboard() {
                 <tr>
                   <th className="px-6 py-4">Name</th>
                   <th className="px-6 py-4">Email</th>
-                  <th className="px-6 py-4">Phone</th>
-                  <th className="px-6 py-4">Role</th>
+                  <th className="px-6 py-4">Plan & Role</th>
                   <th className="px-6 py-4">Joined</th>
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
@@ -109,13 +130,17 @@ export default async function AdminDashboard() {
                   <tr key={user.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-900">{user.fullName}</td>
                     <td className="px-6 py-4 text-gray-600">{user.email || "—"}</td>
-                    <td className="px-6 py-4 text-gray-600">{user.phone || "—"}</td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        user.role === 'admin' ? 'bg-[#C79A3D]/20 text-[#8C6D1F]' : 'bg-green-100 text-green-800'
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mr-2 ${
+                        user.role === 'admin' ? 'bg-[#C79A3D]/20 text-[#8C6D1F]' : 'bg-gray-100 text-gray-800'
                       }`}>
                         {user.role}
                       </span>
+                      {user.subscriptions.length > 0 && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 uppercase">
+                          {user.subscriptions[0].tier}
+                        </span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-gray-500">
                       {new Date(user.createdAt).toLocaleDateString()}
@@ -133,7 +158,7 @@ export default async function AdminDashboard() {
                 ))}
                 {users.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                    <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
                       No users found.
                     </td>
                   </tr>
