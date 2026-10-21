@@ -53,7 +53,7 @@ function LoginForm() {
         </p>
         {justCreated && (
           <p className="mb-4 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm text-ink">
-            Account created. Check your email from Ubora World, then log in. Your 10-day Premium trial (CBT, summaries, tutor) starts now.
+            Account created. Check your email from Ubora World, then log in. Your 24-hour Premium trial (CBT, summaries, tutor) starts now.
           </p>
         )}
         {error && <p className="text-sm text-coral mb-4">{error}</p>}
@@ -82,7 +82,7 @@ function LoginForm() {
         <p className="text-sm text-muted mt-5 text-center">
           New here?{" "}
           <a href="/signup" className="text-ink2 font-semibold hover:text-gold transition-colors duration-150">
-            Create an account for 10 days free.
+            Create an account for 24 hours free.
           </a>
         </p>
       </form>

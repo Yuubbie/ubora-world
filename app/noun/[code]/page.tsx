@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!course) return { title: "NOUN course" };
   const slug = courseSlug(course.code);
   const title = `${course.code} ${course.title} — NOUN CBT practice`;
-  const description = `Practice ${course.code} ${course.title} CBT questions and course summaries on Ubora World. National Open University of Nigeria exam prep. 10-day free trial.`;
+  const description = `Practice ${course.code} ${course.title} CBT questions and course summaries on Ubora World. National Open University of Nigeria exam prep. 24-hour free trial.`;
   return {
     title,
     description,
@@ -86,7 +86,7 @@ export default async function NounCoursePage({ params }: { params: Promise<Param
           </Link>
           <div className="flex items-center gap-2">
             <Link href="/login" className="btn-ghost btn-sm">Log in</Link>
-            <Link href="/signup" className="btn-gold btn-sm">Free 10-day trial</Link>
+            <Link href="/signup" className="btn-gold btn-sm">Free 24-hour trial</Link>
           </div>
         </div>
       </header>
@@ -115,7 +115,7 @@ export default async function NounCoursePage({ params }: { params: Promise<Param
           </div>
           <div className="card-static p-5">
             <dt className="font-mono-brand text-[11px] uppercase tracking-[0.16em] text-muted">Access</dt>
-            <dd className="mt-2 font-display text-2xl font-bold text-golddeep">10-day trial</dd>
+            <dd className="mt-2 font-display text-2xl font-bold text-golddeep">24-hour trial</dd>
           </div>
         </dl>
 
@@ -132,7 +132,7 @@ export default async function NounCoursePage({ params }: { params: Promise<Param
         </div>
 
         <div className="mt-10 flex flex-wrap gap-3">
-          <Link href="/signup" className="btn-gold">Start 10-day free trial</Link>
+          <Link href="/signup" className="btn-gold">Start 24-hour free trial</Link>
           <Link href="/login" className="btn-primary">Log in to sit CBT</Link>
           <Link href="/noun" className="btn-ghost">All NOUN courses</Link>
         </div>

@@ -68,7 +68,7 @@ export async function sendWelcomeEmail(to: string, fullName: string) {
   const html = wrap(`
     <h1 style="margin:0 0 12px;font-size:24px;">Welcome to Ubora World, ${first}.</h1>
     <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">
-      Your 10-day free trial is open. Sit NOUN CBT practice, read course summaries, and ask the tutor from your phone.
+      Your 24-hour free trial is open. Sit NOUN CBT practice, read course summaries, and ask the tutor from your phone.
     </p>
     <p style="margin:0 0 24px;">
       <a href="${SITE_URL}/login" style="display:inline-block;background:#C79A3D;color:#101B33;text-decoration:none;font-weight:700;padding:12px 18px;border-radius:10px;">Log in to start</a>
@@ -79,9 +79,9 @@ export async function sendWelcomeEmail(to: string, fullName: string) {
   `);
   return sendEmail({
     to,
-    subject: "Welcome to Ubora World — your 10-day NOUN CBT trial",
+    subject: "Welcome to Ubora World — your 24-hour NOUN CBT trial",
     html,
-    text: `Welcome to Ubora World, ${first}. Your 10-day free trial is open. Log in: ${SITE_URL}/login`,
+    text: `Welcome to Ubora World, ${first}. Your 24-hour free trial is open. Log in: ${SITE_URL}/login`,
   });
 }
 

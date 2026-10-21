@@ -9,7 +9,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "NOUN CBT Practice & Past Questions",
   description:
-    "Practice NOUN CBT, past questions and course summaries on Ubora World. GST, Criminology, Economics, Political Science and more for National Open University of Nigeria students. 10-day free trial.",
+    "Practice NOUN CBT, past questions and course summaries on Ubora World. GST, Criminology, Economics, Political Science and more for National Open University of Nigeria students. 24-hour free trial.",
   alternates: { canonical: "/noun" },
   openGraph: {
     title: "NOUN CBT Practice & Past Questions | Ubora World",
@@ -45,7 +45,7 @@ export default async function NounHubPage() {
         name: "How do I practise NOUN CBT on Ubora World?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Create a free account for a 10-day trial, then pick your faculty, department and course to sit a timed 30-question set.",
+          text: "Create a free account for a 24-hour trial, then pick your faculty, department and course to sit a timed 30-question set.",
         },
       },
     ],
@@ -68,7 +68,7 @@ export default async function NounHubPage() {
           </Link>
           <div className="flex items-center gap-2">
             <Link href="/login" className="btn-ghost btn-sm">Log in</Link>
-            <Link href="/signup" className="btn-gold btn-sm">Free 10-day trial</Link>
+            <Link href="/signup" className="btn-gold btn-sm">Free 24-hour trial</Link>
           </div>
         </div>
       </header>
@@ -82,7 +82,7 @@ export default async function NounHubPage() {
           Ubora World is exam practice for NOUN students. Sit timed CBT sets, read cram summaries, and ask a tutor grounded in the course bank. School fees, course registration and official TMAs stay on the NOUN portals.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/signup" className="btn-gold">Start 10-day free trial</Link>
+          <Link href="/signup" className="btn-gold">Start 24-hour free trial</Link>
           <Link href="/" className="btn-ghost">Back to home</Link>
         </div>
 
@@ -120,7 +120,7 @@ export default async function NounHubPage() {
             </div>
             <div className="card-static p-6">
               <dt className="type-card-title">How do I start?</dt>
-              <dd className="mt-3 type-body text-muted">Create an account for a 10-day free trial. No card. Then pick a faculty and sit a 30-question set on your phone.</dd>
+              <dd className="mt-3 type-body text-muted">Create an account for a 24-hour free trial. No card. Then pick a faculty and sit a 30-question set on your phone.</dd>
             </div>
           </dl>
         </section>

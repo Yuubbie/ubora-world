@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
-import { FREE_TRIAL_DAYS } from "@/lib/config";
+import { FREE_TRIAL_MS } from "@/lib/config";
 
 export function trialEndDate(from: Date) {
-  return new Date(from.getTime() + FREE_TRIAL_DAYS * 24 * 60 * 60 * 1000);
+  return new Date(from.getTime() + FREE_TRIAL_MS);
 }
 
 export async function grantPremiumTrial(userId: string, startDate = new Date()) {

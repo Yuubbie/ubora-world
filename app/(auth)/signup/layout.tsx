@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Start a 10-day NOUN CBT trial",
+  title: "Start a 24-hour NOUN CBT trial",
   description:
-    "Create a free Ubora World account for 10 days of NOUN CBT practice, past questions and course summaries. No card required.",
+    "Create a free Ubora World account for 24 hours of NOUN CBT practice, past questions and course summaries. No card required.",
   alternates: { canonical: "/signup" },
 };
 

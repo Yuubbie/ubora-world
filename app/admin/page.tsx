@@ -28,18 +28,14 @@ export default async function AdminDashboard() {
     }
   });
 
-  // Calculate actual subscribers and revenue
   const subscribers = users.filter(u => u.subscriptions.length > 0);
   const totalSubscribersCount = subscribers.length;
-  
-  // Calculate revenue dynamically based on active subscription tiers (Semester pricing)
-  let totalSubRevenue = 0;
-  for (const sub of subscribers) {
-    const tier = sub.subscriptions[0].tier;
-    if (tier === "basic") totalSubRevenue += 4500;
-    else if (tier === "standard") totalSubRevenue += 7500;
-    else if (tier === "premium") totalSubRevenue += 9000;
-  }
+
+  const paid = await db.payment.aggregate({
+    where: { status: "success" },
+    _sum: { amount: true },
+  });
+  const totalSubRevenue = (paid._sum.amount ?? 0) / 100;
 
   async function deleteUser(formData: FormData) {
     "use server";
@@ -107,7 +103,7 @@ export default async function AdminDashboard() {
           </div>
 
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Estimated Revenue</p>
+            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Revenue</p>
             <h3 className="text-3xl font-extrabold text-green-600 mt-2">₦{totalSubRevenue.toLocaleString()}</h3>
           </div>
         </div>

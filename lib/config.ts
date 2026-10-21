@@ -27,7 +27,8 @@ export type BillingCycle = keyof typeof BILLING_CYCLES;
 // Added back for prisma/seed.ts compatibility
 export const SUBSCRIPTION_LENGTH_DAYS = 90; 
 
-export const FREE_TRIAL_DAYS = 10; 
+export const FREE_TRIAL_HOURS = 24;
+export const FREE_TRIAL_MS = FREE_TRIAL_HOURS * 60 * 60 * 1000; 
 export const RENEWAL_REMINDER_DAYS_BEFORE = [7, 1];
 
 // Platform URLs & Contact

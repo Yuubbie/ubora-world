@@ -84,7 +84,7 @@ export default async function HomePage() {
           </nav>
           <div className="flex items-center gap-2">
             <Link href="/login" className="btn-ghost btn-sm">Log in</Link>
-            <Link href="/signup" className="btn-gold btn-sm hidden sm:inline-flex">Free 10-day trial</Link>
+            <Link href="/signup" className="btn-gold btn-sm hidden sm:inline-flex">Free 24-hour trial</Link>
           </div>
         </div>
       </header>
@@ -101,7 +101,7 @@ export default async function HomePage() {
               Past questions, timed CBT sets, and course summaries for National Open University of Nigeria students — organised by faculty, department, course, level and semester. One pass. Your phone.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/signup" className="btn-gold">Start 10-day free trial</Link>
+              <Link href="/signup" className="btn-gold">Start 24-hour free trial</Link>
               <Link href="/login" className="btn-primary">Log in</Link>
               <Link href="/cbt" className="btn-ghost">Sit CBT</Link>
             </div>
@@ -125,7 +125,7 @@ export default async function HomePage() {
             <p className="mt-2 text-sm text-muted">Tap each step. Set up your personal account, pick your faculty, and test your knowledge.</p>
             <div className="mt-6 space-y-3">
               {[
-                { n: "01", t: "Create account", d: "Name, email, password. No card required. 10 days of trial access starts immediately.", href: "/signup" },
+                { n: "01", t: "Create account", d: "Name, email, password. No card required. 24 hours of trial access starts immediately.", href: "/signup" },
                 { n: "02", t: "Log in", d: "Sign in securely with the email and password you just created.", href: "/login" },
                 { n: "03", t: "Pick a paper", d: "Faculty → department → course. Sit 30 questions. Ask the Tutor on that page.", href: "/cbt" },
               ].map((step) => (
@@ -166,13 +166,13 @@ export default async function HomePage() {
 
       <section id="walkthrough" className="mx-auto max-w-6xl px-5 py-14 md:px-8">
         <p className="eyebrow text-golddeep">Platform guide</p>
-        <h2 className="type-page-title mt-3">Sign up once. Ten days of everything free.</h2>
+        <h2 className="type-page-title mt-3">Sign up once. 24 hours of everything free.</h2>
         <p className="mt-3 max-w-2xl text-muted">
-          Create your personal account for a 10-day free trial (CBT, summaries, Ask the Tutor). School fees, registration and official TMAs stay on NOUN — two portals, two jobs.
+          Create your personal account for a 24-hour free trial (CBT, summaries, Ask the Tutor). School fees, registration and official TMAs stay on NOUN — two portals, two jobs.
         </p>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {([
-            { n: "01", t: "Sign up", d: "Open Create account. Full name, email, password (8+). Matric is optional. Tap Start 10-day free trial. You land on login — no card, no Paystack.", href: "/signup" },
+            { n: "01", t: "Sign up", d: "Open Create account. Full name, email, password (8+). Matric is optional. Tap Start 24-hour free trial. You land on login — no card, no Paystack.", href: "/signup" },
             { n: "02", t: "Log in", d: "Use the email and password you just set during your account creation.", href: "/login" },
             { n: "03", t: "Sit CBT", d: "Dashboard → Start CBT Practice. Faculty, then department, then the 30-question set. Ask the Tutor lives on that course page.", href: "/cbt" },
             { n: "04", t: "Read summaries", d: "Same faculty path under Course summaries. Cram notes for the paper you are sitting.", href: "/summaries" },
@@ -218,7 +218,7 @@ export default async function HomePage() {
             ["CBT simulator", "Fixed 30-question sets per module so the full bank is covered across attempts.", "/cbt"],
             ["Course summaries", "Cram format, served only to logged-in subscribers. Never a public file.", "/summaries"],
             ["Ask the Tutor", "Stuck mid-revision? Ask from the course you are sitting. Grounded in that course bank.", "/cbt"],
-            ["10-day trial, then a pass", "Sign up unlocks access for 10 days free. After that: choose Monthly or Semester billing. Paystack. Manual renew.", "/signup"],
+            ["24-hour trial, then a pass", "Sign up unlocks access for 24 hours free. After that: choose Monthly or Semester billing. Paystack. Manual renew.", "/signup"],
           ].map(([t, d, href]) => (
             <Link key={t} href={href} className="card-premium p-6 no-underline">
               <h3 className="type-card-title">{t}</h3>
@@ -256,8 +256,8 @@ export default async function HomePage() {
 
       <section id="pricing" className="mx-auto max-w-6xl px-5 py-14 md:px-8">
         <p className="eyebrow text-golddeep">Flexible pricing</p>
-        <h2 className="type-page-title mt-3">Ten days free. Then choose monthly or semester.</h2>
-        <p className="mt-3 max-w-xl text-muted">New accounts get full platform access for 10 days. After that, choose the plan that fits your budget. Renews manually.</p>
+        <h2 className="type-page-title mt-3">24 hours free. Then choose monthly or semester.</h2>
+        <p className="mt-3 max-w-xl text-muted">New accounts get full platform access for 24 hours. After that, choose the plan that fits your budget. Renews manually.</p>
         <div className="mt-10 grid gap-5 sm:grid-cols-3">
           {TIERS.map((t) => (
             <article key={t.id} className={`card-static flex flex-col p-7 ${t.highlight ? "border-2 border-gold shadow-cardHover" : ""}`}>
@@ -297,10 +297,10 @@ export default async function HomePage() {
         <div className="rounded-3xl bg-ink px-8 py-12 text-center text-white">
           <h2 className="font-display text-3xl font-bold md:text-5xl">Sit the paper on your phone tonight.</h2>
           <p className="mx-auto mt-4 max-w-xl text-white/70">
-            Sign up, get 10 days free, log in, pick your faculty, run a module. Ask the Tutor lives on every CBT course page.
+            Sign up, get 24 hours free, log in, pick your faculty, run a module. Ask the Tutor lives on every CBT course page.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/signup" className="btn-gold">Start 10-day free trial</Link>
+            <Link href="/signup" className="btn-gold">Start 24-hour free trial</Link>
             <Link href="/login" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:border-gold">
               Log in
             </Link>

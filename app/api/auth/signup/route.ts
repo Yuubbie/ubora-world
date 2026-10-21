@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { sendWelcomeEmail } from "@/lib/email";
+import { grantPremiumTrial } from "@/lib/trial";
 
 // Helper to convert empty strings "" to undefined before validation
 const emptyToUndef = (val: any) => (val === "" ? undefined : val);
@@ -69,14 +70,15 @@ export async function POST(req: Request) {
       },
     });
 
-    // Fire the welcome email if an email address was provided
+    await grantPremiumTrial(user.id);
+
     if (user.email) {
       await sendWelcomeEmail(user.email, user.fullName).catch((err) => {
         console.error("Non-fatal error: Welcome email failed to send", err);
       });
     }
 
-    return NextResponse.json({ id: user.id, fullName: user.fullName }, { status: 201 });
+    return NextResponse.json({ id: user.id, fullName: user.fullName, trialHours: 24 }, { status: 201 });
   } catch (error) {
     console.error("Signup error:", error);
     return NextResponse.json({ error: "Something went wrong during signup" }, { status: 500 });

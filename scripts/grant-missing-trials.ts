@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 const db = new PrismaClient();
-const FREE_TRIAL_DAYS = 10;
+const FREE_TRIAL_MS = 24 * 60 * 60 * 1000;
 
 async function main() {
   const students = await db.user.findMany({
@@ -14,7 +14,7 @@ async function main() {
 
   let granted = 0;
   for (const user of students) {
-    const endDate = new Date(user.createdAt.getTime() + FREE_TRIAL_DAYS * 24 * 60 * 60 * 1000);
+    const endDate = new Date(user.createdAt.getTime() + FREE_TRIAL_MS);
     const now = new Date();
     await db.subscription.create({
       data: {
@@ -29,7 +29,7 @@ async function main() {
     console.log(`${endDate < now ? "expired" : "active"} trial for ${user.email || user.fullName}`);
   }
 
-  console.log(`Granted ${granted} missing 10-day Premium trial(s).`);
+  console.log(`Granted ${granted} missing 24-hour Premium trial(s).`);
 }
 
 main()
