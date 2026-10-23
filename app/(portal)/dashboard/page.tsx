@@ -2,6 +2,8 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { getAccessState } from "@/lib/access";
+import { db } from "@/lib/db";
+import { gradeFor } from "@/lib/config";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
 
@@ -9,12 +11,6 @@ const TIER_LABELS: Record<string, string> = {
   basic: "Basic",
   standard: "Standard",
   premium: "Premium",
-};
-
-const TIER_FEATURE_COUNT: Record<string, number> = {
-  basic: 2,
-  standard: 3,
-  premium: 4,
 };
 
 function getGreeting() {
@@ -93,13 +89,27 @@ function StatCard({
   );
 }
 
+function gradeClass(grade: string) {
+  if (grade === "Distinction") return "text-green-700";
+  if (grade === "Pass") return "text-golddeep";
+  return "text-coral";
+}
+
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
-  const access = await getAccessState((session!.user as any).id);
+  const userId = (session!.user as any).id;
+  const access = await getAccessState(userId);
 
+  const attempts = await db.attempt.findMany({
+    where: { userId },
+    orderBy: { startedAt: "desc" },
+    take: 8,
+    include: { course: { select: { id: true, code: true, title: true } } },
+  });
+
+  const attemptCount = await db.attempt.count({ where: { userId } });
   const daysRemaining = access.active ? getDaysRemaining(access.endDate) : 0;
   const tierLabel = access.active ? TIER_LABELS[access.tier] ?? access.tier : "None";
-  const featuresUnlocked = access.active ? TIER_FEATURE_COUNT[access.tier] ?? 0 : 0;
   const firstName = (session!.user?.name || "").split(" ")[0];
 
   const actions = [
@@ -141,8 +151,8 @@ export default async function DashboardPage() {
             />
             <StatCard
               icon={<IconUnlocked />}
-              value={`${featuresUnlocked} / 4`}
-              label="Features Unlocked"
+              value={attemptCount}
+              label="CBT Attempts"
             />
           </div>
 
@@ -210,6 +220,45 @@ export default async function DashboardPage() {
                 )
               )}
             </div>
+          </section>
+
+          <section
+            className="card-static p-6 md:p-8 mt-6 animate-fade-up-scale"
+            style={{ animationDelay: "0.24s", opacity: 0 }}
+          >
+            <p className="eyebrow text-golddeep mb-2">CBT tracker</p>
+            <h2 className="type-section-title mb-6">Recent practice</h2>
+
+            {attempts.length === 0 ? (
+              <p className="text-sm text-muted">No practice attempts yet. Start a CBT set to see scores here.</p>
+            ) : (
+              <ul className="divide-y divide-line">
+                {attempts.map((attempt) => {
+                  const percentage = attempt.total > 0 ? Math.round((attempt.score / attempt.total) * 100) : 0;
+                  const grade = gradeFor(percentage);
+                  return (
+                    <li key={attempt.id} className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+                      <div className="min-w-0">
+                        <p className="font-medium text-ink truncate">
+                          {attempt.course.code} · {attempt.course.title}
+                        </p>
+                        <p className="text-xs text-muted mt-0.5">
+                          {attempt.score}/{attempt.total} · {new Date(attempt.startedAt).toLocaleDateString("en-GB")}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3 shrink-0">
+                        <span className={`text-sm font-semibold ${gradeClass(grade)}`}>
+                          {percentage}% · {grade}
+                        </span>
+                        <Link href={`/cbt/${attempt.course.id}`} className="btn-ghost btn-sm">
+                          Retry
+                        </Link>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </section>
         </div>
       </div>
