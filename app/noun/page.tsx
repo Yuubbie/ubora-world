@@ -20,42 +20,63 @@ export const metadata: Metadata = {
 };
 
 export default async function NounHubPage() {
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Does Ubora World host official NOUN TMAs?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "No. Official TMAs stay on elearn.nou.edu.ng. Ubora World is timed CBT practice and course summaries for National Open University of Nigeria students.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Where do I pay NOUN school fees?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Pay school fees and complete course registration on www.nouonline.nou.edu.ng. Ubora subscriptions only unlock practice on uboraworld.com.ng.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "How do I practise NOUN CBT on Ubora World?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Create a free account for a 24-hour trial, then pick your faculty, department and course to sit a timed 30-question set.",
-        },
-      },
-    ],
-  };
-
   const courses = await db.course.findMany({
     where: { questionBanks: { some: { status: "approved" } } },
     select: { code: true, title: true, isGST: true, level: true, semester: true, department: { select: { name: true } } },
     orderBy: { code: "asc" },
   });
+
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "NOUN courses", item: `${SITE_URL}/noun` },
+        ],
+      },
+      {
+        "@type": "ItemList",
+        name: "NOUN CBT courses on Ubora World",
+        itemListElement: courses.map((c, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          url: `${SITE_URL}/noun/${courseSlug(c.code)}`,
+          name: `${c.code} ${c.title}`,
+        })),
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: [
+          {
+            "@type": "Question",
+            name: "Does Ubora World host official NOUN TMAs?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "No. Official TMAs stay on elearn.nou.edu.ng. Ubora World is timed CBT practice and course summaries for National Open University of Nigeria students.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Where do I pay NOUN school fees?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Pay school fees and complete course registration on www.nouonline.nou.edu.ng. Ubora subscriptions only unlock practice on uboraworld.com.ng.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "How do I practise NOUN CBT on Ubora World?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Create a free account for a 24-hour trial, then pick your faculty, department and course to sit a timed 30-question set.",
+            },
+          },
+        ],
+      },
+    ],
+  };
 
   return (
     <div className="min-h-[100dvh] bg-paper text-ink">

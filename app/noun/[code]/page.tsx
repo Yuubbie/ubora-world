@@ -66,13 +66,25 @@ export default async function NounCoursePage({ params }: { params: Promise<Param
   const faculty = course.department?.faculty?.name;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Course",
-    name: `${course.code} ${course.title}`,
-    description: `NOUN CBT practice and course summary for ${course.code} ${course.title} on Ubora World.`,
-    url: `${SITE_URL}/noun/${slug}`,
-    provider: { "@type": "Organization", name: "Ubora World", url: SITE_URL },
-    educationalLevel: `${course.level} Level`,
-    isAccessibleForFree: false,
+    "@graph": [
+      {
+        "@type": "Course",
+        name: `${course.code} ${course.title}`,
+        description: `NOUN CBT practice and course summary for ${course.code} ${course.title} on Ubora World.`,
+        url: `${SITE_URL}/noun/${slug}`,
+        provider: { "@type": "Organization", name: "Ubora World", url: SITE_URL },
+        educationalLevel: `${course.level} Level`,
+        isAccessibleForFree: false,
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "NOUN courses", item: `${SITE_URL}/noun` },
+          { "@type": "ListItem", position: 3, name: `${course.code} ${course.title}`, item: `${SITE_URL}/noun/${slug}` },
+        ],
+      },
+    ],
   };
 
   return (
