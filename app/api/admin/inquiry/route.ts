@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { sanitizeInquiryContent } from "@/lib/inquirySanitize";
 
 function requireAdmin(session: any) {
   const role = session?.user?.role;
@@ -31,11 +32,11 @@ export async function GET() {
       email: t.email || t.user?.email || null,
       signedIn: !!t.userId,
       updatedAt: t.updatedAt,
-      preview: t.messages[t.messages.length - 1]?.content || "",
+      preview: sanitizeInquiryContent(t.messages[t.messages.length - 1]?.content || ""),
       messages: t.messages.map((m) => ({
         id: m.id,
         sender: m.sender,
-        content: m.content,
+        content: sanitizeInquiryContent(m.content),
         createdAt: m.createdAt,
       })),
     })),
@@ -87,7 +88,7 @@ export async function POST(req: Request) {
     messages: messages.map((m) => ({
       id: m.id,
       sender: m.sender,
-      content: m.content,
+      content: sanitizeInquiryContent(m.content),
       createdAt: m.createdAt,
     })),
   });

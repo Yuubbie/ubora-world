@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { isSensitiveInquiryContent } from "@/lib/inquirySanitize";
 
 const postSchema = z.object({
   visitorKey: z.string().min(8).max(80).optional(),
@@ -55,12 +56,14 @@ export async function GET(req: Request) {
       name: thread.name,
       email: thread.email,
     },
-    messages: thread.messages.map((m) => ({
-      id: m.id,
-      sender: m.sender,
-      content: m.content,
-      createdAt: m.createdAt,
-    })),
+    messages: thread.messages
+      .filter((m) => !isSensitiveInquiryContent(m.content))
+      .map((m) => ({
+        id: m.id,
+        sender: m.sender,
+        content: m.content,
+        createdAt: m.createdAt,
+      })),
   });
 }
 
@@ -132,12 +135,14 @@ export async function POST(req: Request) {
 
   const res = NextResponse.json({
     thread: { id: thread.id, status: thread.status, name: thread.name, email: thread.email },
-    messages: messages.map((m) => ({
-      id: m.id,
-      sender: m.sender,
-      content: m.content,
-      createdAt: m.createdAt,
-    })),
+    messages: messages
+      .filter((m) => !isSensitiveInquiryContent(m.content))
+      .map((m) => ({
+        id: m.id,
+        sender: m.sender,
+        content: m.content,
+        createdAt: m.createdAt,
+      })),
   });
   if (!userId && visitorKey) setVisitorCookie(res, visitorKey);
   return res;
