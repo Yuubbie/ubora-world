@@ -2,6 +2,7 @@ import { db } from "./db";
 import { verifyTransaction } from "./paystack";
 // We import BILLING_CYCLES instead of the old SUBSCRIPTION_LENGTH_DAYS
 import { BILLING_CYCLES, TIER_PRICES_KOBO, type Tier, type BillingCycle } from "./config";
+import { creditReferralOnFirstPayment } from "./referral";
 
 export type ConfirmResult =
   | { ok: true; alreadyProcessed: boolean }
@@ -22,6 +23,7 @@ export async function confirmPaymentAndActivate(reference: string): Promise<Conf
   if (!payment) return { ok: false, reason: "unknown_reference" };
 
   if (payment.status === "success") {
+    await creditReferralOnFirstPayment(payment.userId, payment.amount);
     return { ok: true, alreadyProcessed: true };
   }
 
@@ -49,6 +51,8 @@ export async function confirmPaymentAndActivate(reference: string): Promise<Conf
   await db.subscription.create({
     data: { userId: payment.userId, tier, startDate, endDate, status: "active", paymentId: payment.id },
   });
+
+  await creditReferralOnFirstPayment(payment.userId, payment.amount);
 
   return { ok: true, alreadyProcessed: false };
 }

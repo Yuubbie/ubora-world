@@ -34,7 +34,14 @@ export async function deleteUserAndRelated(userId: string) {
       await tx.referral.deleteMany({ where: { agentId: agent.id } });
       await tx.agent.delete({ where: { id: agent.id } });
     }
-    await tx.referral.deleteMany({ where: { referredUserId: userId } });
+    const incoming = await tx.referral.findMany({
+      where: { referredUserId: userId },
+      select: { id: true },
+    });
+    if (incoming.length > 0) {
+      await tx.commission.deleteMany({ where: { referralId: { in: incoming.map((row) => row.id) } } });
+      await tx.referral.deleteMany({ where: { referredUserId: userId } });
+    }
 
     await tx.user.delete({ where: { id: userId } });
   });

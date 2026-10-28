@@ -85,8 +85,13 @@ export default async function AdminDashboard() {
             <h1 className="text-3xl font-bold text-[#101B33]">Admin Dashboard</h1>
             <p className="text-gray-500 mt-1">Manage users, view subscriber statistics, and assess platforms.</p>
           </div>
-          <div className="bg-[#101B33] text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm">
-            Admin Session: {session.user.name} ({canDelete ? "Master Admin" : "View-Only"})
+          <div className="flex items-center gap-3">
+            <a href="/admin/referrals" className="bg-white border border-gray-200 text-[#101B33] px-4 py-2 rounded-lg text-sm font-medium shadow-sm">
+              Referrals
+            </a>
+            <div className="bg-[#101B33] text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm">
+              Admin Session: {session.user.name} ({canDelete ? "Master Admin" : "View-Only"})
+            </div>
           </div>
         </div>
 

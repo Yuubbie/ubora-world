@@ -16,8 +16,8 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  const expired = await expirePastDueSubscriptions();
-  return NextResponse.json({ expired });
+  const result = await expirePastDueSubscriptions();
+  return NextResponse.json(result);
 }
 
 export async function POST(req: Request) {

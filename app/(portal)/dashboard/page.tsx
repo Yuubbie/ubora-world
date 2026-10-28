@@ -115,6 +115,7 @@ export default async function DashboardPage() {
   const actions = [
     { href: "/cbt", label: "Start CBT Practice", ready: true },
     { href: "/summaries", label: "Open Course Summaries", ready: true },
+    { href: "/referrals", label: "Earn ₦1,000 per semester referral", ready: true },
     { href: "https://www.nouonline.nou.edu.ng/", label: "NOUN fees and registration", ready: true, external: true },
     { href: null, label: "Browse Past Questions", ready: false },
   ];

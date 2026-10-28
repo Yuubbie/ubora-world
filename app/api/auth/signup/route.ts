@@ -4,6 +4,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { sendWelcomeEmail } from "@/lib/email";
 import { grantPremiumTrial } from "@/lib/trial";
+import { attachReferralOnSignup } from "@/lib/referral";
 
 // Helper to convert empty strings "" to undefined before validation
 const emptyToUndef = (val: any) => (val === "" ? undefined : val);
@@ -14,6 +15,7 @@ const signupSchema = z.object({
   phone: z.preprocess(emptyToUndef, z.string().min(7).optional()),
   password: z.string().min(8),
   matricNumber: z.preprocess(emptyToUndef, z.string().optional()),
+  referralCode: z.preprocess(emptyToUndef, z.string().max(200).optional()),
 }).refine((data) => data.email || data.phone, {
   message: "Provide an email or phone number",
 });
@@ -27,7 +29,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
     }
     
-    const { fullName, email, phone, password, matricNumber } = parsed.data;
+    const { fullName, email, phone, password, matricNumber, referralCode } = parsed.data;
 
     const cleanEmail = email || null;
     const cleanPhone = phone || null;
@@ -71,6 +73,7 @@ export async function POST(req: Request) {
     });
 
     await grantPremiumTrial(user.id);
+    await attachReferralOnSignup({ referredUserId: user.id, referralCode });
 
     if (user.email) {
       await sendWelcomeEmail(user.email, user.fullName).catch((err) => {

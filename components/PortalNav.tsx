@@ -43,6 +43,17 @@ function IconSubscribe() {
   );
 }
 
+function IconReferral() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3 19c0-3 2.5-5 6-5" />
+      <circle cx="17" cy="9" r="2.5" />
+      <path d="M14 19c0-2.4 1.8-4 4.5-4 .8 0 1.5.1 2.1.4" />
+    </svg>
+  );
+}
+
 function IconSignOut() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -68,6 +79,7 @@ const links = [
   { href: "/cbt", label: "CBT Practice", Icon: IconCbt, external: false },
   { href: "/summaries", label: "Summaries", Icon: IconSummaries, external: false },
   { href: "/subscribe", label: "Subscribe", Icon: IconSubscribe, external: false },
+  { href: "/referrals", label: "Referrals", Icon: IconReferral, external: false },
   { href: "https://www.nouonline.nou.edu.ng/", label: "Fees & registration", Icon: IconNoun, external: true },
   { href: "https://elearn.nou.edu.ng/", label: "TMAs on eLearn", Icon: IconNoun, external: true },
 ];

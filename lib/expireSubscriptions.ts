@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { FREE_TRIAL_MS } from "@/lib/config";
+import { releaseMaturedCommissions } from "@/lib/referral";
 
 export async function clampUnpaidStudentTrials() {
   const now = new Date();
@@ -33,5 +34,6 @@ export async function expirePastDueSubscriptions() {
     where: { status: "active", endDate: { lt: new Date() } },
     data: { status: "expired" },
   });
-  return result.count;
+  const commissionsReleased = await releaseMaturedCommissions();
+  return { expired: result.count, commissionsReleased };
 }

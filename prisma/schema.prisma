@@ -20,6 +20,7 @@ model User {
   assignedRequests  AdmissionRequest[] @relation("assignee")
   admissionRequests AdmissionRequest[] @relation("requester")
   agent             Agent?
+  referralReceived  Referral?          @relation("ReferredUser")
   attempts          Attempt[]
   subscriptions     Subscription[]
   inquiryThreads    InquiryThread[]
@@ -212,10 +213,11 @@ model Agent {
 model Referral {
   id             String      @id @default(cuid())
   agentId        String
-  referredUserId String
+  referredUserId String      @unique
   createdAt      DateTime    @default(now())
   commission     Commission?
   agent          Agent       @relation(fields: [agentId], references: [id])
+  referredUser   User        @relation("ReferredUser", fields: [referredUserId], references: [id])
 
   @@index([agentId])
 }
@@ -228,20 +230,24 @@ model Commission {
   status       CommissionStatus @default(pending)
   createdAt    DateTime         @default(now())
   payableAfter DateTime
+  payoutId     String?
   agent        Agent            @relation(fields: [agentId], references: [id])
   referral     Referral         @relation(fields: [referralId], references: [id])
+  payout       Payout?          @relation(fields: [payoutId], references: [id])
 
   @@index([agentId, status])
+  @@index([payoutId])
 }
 
 model Payout {
-  id          String       @id @default(cuid())
-  agentId     String
-  amount      Int
-  status      PayoutStatus @default(requested)
-  requestedAt DateTime     @default(now())
-  paidAt      DateTime?
-  agent       Agent        @relation(fields: [agentId], references: [id])
+  id           String       @id @default(cuid())
+  agentId      String
+  amount       Int
+  status       PayoutStatus @default(requested)
+  requestedAt  DateTime     @default(now())
+  paidAt       DateTime?
+  agent        Agent        @relation(fields: [agentId], references: [id])
+  commissions  Commission[]
 
   @@index([agentId])
 }

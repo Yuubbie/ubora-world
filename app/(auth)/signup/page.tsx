@@ -1,14 +1,20 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import BackLink from "@/components/BackLink";
 import PasswordField from "@/components/PasswordField";
 
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter();
-  const [form, setForm] = useState({ fullName: "", email: "", password: "", matricNumber: "" });
+  const searchParams = useSearchParams();
+  const [form, setForm] = useState({ fullName: "", email: "", password: "", matricNumber: "", referralCode: "" });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const ref = searchParams.get("ref") || "";
+    if (ref) setForm((current) => ({ ...current, referralCode: ref }));
+  }, [searchParams]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -42,6 +48,11 @@ export default function SignupPage() {
         <p className="text-sm text-muted mb-6">
           24 hours of Premium free — CBT, summaries, and Ask the Tutor. Then choose monthly or semester billing.
         </p>
+        {form.referralCode ? (
+          <p className="text-sm text-golddeep mb-4">
+            Invited with code {form.referralCode.toUpperCase()}. Your friend earns ₦1,000 when you take a semester plan.
+          </p>
+        ) : null}
         {error && <p className="text-sm text-coral mb-4">{error}</p>}
         {[
           { key: "fullName", label: "Full name", type: "text" },
@@ -65,6 +76,16 @@ export default function SignupPage() {
           minLength={8}
           className="mb-4"
         />
+        <div className="mb-4">
+          <label className="text-sm font-medium block mb-1.5">Referral code (optional)</label>
+          <input
+            type="text"
+            value={form.referralCode}
+            onChange={(e) => setForm({ ...form, referralCode: e.target.value })}
+            className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm uppercase"
+            autoComplete="off"
+          />
+        </div>
         <button
           disabled={loading}
           className="w-full bg-ink text-white rounded-lg py-2.5 text-sm font-semibold disabled:opacity-50 mt-2"
@@ -79,5 +100,13 @@ export default function SignupPage() {
         </p>
       </form>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignupForm />
+    </Suspense>
   );
 }

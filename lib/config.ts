@@ -35,9 +35,16 @@ export const RENEWAL_REMINDER_DAYS_BEFORE = [7, 1];
 export const ENQUIRY_NUMBER = "0810 013 3673";
 export const STUDENT_PORTAL_URL = "https://www.nouonline.nou.edu.ng/";
 
-// Prices in kobo
+export const REFERRAL_REWARD_KOBO = 100000;
+export const REFERRAL_PAYABLE_AFTER_DAYS = 7;
+export const REFERRAL_REQUIRED_CYCLE: BillingCycle = "semester";
+
 export const TIER_PRICES_KOBO: Record<Tier, { monthly: number; semester: number }> = {
   basic: { monthly: 200000, semester: 450000 },
   standard: { monthly: 300000, semester: 750000 },
   premium: { monthly: 350000, semester: 900000 },
 };
+
+export function isSemesterPaymentAmount(amountKobo: number) {
+  return Object.values(TIER_PRICES_KOBO).some((prices) => prices.semester === amountKobo);
+}
