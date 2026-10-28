@@ -35,9 +35,11 @@ export const RENEWAL_REMINDER_DAYS_BEFORE = [7, 1];
 export const ENQUIRY_NUMBER = "0810 013 3673";
 export const STUDENT_PORTAL_URL = "https://www.nouonline.nou.edu.ng/";
 
-export const REFERRAL_REWARD_KOBO = 100000;
+export const REFERRAL_REWARD_KOBO = {
+  monthly: 50000,
+  semester: 100000,
+} as const;
 export const REFERRAL_PAYABLE_AFTER_DAYS = 7;
-export const REFERRAL_REQUIRED_CYCLE: BillingCycle = "semester";
 
 export const TIER_PRICES_KOBO: Record<Tier, { monthly: number; semester: number }> = {
   basic: { monthly: 200000, semester: 450000 },
@@ -45,6 +47,15 @@ export const TIER_PRICES_KOBO: Record<Tier, { monthly: number; semester: number 
   premium: { monthly: 350000, semester: 900000 },
 };
 
-export function isSemesterPaymentAmount(amountKobo: number) {
-  return Object.values(TIER_PRICES_KOBO).some((prices) => prices.semester === amountKobo);
+export function billingCycleFromAmount(amountKobo: number): BillingCycle | null {
+  for (const prices of Object.values(TIER_PRICES_KOBO)) {
+    if (prices.monthly === amountKobo) return "monthly";
+    if (prices.semester === amountKobo) return "semester";
+  }
+  return null;
+}
+
+export function referralRewardForAmount(amountKobo: number): number | null {
+  const cycle = billingCycleFromAmount(amountKobo);
+  return cycle ? REFERRAL_REWARD_KOBO[cycle] : null;
 }

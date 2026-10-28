@@ -44,7 +44,7 @@ export default async function AdminReferralsPage() {
           <div>
             <a href="/admin" className="text-sm text-gray-500 hover:text-[#101B33]">Back to admin</a>
             <h1 className="text-3xl font-bold text-[#101B33] mt-2">Referrals</h1>
-            <p className="text-gray-500 mt-1">₦1,000 per first semester subscription. Monthly plans and trials do not earn.</p>
+            <p className="text-gray-500 mt-1">₦500 monthly or ₦1,000 semester on a friend's first paid plan. Trials do not earn.</p>
           </div>
         </div>
 

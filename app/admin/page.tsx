@@ -27,16 +27,22 @@ export default async function AdminDashboard() {
       subscriptions: {
         orderBy: { endDate: "desc" },
         include: { payment: true },
-        take: 1,
       },
     },
   });
 
   const now = new Date();
+  function displaySubscription(user: (typeof users)[number]) {
+    return (
+      user.subscriptions.find((sub) => isPaidSubscription(sub) && sub.status === "active" && sub.endDate >= now) ||
+      user.subscriptions.find((sub) => isPaidSubscription(sub)) ||
+      user.subscriptions[0]
+    );
+  }
   const paidSubscribers = users.filter((user) => {
     if (!isRealStudent(user)) return false;
-    const sub = user.subscriptions[0];
-    return isPaidSubscription(sub) && sub.status === "active" && sub.endDate >= now;
+    const sub = displaySubscription(user);
+    return Boolean(sub && isPaidSubscription(sub) && sub.status === "active" && sub.endDate >= now);
   });
   const totalSubscribersCount = paidSubscribers.length;
 
@@ -126,7 +132,7 @@ export default async function AdminDashboard() {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {users.map((user) => {
-                  const sub = user.subscriptions[0];
+                  const sub = displaySubscription(user);
                   const hasSub = Boolean(sub);
                   const isPaid = isPaidSubscription(sub);
                   const trialExpired = hasSub && !isPaid && sub.endDate < now;

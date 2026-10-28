@@ -50,7 +50,7 @@ function SignupForm() {
         </p>
         {form.referralCode ? (
           <p className="text-sm text-golddeep mb-4">
-            Invited with code {form.referralCode.toUpperCase()}. Your friend earns ₦1,000 when you take a semester plan.
+            Invited with code {form.referralCode.toUpperCase()}. Your friend earns ₦500 if you pay monthly, or ₦1,000 if you take a semester plan.
           </p>
         ) : null}
         {error && <p className="text-sm text-coral mb-4">{error}</p>}

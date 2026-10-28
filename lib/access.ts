@@ -14,14 +14,15 @@ export type AccessState =
  *
  * A subscription with no paymentId is the launch 24-hour Premium trial granted
  * at signup. Paid plans always have a paymentId and take precedence when both
- * exist because we order by endDate desc (90-day paid outlasts 24-hour trial).
+ * exist.
  */
 export async function getAccessState(userId: string): Promise<AccessState> {
-  const sub = await db.subscription.findFirst({
+  const subs = await db.subscription.findMany({
     where: { userId, status: "active" },
     orderBy: { endDate: "desc" },
     include: { user: { select: { role: true } } },
   });
+  const sub = subs.find((row) => row.paymentId) ?? subs[0];
 
   if (!sub) return { active: false, tier: null };
 

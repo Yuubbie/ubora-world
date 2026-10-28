@@ -5,9 +5,6 @@ import { db } from "@/lib/db";
 import { confirmPaymentAndActivate } from "@/lib/confirmPayment";
 
 export async function GET(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
-
   const { searchParams } = new URL(req.url);
   const reference = searchParams.get("reference");
   if (!reference) return NextResponse.json({ error: "missing_reference" }, { status: 400 });
@@ -16,7 +13,11 @@ export async function GET(req: Request) {
   }
 
   const payment = await db.payment.findUnique({ where: { reference } });
-  if (!payment || payment.userId !== (session.user as any).id) {
+  if (!payment) return NextResponse.json({ error: "unknown_reference" }, { status: 404 });
+
+  const session = await getServerSession(authOptions);
+  const sessionUserId = session?.user ? (session.user as { id?: string }).id : null;
+  if (sessionUserId && sessionUserId !== payment.userId) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
 

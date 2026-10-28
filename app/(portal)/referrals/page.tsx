@@ -5,7 +5,7 @@ import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
 import CopyButton from "@/components/CopyButton";
 import { db } from "@/lib/db";
-import { ENQUIRY_NUMBER, isSemesterPaymentAmount } from "@/lib/config";
+import { ENQUIRY_NUMBER } from "@/lib/config";
 import {
   ensureAgentForUser,
   formatNaira,
@@ -16,13 +16,12 @@ import RequestPayoutButton from "./RequestPayoutButton";
 
 export const dynamic = "force-dynamic";
 
-function statusLabel(status: string, hasPayment: boolean, isSemester: boolean) {
+function statusLabel(status: string, hasPayment: boolean) {
   if (status === "paid") return "Paid";
   if (status === "payable") return "Ready";
   if (status === "pending") return "Waiting 7 days";
   if (status === "voided") return "Voided";
   if (!hasPayment) return "Signed up — unpaid";
-  if (!isSemester) return "Monthly — no reward";
   return "Processing";
 }
 
@@ -51,9 +50,6 @@ export default async function ReferralsPage() {
     select: { userId: true, amount: true },
   });
   const paidUserIds = new Set(successPayments.map((row) => row.userId));
-  const semesterUserIds = new Set(
-    successPayments.filter((row) => isSemesterPaymentAmount(row.amount)).map((row) => row.userId)
-  );
 
   const commissions = await db.commission.findMany({
     where: { agentId: agent.id },
@@ -80,8 +76,8 @@ export default async function ReferralsPage() {
         <div className="page-shell">
           <PageHeader
             eyebrow="Referrals"
-            title="Earn ₦1,000"
-            subtitle="Share your link. You earn ₦1,000 when a friend pays for a semester plan. Monthly plans and free trials do not count."
+            title="Earn ₦500 / ₦1,000"
+            subtitle="Share your link. You earn ₦500 when a friend pays monthly, or ₦1,000 when they take a semester plan. Free trials do not count."
           />
 
           <div className="card-static p-6 md:p-8 mb-6">
@@ -152,7 +148,6 @@ export default async function ReferralsPage() {
               <ul className="divide-y divide-line">
                 {referrals.map((row) => {
                   const paid = paidUserIds.has(row.referredUserId);
-                  const semesterPaid = semesterUserIds.has(row.referredUserId);
                   return (
                     <li key={row.id} className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
                       <div className="min-w-0">
@@ -162,7 +157,7 @@ export default async function ReferralsPage() {
                         </p>
                       </div>
                       <span className="tag shrink-0">
-                        {statusLabel(row.commission?.status || "", paid, semesterPaid)}
+                        {statusLabel(row.commission?.status || "", paid)}
                         {row.commission ? ` · ${formatNaira(row.commission.amount)}` : ""}
                       </span>
                     </li>

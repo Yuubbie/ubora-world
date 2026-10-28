@@ -1,7 +1,7 @@
 import { randomBytes } from "crypto";
 import type { Prisma, PrismaClient } from "@prisma/client";
 import { db } from "@/lib/db";
-import { isSemesterPaymentAmount, REFERRAL_PAYABLE_AFTER_DAYS, REFERRAL_REWARD_KOBO } from "@/lib/config";
+import { REFERRAL_PAYABLE_AFTER_DAYS, referralRewardForAmount } from "@/lib/config";
 import { SITE_URL } from "@/lib/seo";
 
 type DbClient = PrismaClient | Prisma.TransactionClient;
@@ -90,7 +90,8 @@ export async function attachReferralOnSignup(params: {
 }
 
 export async function creditReferralOnFirstPayment(userId: string, amountKobo: number, client: DbClient = db) {
-  if (!isSemesterPaymentAmount(amountKobo)) return null;
+  const rewardKobo = referralRewardForAmount(amountKobo);
+  if (rewardKobo == null) return null;
 
   const referral = await client.referral.findUnique({
     where: { referredUserId: userId },
@@ -106,7 +107,7 @@ export async function creditReferralOnFirstPayment(userId: string, amountKobo: n
       data: {
         agentId: referral.agentId,
         referralId: referral.id,
-        amount: REFERRAL_REWARD_KOBO,
+        amount: rewardKobo,
         status: "pending",
         payableAfter,
       },

@@ -1,8 +1,69 @@
 import { db } from "./db";
 import { verifyTransaction } from "./paystack";
-// We import BILLING_CYCLES instead of the old SUBSCRIPTION_LENGTH_DAYS
 import { BILLING_CYCLES, TIER_PRICES_KOBO, type Tier, type BillingCycle } from "./config";
 import { creditReferralOnFirstPayment } from "./referral";
+import type { Prisma, PrismaClient } from "@prisma/client";
+
+type DbClient = PrismaClient | Prisma.TransactionClient;
+
+function planFromAmount(amountKobo: number): { tier: Tier; cycle: BillingCycle } | null {
+  const tiers = Object.keys(TIER_PRICES_KOBO) as Tier[];
+  for (const tier of tiers) {
+    const prices = TIER_PRICES_KOBO[tier];
+    if (prices.monthly === amountKobo) return { tier, cycle: "monthly" };
+    if (prices.semester === amountKobo) return { tier, cycle: "semester" };
+  }
+  return null;
+}
+
+function resolvePlan(
+  amountKobo: number,
+  metadata: { tier?: unknown; cycle?: unknown } | null | undefined
+): { tier: Tier; cycle: BillingCycle } | null {
+  const fromAmount = planFromAmount(amountKobo);
+  const metaTier = metadata?.tier;
+  const metaCycle = metadata?.cycle;
+  if (
+    fromAmount &&
+    (metaTier === "basic" || metaTier === "standard" || metaTier === "premium") &&
+    (metaCycle === "monthly" || metaCycle === "semester") &&
+    TIER_PRICES_KOBO[metaTier][metaCycle] === amountKobo
+  ) {
+    return { tier: metaTier, cycle: metaCycle };
+  }
+  return fromAmount;
+}
+
+async function createPaidSubscription(
+  client: DbClient,
+  payment: { id: string; userId: string },
+  plan: { tier: Tier; cycle: BillingCycle }
+) {
+  const startDate = new Date();
+  const lengthDays = BILLING_CYCLES[plan.cycle];
+  const endDate = new Date(startDate.getTime() + lengthDays * 24 * 60 * 60 * 1000);
+
+  await client.subscription.updateMany({
+    where: { userId: payment.userId, paymentId: null, status: "active" },
+    data: { status: "expired", endDate: startDate },
+  });
+
+  try {
+    await client.subscription.create({
+      data: {
+        userId: payment.userId,
+        tier: plan.tier,
+        startDate,
+        endDate,
+        status: "active",
+        paymentId: payment.id,
+      },
+    });
+  } catch (error) {
+    const prismaCode = (error as { code?: string }).code;
+    if (prismaCode !== "P2002") throw error;
+  }
+}
 
 export type ConfirmResult =
   | { ok: true; alreadyProcessed: boolean }
@@ -19,40 +80,43 @@ export async function confirmPaymentAndActivate(reference: string): Promise<Conf
   const verified = await verifyTransaction(reference);
   if (verified.status !== "success") return { ok: false, reason: "not_successful" };
 
-  const payment = await db.payment.findUnique({ where: { reference } });
-  if (!payment) return { ok: false, reason: "unknown_reference" };
+  const result = await db.$transaction(async (tx) => {
+    const payment = await tx.payment.findUnique({ where: { reference } });
+    if (!payment) return { ok: false as const, reason: "unknown_reference" };
 
-  if (payment.status === "success") {
-    await creditReferralOnFirstPayment(payment.userId, payment.amount);
-    return { ok: true, alreadyProcessed: true };
-  }
+    const plan = resolvePlan(verified.amount, verified.metadata);
 
-  // Read both tier and cycle from the Paystack metadata (default to semester for safety)
-  const tier = (verified.metadata?.tier ?? "basic") as Tier;
-  const cycle = (verified.metadata?.cycle ?? "semester") as BillingCycle;
-  
-  // Look up the exact price for that specific tier and cycle
-  const expectedAmount = TIER_PRICES_KOBO[tier][cycle];
-  
-  if (verified.amount !== expectedAmount) {
-    await db.payment.update({ where: { reference }, data: { status: "failed" } });
-    return { ok: false, reason: "amount_mismatch" };
-  }
+    if (payment.status === "success") {
+      const existing = await tx.subscription.findUnique({ where: { paymentId: payment.id } });
+      if (!existing && plan && verified.amount === payment.amount) {
+        await createPaidSubscription(tx, payment, plan);
+      } else {
+        await tx.subscription.updateMany({
+          where: { userId: payment.userId, paymentId: null, status: "active" },
+          data: { status: "expired", endDate: new Date() },
+        });
+      }
+      return { ok: true as const, alreadyProcessed: true, userId: payment.userId, amount: payment.amount };
+    }
 
-  await db.payment.update({ where: { reference }, data: { status: "success" } });
+    if (verified.amount !== payment.amount) {
+      await tx.payment.update({ where: { reference }, data: { status: "failed" } });
+      return { ok: false as const, reason: "amount_mismatch" };
+    }
 
-  const startDate = new Date();
-  
-  // Calculate end date based on the cycle (30 days for monthly, 90 days for semester)
-  const lengthDays = BILLING_CYCLES[cycle];
-  const endDate = new Date(startDate.getTime() + lengthDays * 24 * 60 * 60 * 1000);
+    if (!plan) {
+      await tx.payment.update({ where: { reference }, data: { status: "failed" } });
+      return { ok: false as const, reason: "unknown_plan" };
+    }
 
-  // Create the active subscription record
-  await db.subscription.create({
-    data: { userId: payment.userId, tier, startDate, endDate, status: "active", paymentId: payment.id },
+    await tx.payment.update({ where: { reference }, data: { status: "success" } });
+    await createPaidSubscription(tx, payment, plan);
+    return { ok: true as const, alreadyProcessed: false, userId: payment.userId, amount: payment.amount };
   });
 
-  await creditReferralOnFirstPayment(payment.userId, payment.amount);
-
-  return { ok: true, alreadyProcessed: false };
+  if (result.ok) {
+    await creditReferralOnFirstPayment(result.userId, result.amount);
+    return { ok: true, alreadyProcessed: result.alreadyProcessed };
+  }
+  return { ok: false, reason: result.reason };
 }
