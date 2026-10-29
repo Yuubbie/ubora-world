@@ -37,6 +37,10 @@ const DEPT = {
   TOURISM: 'cms7arzef000esgby3zl6aotz',
   DEV_STUDIES: 'cms7arzrt000gsgbybgjlmkqc',
   COMPUTER_SCIENCE: 'cmrcnngy20002100ylo7snl5m',
+  BUSINESS_ADMINISTRATION: 'cmtlzb2go000opaln531hcxou',
+  ACCOUNTING: 'cmtlzb1lr000kpalnut4k8vzy',
+  BANKING_AND_FINANCE: 'cmtlzb26v000mpalnvmwd4kb2',
+  ENTREPRENEURSHIP: 'cmtlzb39l000spalnd9pg5fob',
 };
 
 /**
@@ -53,6 +57,10 @@ const CROSS_LISTINGS = [
   { code: 'PCR274', departments: [DEPT.CRIMINOLOGY] },
   { code: 'LAW212', departments: [DEPT.CRIMINOLOGY] },
   { code: 'MAC212', departments: [DEPT.CRIMINOLOGY] },
+  { code: 'ACC203', departments: [DEPT.BUSINESS_ADMINISTRATION] },
+  { code: 'BFN209', departments: [DEPT.BUSINESS_ADMINISTRATION] },
+  { code: 'ECO231', departments: [DEPT.BUSINESS_ADMINISTRATION] },
+  { code: 'BFN203', departments: [DEPT.BUSINESS_ADMINISTRATION] },
 ];
 
 async function main() {
