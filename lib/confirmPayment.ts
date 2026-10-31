@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { verifyTransaction } from "./paystack";
 import { BILLING_CYCLES, TIER_PRICES_KOBO, type Tier, type BillingCycle } from "./config";
+import { calculatePaystackTotal } from "./paystackFees";
 import { creditReferralOnFirstPayment } from "./referral";
 import type { Prisma, PrismaClient } from "@prisma/client";
 
@@ -16,18 +17,21 @@ function planFromAmount(amountKobo: number): { tier: Tier; cycle: BillingCycle }
   return null;
 }
 
+function chargeMatchesBase(verifiedKobo: number, baseKobo: number) {
+  return verifiedKobo === baseKobo || verifiedKobo === calculatePaystackTotal(baseKobo).grossKobo;
+}
+
 function resolvePlan(
-  amountKobo: number,
+  baseKobo: number,
   metadata: { tier?: unknown; cycle?: unknown } | null | undefined
 ): { tier: Tier; cycle: BillingCycle } | null {
-  const fromAmount = planFromAmount(amountKobo);
+  const fromAmount = planFromAmount(baseKobo);
   const metaTier = metadata?.tier;
   const metaCycle = metadata?.cycle;
   if (
-    fromAmount &&
     (metaTier === "basic" || metaTier === "standard" || metaTier === "premium") &&
     (metaCycle === "monthly" || metaCycle === "semester") &&
-    TIER_PRICES_KOBO[metaTier][metaCycle] === amountKobo
+    TIER_PRICES_KOBO[metaTier][metaCycle] === baseKobo
   ) {
     return { tier: metaTier, cycle: metaCycle };
   }
@@ -84,11 +88,11 @@ export async function confirmPaymentAndActivate(reference: string): Promise<Conf
     const payment = await tx.payment.findUnique({ where: { reference } });
     if (!payment) return { ok: false as const, reason: "unknown_reference" };
 
-    const plan = resolvePlan(verified.amount, verified.metadata);
+    const plan = resolvePlan(payment.amount, verified.metadata);
 
     if (payment.status === "success") {
       const existing = await tx.subscription.findUnique({ where: { paymentId: payment.id } });
-      if (!existing && plan && verified.amount === payment.amount) {
+      if (!existing && plan && chargeMatchesBase(verified.amount, payment.amount)) {
         await createPaidSubscription(tx, payment, plan);
       } else {
         await tx.subscription.updateMany({
@@ -99,7 +103,7 @@ export async function confirmPaymentAndActivate(reference: string): Promise<Conf
       return { ok: true as const, alreadyProcessed: true, userId: payment.userId, amount: payment.amount };
     }
 
-    if (verified.amount !== payment.amount) {
+    if (!chargeMatchesBase(verified.amount, payment.amount)) {
       await tx.payment.update({ where: { reference }, data: { status: "failed" } });
       return { ok: false as const, reason: "amount_mismatch" };
     }

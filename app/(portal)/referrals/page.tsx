@@ -28,7 +28,8 @@ function statusLabel(status: string, hasPayment: boolean) {
 export default async function ReferralsPage() {
   const session = await getServerSession(authOptions);
   const userId = (session!.user as { id: string }).id;
-  const access = await getAccessState(userId);
+  const role = (session!.user as { role?: string }).role;
+  const access = role === "agent" ? { active: false as const, tier: null } : await getAccessState(userId);
 
   await releaseMaturedCommissions();
   const agent = await ensureAgentForUser(userId);
@@ -77,7 +78,7 @@ export default async function ReferralsPage() {
           <PageHeader
             eyebrow="Referrals"
             title="Earn ₦500 / ₦1,000"
-            subtitle="Share your link. You earn ₦500 when a friend pays monthly, or ₦1,000 when they take a semester plan. Free trials do not count."
+            subtitle="Share your link. You earn ₦500 when a friend pays monthly, or ₦1,000 when they take a semester plan. Free trials do not count. Anyone can refer — students and non-students."
           />
 
           <div className="card-static p-6 md:p-8 mb-6">

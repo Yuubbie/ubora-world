@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useState } from "react";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import BackLink from "@/components/BackLink";
 import PasswordField from "@/components/PasswordField";
@@ -8,7 +8,9 @@ import PasswordField from "@/components/PasswordField";
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const justCreated = searchParams.get("created") === "1";
+  const created = searchParams.get("created");
+  const justCreated = created === "1";
+  const referrerCreated = created === "referrer";
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +35,9 @@ function LoginForm() {
       return;
     }
 
-    router.push("/dashboard");
+    const session = await getSession();
+    const role = (session?.user as { role?: string } | undefined)?.role;
+    router.push(role === "agent" ? "/referrals" : role === "admin" || role === "super_admin" ? "/admin" : "/dashboard");
     router.refresh();
   }
 
@@ -54,6 +58,11 @@ function LoginForm() {
         {justCreated && (
           <p className="mb-4 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm text-ink">
             Account created. Check your email from Ubora World, then log in. Your 24-hour Premium trial (CBT, summaries, tutor) starts now.
+          </p>
+        )}
+        {referrerCreated && (
+          <p className="mb-4 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm text-ink">
+            Referral profile created. Log in to copy your link. You earn when a friend pays a plan, not on free trials.
           </p>
         )}
         {error && <p className="text-sm text-coral mb-4">{error}</p>}
@@ -83,6 +92,12 @@ function LoginForm() {
           New here?{" "}
           <a href="/signup" className="text-ink2 font-semibold hover:text-gold transition-colors duration-150">
             Create an account for 24 hours free.
+          </a>
+        </p>
+        <p className="text-sm text-muted mt-3 text-center">
+          Just want to refer?{" "}
+          <a href="/refer" className="text-ink2 font-semibold hover:text-gold transition-colors duration-150">
+            Set up a referral profile
           </a>
         </p>
       </form>

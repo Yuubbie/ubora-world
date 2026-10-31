@@ -56,6 +56,7 @@ export default function InstallAppBanner() {
   const hideOnAuth =
     pathname === "/login" ||
     pathname === "/signup" ||
+    pathname === "/refer" ||
     pathname === "/forgot-password" ||
     pathname?.startsWith("/reset-password");
 

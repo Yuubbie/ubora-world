@@ -9,6 +9,9 @@ export default withAuth(
     if (isAdminRoute && role !== "admin" && role !== "super_admin") {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
+    if (role === "agent" && !req.nextUrl.pathname.startsWith("/referrals")) {
+      return NextResponse.redirect(new URL("/referrals", req.url));
+    }
     return NextResponse.next();
   },
   {

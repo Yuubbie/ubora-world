@@ -98,6 +98,12 @@ function SignupForm() {
             Log in
           </a>
         </p>
+        <p className="text-sm text-muted mt-3 text-center">
+          Just want to refer friends?{" "}
+          <a href="/refer" className="text-ink2 font-semibold hover:text-gold transition-colors duration-150">
+            Set up a referral profile
+          </a>
+        </p>
       </form>
     </div>
   );

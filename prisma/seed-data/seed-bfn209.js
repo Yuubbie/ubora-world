@@ -19,8 +19,8 @@
  * Course guide: BFN209 Introduction to Finance, Faculty of Management
  * Sciences, editor Dr. I.D. Idrisu (Dept of Financial Studies, NOUN),
  * coordinator Mrs. Kunbi Lawal (Dept. of Financial Studies).
- * 15 study units in 3 modules. Treated as 100L, first semester.
- * FIRST Banking and Finance-owned course.
+ * 15 study units in 3 modules. Treated as 200L, first semester
+ * (Bus Admin 200L list). FIRST Banking and Finance-owned course.
  *
  * HOW TO RUN:
  *   cd C:\Users\HP\Desktop\ubora-world
@@ -129,11 +129,11 @@ async function main() {
         code: "BFN209",
         title: "Introduction to Finance",
         departmentId: department.id,
-        level: 100,
+        level: 200,
         semester: "first",
       },
     });
-    console.log("Created Course: BFN209 - Introduction to Finance (100L, 1st semester)");
+    console.log("Created Course: BFN209 - Introduction to Finance (200L, 1st semester)");
   } else {
     console.log("Found existing Course: BFN209");
   }

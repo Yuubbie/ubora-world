@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { TIER_PRICES_KOBO, type BillingCycle } from "@/lib/config";
+import { calculatePaystackTotal, formatKoboNaira } from "@/lib/paystackFees";
 
 const TIERS: { id: "basic" | "standard" | "premium"; label: string; features: string[]; highlight?: boolean }[] = [
   { id: "basic", label: "Basic", features: ["Past questions", "Course summaries (view only)"] },
@@ -11,7 +12,6 @@ const TIERS: { id: "basic" | "standard" | "premium"; label: string; features: st
 export default function SubscribeForm() {
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  // Track which billing cycle the user has selected for payment (defaults to semester)
   const [selectedCycle, setSelectedCycle] = useState<BillingCycle>("semester");
 
   async function subscribe(tier: string) {
@@ -46,11 +46,10 @@ export default function SubscribeForm() {
             Choose your <span className="italic font-medium text-gold">plan</span>.
           </h1>
           <p className="text-muted animate-fade-up" style={{ animationDelay: "0.1s", opacity: 0, animationFillMode: "forwards" }}>
-            Select your preferred billing cycle below, then choose your plan to checkout securely via Paystack.
+            Select your preferred billing cycle below, then choose your plan to checkout securely via Paystack. The gateway fee is added so we receive the plan price in full.
           </p>
         </div>
 
-        {/* Global Cycle Selector for Checkout */}
         <div 
           className="flex items-center p-1 bg-surface-alt rounded-lg border border-line w-fit animate-fade-up"
           style={{ animationDelay: "0.15s", opacity: 0, animationFillMode: "forwards" }}
@@ -79,7 +78,9 @@ export default function SubscribeForm() {
       {error && <p className="text-coral mb-4 font-medium">{error}</p>}
       
       <div className="grid sm:grid-cols-3 gap-5">
-        {TIERS.map((t, i) => (
+        {TIERS.map((t, i) => {
+          const quote = calculatePaystackTotal(TIER_PRICES_KOBO[t.id][selectedCycle]);
+          return (
           <div
             key={t.id}
             className={`card-premium flex flex-col p-7 animate-fade-up-scale ${t.highlight ? "border-2 border-gold shadow-cardHover" : ""}`}
@@ -92,19 +93,33 @@ export default function SubscribeForm() {
             )}
             <h3 className="font-display font-bold text-xl mb-3 tracking-tight">{t.label}</h3>
 
-            {/* Display Both Tariffs Clearly inside the Dashboard */}
             <div className="space-y-2 mb-6 pb-4 border-b border-line">
               <div className={`flex items-center justify-between text-sm p-2 rounded-lg ${selectedCycle === "monthly" ? "bg-gold/10 border border-gold/40" : ""}`}>
                 <span className="text-muted">Monthly (30d)</span>
                 <span className="font-mono-brand font-semibold">
-                  ₦{(TIER_PRICES_KOBO[t.id].monthly / 100).toLocaleString()}
+                  {formatKoboNaira(TIER_PRICES_KOBO[t.id].monthly)}
                 </span>
               </div>
               <div className={`flex items-center justify-between text-sm p-2 rounded-lg ${selectedCycle === "semester" ? "bg-gold/10 border border-gold/40" : ""}`}>
                 <span className="font-medium text-ink">Semester (90d)</span>
                 <span className="font-mono-brand font-bold text-golddeep">
-                  ₦{(TIER_PRICES_KOBO[t.id].semester / 100).toLocaleString()}
+                  {formatKoboNaira(TIER_PRICES_KOBO[t.id].semester)}
                 </span>
+              </div>
+            </div>
+
+            <div className="mb-6 space-y-1.5 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-muted">Subtotal</span>
+                <span className="font-mono-brand">{formatKoboNaira(quote.baseKobo)}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted">Processing fee</span>
+                <span className="font-mono-brand">{formatKoboNaira(quote.feeKobo)}</span>
+              </div>
+              <div className="flex items-center justify-between pt-1.5 border-t border-line font-medium">
+                <span>Total to pay</span>
+                <span className="font-mono-brand text-golddeep">{formatKoboNaira(quote.grossKobo)}</span>
               </div>
             </div>
 
@@ -124,14 +139,15 @@ export default function SubscribeForm() {
               <span>
                 {loading === t.id 
                   ? "Redirecting..." 
-                  : `Pay for ${selectedCycle === "monthly" ? "Month" : "Semester"} (${t.label})`}
+                  : `Pay ${formatKoboNaira(quote.grossKobo)} for ${selectedCycle === "monthly" ? "Month" : "Semester"}`}
               </span>
               {loading !== t.id && (
                 <span className="ml-2 transition-transform duration-200 group-hover:translate-x-1">→</span>
               )}
             </button>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

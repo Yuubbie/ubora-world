@@ -81,6 +81,7 @@ export default async function HomePage() {
             <Link href="/noun" className="hover:text-ink">NOUN courses</Link>
             <a href="#courses" className="hover:text-ink">Courses</a>
             <a href="#pricing" className="hover:text-ink">Pricing</a>
+            <Link href="/refer" className="hover:text-ink">Refer and earn</Link>
           </nav>
           <div className="flex items-center gap-2">
             <Link href="/login" className="btn-ghost btn-sm">Log in</Link>
@@ -322,6 +323,7 @@ export default async function HomePage() {
           <p>Ubora World — NOUN CBT practice. Not the official NOUN portal.</p>
           <nav className="flex flex-wrap gap-4">
             <Link href="/noun" className="hover:text-ink">NOUN courses</Link>
+            <Link href="/refer" className="hover:text-ink">Refer and earn</Link>
             <Link href="/signup" className="hover:text-ink">Free trial</Link>
             <a href="https://www.nouonline.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="hover:text-ink">NOUN portal</a>
             <a href="https://elearn.nou.edu.ng/" target="_blank" rel="noopener noreferrer" className="hover:text-ink">eLearn TMAs</a>

@@ -22,6 +22,7 @@ export default function InquiryChat() {
     pathname?.startsWith("/admin") ||
     pathname === "/login" ||
     pathname === "/signup" ||
+    pathname === "/refer" ||
     pathname === "/forgot-password" ||
     pathname?.startsWith("/reset-password");
 

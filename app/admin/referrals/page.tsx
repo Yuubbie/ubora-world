@@ -19,15 +19,16 @@ export default async function AdminReferralsPage() {
   const [agents, payouts, commissions] = await Promise.all([
     db.agent.findMany({
       include: {
-        user: { select: { fullName: true, email: true } },
+        user: { select: { fullName: true, email: true, phone: true, role: true } },
         _count: { select: { referrals: true } },
+        commissions: { select: { amount: true, status: true } },
       },
       orderBy: { referrals: { _count: "desc" } },
     }),
     db.payout.findMany({
       orderBy: { requestedAt: "desc" },
       include: {
-        agent: { include: { user: { select: { fullName: true, email: true, phone: true } } } },
+        agent: { include: { user: { select: { fullName: true, email: true, phone: true, role: true } } } },
       },
     }),
     db.commission.findMany({ select: { amount: true, status: true } }),
@@ -44,7 +45,7 @@ export default async function AdminReferralsPage() {
           <div>
             <a href="/admin" className="text-sm text-gray-500 hover:text-[#101B33]">Back to admin</a>
             <h1 className="text-3xl font-bold text-[#101B33] mt-2">Referrals</h1>
-            <p className="text-gray-500 mt-1">₦500 monthly or ₦1,000 semester on a friend's first paid plan. Trials do not earn.</p>
+            <p className="text-gray-500 mt-1">₦500 monthly or ₦1,000 semester on a friend's first paid plan. Trials do not earn. Includes student and public referrers.</p>
           </div>
         </div>
 
@@ -71,7 +72,7 @@ export default async function AdminReferralsPage() {
             <table className="w-full text-left text-sm whitespace-nowrap">
               <thead className="bg-gray-100/75 border-b border-gray-200 text-gray-600 font-semibold">
                 <tr>
-                  <th className="px-6 py-4">Student</th>
+                  <th className="px-6 py-4">Referrer</th>
                   <th className="px-6 py-4">Amount</th>
                   <th className="px-6 py-4">Status</th>
                   <th className="px-6 py-4">Requested</th>
@@ -84,6 +85,7 @@ export default async function AdminReferralsPage() {
                     <td className="px-6 py-4">
                       <p className="font-medium">{payout.agent.user.fullName}</p>
                       <p className="text-xs text-gray-500">{payout.agent.user.email || payout.agent.user.phone || "—"}</p>
+                      <p className="text-xs text-gray-400 uppercase">{payout.agent.user.role === "agent" ? "public referrer" : payout.agent.user.role}</p>
                     </td>
                     <td className="px-6 py-4">{formatNaira(payout.amount)}</td>
                     <td className="px-6 py-4 uppercase">{payout.status}</td>
@@ -116,7 +118,7 @@ export default async function AdminReferralsPage() {
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="font-semibold text-[#101B33]">Agents</h2>
+            <h2 className="font-semibold text-[#101B33]">Referrers</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
@@ -125,22 +127,31 @@ export default async function AdminReferralsPage() {
                   <th className="px-6 py-4">Name</th>
                   <th className="px-6 py-4">Code</th>
                   <th className="px-6 py-4">Invites</th>
+                  <th className="px-6 py-4">Earned</th>
+                  <th className="px-6 py-4">Paid out</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {agents.map((agent) => (
-                  <tr key={agent.id}>
-                    <td className="px-6 py-4">
-                      <p className="font-medium">{agent.user.fullName}</p>
-                      <p className="text-xs text-gray-500">{agent.user.email || "—"}</p>
-                    </td>
-                    <td className="px-6 py-4 font-mono">{agent.referralCode}</td>
-                    <td className="px-6 py-4">{agent._count.referrals}</td>
-                  </tr>
-                ))}
+                {agents.map((agent) => {
+                  const earned = agent.commissions.reduce((sum, row) => sum + (row.status === "voided" ? 0 : row.amount), 0);
+                  const paidOut = agent.commissions.filter((row) => row.status === "paid").reduce((sum, row) => sum + row.amount, 0);
+                  return (
+                    <tr key={agent.id}>
+                      <td className="px-6 py-4">
+                        <p className="font-medium">{agent.user.fullName}</p>
+                        <p className="text-xs text-gray-500">{agent.user.email || agent.user.phone || "—"}</p>
+                        <p className="text-xs text-gray-400 uppercase">{agent.user.role === "agent" ? "public referrer" : agent.user.role}</p>
+                      </td>
+                      <td className="px-6 py-4 font-mono">{agent.referralCode}</td>
+                      <td className="px-6 py-4">{agent._count.referrals}</td>
+                      <td className="px-6 py-4">{formatNaira(earned)}</td>
+                      <td className="px-6 py-4">{formatNaira(paidOut)}</td>
+                    </tr>
+                  );
+                })}
                 {agents.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="px-6 py-8 text-center text-gray-500">No referral codes issued yet.</td>
+                    <td colSpan={5} className="px-6 py-8 text-center text-gray-500">No referral codes issued yet.</td>
                   </tr>
                 )}
               </tbody>
