@@ -23,7 +23,7 @@ function chargeMatchesBase(verifiedKobo: number, baseKobo: number) {
 
 function resolvePlan(
   baseKobo: number,
-  metadata: { tier?: unknown; cycle?: unknown } | null | undefined
+  metadata: { tier?: unknown; cycle?: unknown; baseAmountKobo?: unknown } | null | undefined
 ): { tier: Tier; cycle: BillingCycle } | null {
   const fromAmount = planFromAmount(baseKobo);
   const metaTier = metadata?.tier;
@@ -36,6 +36,22 @@ function resolvePlan(
     return { tier: metaTier, cycle: metaCycle };
   }
   return fromAmount;
+}
+
+function planFromVerifiedCharge(
+  verified: { amount: number; metadata?: { tier?: unknown; cycle?: unknown; baseAmountKobo?: unknown; userId?: unknown } | null }
+): { tier: Tier; cycle: BillingCycle; baseKobo: number } | null {
+  const metadata = verified.metadata ?? {};
+  const metaBase =
+    typeof metadata.baseAmountKobo === "number" ? metadata.baseAmountKobo : Number(metadata.baseAmountKobo);
+  const candidates = [metaBase, verified.amount].filter((value) => Number.isFinite(value) && value > 0);
+  for (const amount of candidates) {
+    const plan = resolvePlan(amount, metadata);
+    if (plan && chargeMatchesBase(verified.amount, amount)) {
+      return { ...plan, baseKobo: amount };
+    }
+  }
+  return null;
 }
 
 async function createPaidSubscription(
@@ -80,15 +96,53 @@ export type ConfirmResult =
  * webhook (production) and the checkout return page (works without a public
  * webhook URL, e.g. local development).
  */
+async function recoverOrphanPayment(
+  tx: Prisma.TransactionClient,
+  reference: string,
+  verified: { amount: number; metadata?: { userId?: unknown; tier?: unknown; cycle?: unknown; baseAmountKobo?: unknown } | null }
+) {
+  const plan = planFromVerifiedCharge(verified);
+  const userId = typeof verified.metadata?.userId === "string" ? verified.metadata.userId : null;
+  if (!plan || !userId) return { ok: false as const, reason: "unknown_reference" as const };
+
+  const user = await tx.user.findUnique({ where: { id: userId }, select: { id: true } });
+  if (!user) return { ok: false as const, reason: "unknown_reference" as const };
+
+  try {
+    const payment = await tx.payment.create({
+      data: {
+        userId,
+        amount: plan.baseKobo,
+        provider: "paystack",
+        status: "pending",
+        reference,
+      },
+    });
+    return { ok: true as const, payment, plan: { tier: plan.tier, cycle: plan.cycle } };
+  } catch (error) {
+    const prismaCode = (error as { code?: string }).code;
+    if (prismaCode !== "P2002") throw error;
+    const existing = await tx.payment.findUnique({ where: { reference } });
+    if (!existing) throw error;
+    return { ok: true as const, payment: existing, plan: { tier: plan.tier, cycle: plan.cycle } };
+  }
+}
+
 export async function confirmPaymentAndActivate(reference: string): Promise<ConfirmResult> {
   const verified = await verifyTransaction(reference);
   if (verified.status !== "success") return { ok: false, reason: "not_successful" };
 
   const result = await db.$transaction(async (tx) => {
-    const payment = await tx.payment.findUnique({ where: { reference } });
-    if (!payment) return { ok: false as const, reason: "unknown_reference" };
+    let payment = await tx.payment.findUnique({ where: { reference } });
+    let recoveredPlan: { tier: Tier; cycle: BillingCycle } | null = null;
+    if (!payment) {
+      const recovered = await recoverOrphanPayment(tx, reference, verified);
+      if (!recovered.ok) return { ok: false as const, reason: recovered.reason };
+      payment = recovered.payment;
+      recoveredPlan = recovered.plan;
+    }
 
-    const plan = resolvePlan(payment.amount, verified.metadata);
+    const plan = recoveredPlan ?? resolvePlan(payment.amount, verified.metadata);
 
     if (payment.status === "success") {
       const existing = await tx.subscription.findUnique({ where: { paymentId: payment.id } });

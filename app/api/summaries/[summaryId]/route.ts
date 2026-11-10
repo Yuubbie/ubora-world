@@ -24,22 +24,27 @@ export async function GET(
     return NextResponse.json({ error: "Summary not found" }, { status: 404 });
   }
 
-  const gate = await requireTier(userId, "basic");
+  const download = req.nextUrl.searchParams.get("download") === "1";
+  const gate = await requireTier(userId, download ? "premium" : "basic");
   if (!gate.ok) {
-    return NextResponse.json({ error: "Subscription required" }, { status: 403 });
+    return NextResponse.json(
+      { error: download ? "Premium required to download" : "Subscription required" },
+      { status: 403 }
+    );
   }
 
   if (!summary.fileData) {
     return NextResponse.json({ error: "File not available" }, { status: 404 });
   }
 
-  const filename = summary.fileUrl.split("/").pop() || "summary.pdf";
+  const rawName = summary.fileUrl.split("/").pop() || `${summary.courseId || "summary"}.pdf`;
+  const filename = rawName.replace(/[\r\n"]/g, "").replace(/[^\w.\-]+/g, "_") || "summary.pdf";
 
   return new NextResponse(Buffer.from(summary.fileData), {
     status: 200,
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="${filename}"`,
+      "Content-Disposition": `${download ? "attachment" : "inline"}; filename="${filename}"`,
       "Cache-Control": "no-store, no-cache, must-revalidate, private",
       "Pragma": "no-cache",
     },

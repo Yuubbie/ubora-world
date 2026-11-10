@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { initializeTransaction } from "@/lib/paystack";
 import { TIER_PRICES_KOBO, type Tier, type BillingCycle } from "@/lib/config";
 import { calculatePaystackTotal } from "@/lib/paystackFees";
+import { getAppUrl } from "@/lib/appUrl";
 
 // We added 'cycle' here so the frontend can tell us if they want monthly or semester
 const bodySchema = z.object({ 
@@ -40,7 +41,7 @@ export async function POST(req: Request) {
     data: { userId: user.id, amount: baseKobo, provider: "paystack", status: "pending", reference },
   });
 
-  const appUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+  const appUrl = getAppUrl();
   const tx = await initializeTransaction({
     email: user.email,
     amountKobo: grossKobo,

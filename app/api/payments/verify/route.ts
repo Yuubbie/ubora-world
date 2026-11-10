@@ -4,6 +4,9 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { confirmPaymentAndActivate } from "@/lib/confirmPayment";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const reference = searchParams.get("reference");
@@ -13,11 +16,10 @@ export async function GET(req: Request) {
   }
 
   const payment = await db.payment.findUnique({ where: { reference } });
-  if (!payment) return NextResponse.json({ error: "unknown_reference" }, { status: 404 });
-
   const session = await getServerSession(authOptions);
   const sessionUserId = session?.user ? (session.user as { id?: string }).id : null;
-  if (sessionUserId && sessionUserId !== payment.userId) {
+  const sessionRole = session?.user ? (session.user as { role?: string }).role : null;
+  if (payment && sessionUserId && sessionRole !== "admin" && sessionUserId !== payment.userId) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
 

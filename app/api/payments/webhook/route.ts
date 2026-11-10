@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { verifyWebhookSignature } from "@/lib/paystack";
 import { confirmPaymentAndActivate } from "@/lib/confirmPayment";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   const rawBody = await req.text();
   const signature = req.headers.get("x-paystack-signature");

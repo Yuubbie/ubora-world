@@ -89,9 +89,12 @@ export default async function AdminDashboard() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-[#101B33]">Admin Dashboard</h1>
-            <p className="text-gray-500 mt-1">Manage users, view subscriber statistics, and assess platforms.</p>
+            <p className="text-gray-500 mt-1">Manage users, view subscriber statistics, and grant access for Paystack charges that did not activate.</p>
           </div>
           <div className="flex items-center gap-3">
+            <a href="/admin/payments" className="bg-white border border-gray-200 text-[#101B33] px-4 py-2 rounded-lg text-sm font-medium shadow-sm">
+              Payments
+            </a>
             <a href="/admin/referrals" className="bg-white border border-gray-200 text-[#101B33] px-4 py-2 rounded-lg text-sm font-medium shadow-sm">
               Referrals
             </a>

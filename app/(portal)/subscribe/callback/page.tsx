@@ -7,17 +7,29 @@ function CallbackContent() {
   const params = useSearchParams();
   const router = useRouter();
   const [status, setStatus] = useState<"checking" | "success" | "failed">("checking");
+  const [detail, setDetail] = useState<string | null>(null);
 
   useEffect(() => {
     const reference = params.get("reference") ?? params.get("trxref");
     if (!reference) {
       setStatus("failed");
+      setDetail("No payment reference was returned from checkout.");
       return;
     }
     fetch(`/api/payments/verify?reference=${encodeURIComponent(reference)}`)
       .then((r) => r.json())
-      .then((d) => setStatus(d.ok ? "success" : "failed"))
-      .catch(() => setStatus("failed"));
+      .then((d) => {
+        if (d.ok) {
+          setStatus("success");
+          return;
+        }
+        setStatus("failed");
+        setDetail(d.reason ?? d.error ?? "Paystack charged, but Ubora could not confirm yet.");
+      })
+      .catch(() => {
+        setStatus("failed");
+        setDetail("Could not reach the confirmation endpoint. Refresh this page.");
+      });
   }, [params]);
 
   return (
@@ -38,7 +50,9 @@ function CallbackContent() {
       {status === "failed" && (
         <>
           <h1 className="text-2xl font-semibold mb-3 text-coral">Payment not confirmed</h1>
-          <p className="text-muted mb-6">If you were charged, this usually resolves within a minute - try refreshing, or contact support.</p>
+          <p className="text-muted mb-6">
+            {detail ?? "If you were charged, refresh this page or send the Paystack reference to support so access can be granted."}
+          </p>
           <button onClick={() => router.push("/subscribe")} className="bg-ink text-white rounded-lg px-5 py-2.5 text-sm font-semibold">
             Back to plans
           </button>

@@ -21,6 +21,7 @@ export default async function SummariesDepartmentListPage({
   const userId = (session!.user as any).id;
   const access = await getAccessState(userId);
   const gate = await requireTier(userId, "basic");
+  const canDownload = access.active && access.tier === "premium";
 
   const department = await db.department.findUnique({
     where: { id: departmentId },
@@ -96,13 +97,7 @@ export default async function SummariesDepartmentListPage({
                       <p className="eyebrow text-muted mb-3">{SEMESTER_LABEL[sem] || sem}</p>
                       <div className="grid sm:grid-cols-2 gap-5">
                         {bySemester.get(sem)!.map((s) => (
-                          <a
-                            key={s.id}
-                            href={`/api/summaries/${s.id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="card-premium group p-6 block"
-                          >
+                          <div key={s.id} className="card-premium p-6">
                             <p className="tag mb-3">
                               {s.course.code}
                               {s.course.isGST ? " · GST" : ""}
@@ -111,16 +106,29 @@ export default async function SummariesDepartmentListPage({
                             <p className="type-meta">
                               {s.topicCount} topics · {s.pageCount} pages
                             </p>
-                            <p className="type-meta text-gold mt-3">
-                              View summary
-                              <span
-                                aria-hidden="true"
-                                className="ml-1.5 inline-block transition-transform duration-200 group-hover:translate-x-1"
+                            <div className="mt-4 flex flex-wrap items-center gap-3">
+                              <a
+                                href={`/api/summaries/${s.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm font-semibold text-gold"
                               >
-                                →
-                              </span>
-                            </p>
-                          </a>
+                                View
+                              </a>
+                              {canDownload ? (
+                                <a
+                                  href={`/api/summaries/${s.id}?download=1`}
+                                  className="text-sm font-semibold text-ink"
+                                >
+                                  Download PDF
+                                </a>
+                              ) : (
+                                <a href="/subscribe" className="text-sm text-muted">
+                                  Download is Premium
+                                </a>
+                              )}
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </div>
